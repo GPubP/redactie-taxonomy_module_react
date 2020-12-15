@@ -12,6 +12,8 @@ export const MODULE_PATHS = {
 	overview: `${root}/overzicht`,
 
 	create: `${root}/aanmaken`,
+
+	detail: `${root}/:taxonomyUuid`,
 };
 
 export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): BreadcrumbOptions => ({

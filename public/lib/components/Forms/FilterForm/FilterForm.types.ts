@@ -1,3 +1,5 @@
+import { FilterItem } from '../../../taxonomy.types';
+
 export interface FilterFormProps {
 	activeFilters: FilterItem[];
 	initialState: FilterFormState;
