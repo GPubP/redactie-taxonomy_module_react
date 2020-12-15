@@ -1,9 +1,9 @@
 import { NavigateFn } from '@redactie/utils';
 
 export interface OverviewTableRow {
-	uuid: string;
+	id: number;
 	name: string;
 	description: string;
-	status: string;
+	publishStatus: string;
 	navigate: NavigateFn;
 }

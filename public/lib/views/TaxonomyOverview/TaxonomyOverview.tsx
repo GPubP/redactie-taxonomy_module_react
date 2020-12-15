@@ -16,7 +16,7 @@ import {
 	useNavigate,
 	useRoutes,
 } from '@redactie/utils';
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { FilterForm, FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
@@ -36,6 +36,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 	 * Hooks
 	 */
 
+	const [initialLoading, setInitialLoading] = useState(true);
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(DEFAULT_FILTER_FORM);
 
 	const [query, setQuery] = useAPIQueryParams(DEFAULT_OVERVIEW_QUERY_PARAMS);
@@ -47,6 +48,22 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 		BREADCRUMB_OPTIONS(generatePath)
 	);
 	const { loading, pagination } = usePaginatedTaxonomies(query);
+
+	// Set initial loading
+	useEffect(() => {
+		if (initialLoading && !loading) {
+			setInitialLoading(false);
+		}
+	}, [initialLoading, loading]);
+
+	// Set initial values with query params
+	useEffect(() => {
+		const { search = '', publishStatus = '' } = query;
+
+		if (search || publishStatus) {
+			setFilterFormState({ search, publishStatus });
+		}
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/**
 	 * Methods
@@ -77,14 +94,13 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 
 	const onPageChange = (page: number): void => {
 		setQuery({
-			skip: (page - 1) * query.limit,
+			// skip: (page - 1) * query.pagesize,
 			page,
 		});
 	};
 
-	const onOrderBy = ({ key, order }: OrderBy): void => {
-		const prefixedOrderBy = { order, key: `data.${key}` };
-		setQuery({ sort: parseOrderByToString(prefixedOrderBy) });
+	const onOrderBy = (orderBy: OrderBy): void => {
+		setQuery({ sort: parseOrderByToString(orderBy) });
 	};
 
 	const onApplyFilters = (values: FilterFormState): void => {
@@ -104,11 +120,11 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 			return null;
 		}
 
-		const customCCRows: OverviewTableRow[] = pagination.data.map(preset => ({
-			uuid: preset.uuid,
-			name: preset.meta.label,
-			description: `[${preset.meta.safeLabel}]`,
-			status: 'PUBLISHED',
+		const customCCRows: OverviewTableRow[] = pagination.data.map(taxonomy => ({
+			id: taxonomy.id,
+			name: taxonomy.label,
+			description: taxonomy.description,
+			publishStatus: taxonomy.publishStatus,
 			navigate,
 		}));
 
@@ -128,7 +144,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 					columns={OVERVIEW_COLUMNS(t)}
 					rows={customCCRows}
 					currentPage={pagination?.currentPage || 1}
-					itemsPerPage={query.limit}
+					itemsPerPage={query.pagesize}
 					onPageChange={onPageChange}
 					orderBy={onOrderBy}
 					activeSorting={activeSorting}
@@ -150,7 +166,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>
-				<DataLoader loadingState={loading} render={renderOverview} />
+				<DataLoader loadingState={initialLoading} render={renderOverview} />
 			</Container>
 		</>
 	);
