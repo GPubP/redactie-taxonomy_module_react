@@ -1,5 +1,4 @@
 export interface Taxonomy {
-	uuid: string;
 	_id: string;
 	uuid: string;
 	meta: {
@@ -14,7 +13,7 @@ export interface TaxonomyTag {
 	_id: string;
 	uuid: string;
 	label: {
-		multiLanguage: true;
+		multiLanguage: boolean;
 		_LANG_: string;
 	};
 	safeLabel: string;
