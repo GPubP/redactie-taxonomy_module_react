@@ -29,3 +29,14 @@ export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): Breadcrumb
 		},
 	],
 });
+
+export const PUBLISH_STATUS_OPTIONS = [
+	{
+		label: 'Werkversie',
+		value: 'draft',
+	},
+	{
+		label: 'Gepubliceerd',
+		value: 'published',
+	},
+];

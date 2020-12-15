@@ -1,5 +1,6 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { AlertProps } from '@redactie/utils';
+import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 
 export interface TaxonomyModuleRouteProps<Params extends { [K in keyof Params]?: string } = {}>
@@ -41,4 +42,14 @@ export interface FilterItem {
 	key: string;
 	valuePrefix: string;
 	value: string;
+}
+
+export type FormikChildrenFn<Values = FormikValues> = (
+	formikProps: FormikProps<Values>
+) => ReactNode;
+
+export interface SelectOption {
+	label: string;
+	value: string;
+	disabled?: boolean;
 }

@@ -10,5 +10,5 @@ export interface FilterFormProps {
 
 export interface FilterFormState {
 	search: string;
-	status: string;
+	publishStatus: string;
 }
