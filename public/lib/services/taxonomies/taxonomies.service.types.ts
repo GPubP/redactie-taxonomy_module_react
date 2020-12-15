@@ -1,22 +1,12 @@
 export interface Taxonomy {
-	_id: string;
-	uuid: string;
-	meta: {
-		label: string;
-		safeLabel: string;
-		created: string;
-	};
-	tags: TaxonomyTag[];
-}
-
-export interface TaxonomyTag {
-	_id: string;
-	uuid: string;
-	label: {
-		multiLanguage: boolean;
-		_LANG_: string;
-	};
-	safeLabel: string;
+	createdAt: string;
+	createdBy: string;
+	description: string;
+	id: number;
+	label: string;
+	publishStatus: string;
+	updatedAt: string;
+	updatedBy: string;
 }
 
 /**
@@ -27,8 +17,13 @@ export interface TaxonomyTag {
  */
 
 export interface TaxonomiesResponse {
-	data: Taxonomy[];
-	paging: any;
+	_embedded: { resourceList: Taxonomy[] };
+	_page: {
+		number: number;
+		size: number;
+		totalElements: number;
+		totalPages: number;
+	};
 }
 
 export interface TaxonomyDetailResponse {
@@ -43,14 +38,14 @@ export interface TaxonomyDetailResponse {
  */
 
 export interface CreateTaxonomyPayload {
-	meta: {
-		label: string;
-	};
+	label: string;
+	description: string;
+	status: string;
 }
 
 export interface UpdateTaxonomyPayload {
 	uuid: string;
-	meta: {
-		label: string;
-	};
+	label: string;
+	description: string;
+	status: string;
 }

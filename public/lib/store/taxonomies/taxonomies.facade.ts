@@ -98,7 +98,7 @@ export class TaxonomiesFacade {
 			this.service
 				.getTaxonomies(searchParams)
 				.then(response => {
-					const paging = response.paging;
+					const paging = response._page;
 
 					this.listStore.update({
 						paging,
@@ -106,11 +106,11 @@ export class TaxonomiesFacade {
 					});
 
 					return {
-						perPage: paging.limit,
+						perPage: paging.size,
 						currentPage: taxonomiesListPaginator.currentPage,
-						lastPage: paging.total / paging.limit,
-						total: paging.total,
-						data: response.data,
+						lastPage: paging.totalPages,
+						total: paging.totalElements,
+						data: response?._embedded.resourceList,
 					};
 				})
 				.catch(error => {
@@ -143,8 +143,8 @@ export class TaxonomiesFacade {
 		this.service
 			.getTaxonomies(searchParams)
 			.then(response => {
-				if (response) {
-					this.listStore.set(response.data);
+				if (response?._embedded.resourceList) {
+					this.listStore.set(response._embedded.resourceList);
 					this.listStore.update({
 						error: false,
 						isFetching: false,
@@ -187,7 +187,7 @@ export class TaxonomiesFacade {
 		}
 	): Promise<TaxonomyDetailResponse | void> {
 		this.detailStore.setIsCreating(true);
-		const alertMessages = getAlertMessages(payload.meta.label);
+		const alertMessages = getAlertMessages(payload.label);
 
 		return this.service
 			.createTaxonomy(payload)
@@ -226,7 +226,7 @@ export class TaxonomiesFacade {
 		}
 	): Promise<TaxonomyDetailResponse | void> {
 		this.detailStore.setIsUpdatingEntity(true, payload.uuid);
-		const alertMessages = getAlertMessages(payload.meta.label);
+		const alertMessages = getAlertMessages(payload.label);
 
 		return this.service
 			.updateTaxonomy(payload)

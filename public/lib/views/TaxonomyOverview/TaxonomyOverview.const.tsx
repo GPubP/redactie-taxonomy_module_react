@@ -11,31 +11,15 @@ import { TableColumn } from '../../taxonomy.types';
 import { OverviewTableRow } from './TaxonomyOverview.types';
 
 export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
-	page: {
-		defaultValue: 1,
-		type: 'number',
-	},
-	skip: {
-		defaultValue: 0,
-		type: 'number',
-	},
-	limit: {
+	pagesize: {
 		defaultValue: 10,
 		type: 'number',
-	},
-	search: {
-		defaultValue: '',
-		type: 'string',
-	},
-	sort: {
-		defaultValue: '',
-		type: 'string',
 	},
 };
 
 export const DEFAULT_FILTER_FORM: FilterFormState = {
 	search: '',
-	status: '',
+	publishStatus: '',
 };
 
 export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow>[] => [
@@ -57,21 +41,21 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 	},
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
-		value: 'status',
-		component(status: string) {
-			return status;
+		value: 'publishStatus',
+		component(publishStatus: string) {
+			return publishStatus;
 		},
 	},
 	{
 		label: '',
 		classList: ['u-text-right'],
 		disableSorting: true,
-		component(value: unknown, { navigate, uuid }: OverviewTableRow) {
+		component(value: unknown, { navigate, id }: OverviewTableRow) {
 			return (
 				<Button
 					ariaLabel="Edit"
 					icon="edit"
-					onClick={() => navigate(MODULE_PATHS.detail, { taxonomyUuid: uuid })}
+					onClick={() => navigate(MODULE_PATHS.detail, { taxonomyUuid: id })}
 					transparent
 				/>
 			);
