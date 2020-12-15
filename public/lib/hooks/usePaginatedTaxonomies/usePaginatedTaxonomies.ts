@@ -33,9 +33,7 @@ const usePaginatedTaxonomies: UsePaginatedTaxonomies = (searchParams, clearCache
 				}),
 				tap(() => taxonomiesFacade.setIsFetching(true)),
 				switchMap(([, searchParams]) =>
-					paginator.getPage(() =>
-						taxonomiesFacade.getTaxonomiesPaginated(omit(['page'], searchParams))
-					)
+					paginator.getPage(() => taxonomiesFacade.getTaxonomiesPaginated(searchParams))
 				)
 			)
 			.subscribe(result => {
