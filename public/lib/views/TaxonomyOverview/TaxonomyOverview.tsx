@@ -93,10 +93,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 	};
 
 	const onPageChange = (page: number): void => {
-		setQuery({
-			// skip: (page - 1) * query.pagesize,
-			page,
-		});
+		setQuery({ page });
 	};
 
 	const onOrderBy = (orderBy: OrderBy): void => {
