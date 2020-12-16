@@ -12,6 +12,8 @@ export const MODULE_PATHS = {
 	overview: `${root}/overzicht`,
 
 	create: `${root}/aanmaken`,
+
+	detail: `${root}/:taxonomyUuid`,
 };
 
 export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): BreadcrumbOptions => ({
@@ -27,3 +29,14 @@ export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): Breadcrumb
 		},
 	],
 });
+
+export const PUBLISH_STATUS_OPTIONS = [
+	{
+		label: 'Werkversie',
+		value: 'draft',
+	},
+	{
+		label: 'Gepubliceerd',
+		value: 'published',
+	},
+];

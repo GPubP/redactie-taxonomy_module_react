@@ -1,0 +1,40 @@
+import { parseSearchParams, SearchParams } from '@redactie/utils';
+
+import { api } from '../api';
+
+import {
+	DEFAULT_TAXONOMIES_SEARCH_PARAMS,
+	TAXONOMIES_PREFIX_URL,
+} from './taxonomies.service.const';
+import {
+	CreateTaxonomyPayload,
+	TaxonomiesResponse,
+	TaxonomyDetailResponse,
+	UpdateTaxonomyPayload,
+} from './taxonomies.service.types';
+
+export class TaxonomiesApiService {
+	public async getTaxonomies(
+		searchParams: SearchParams = DEFAULT_TAXONOMIES_SEARCH_PARAMS
+	): Promise<TaxonomiesResponse> {
+		return await api
+			.get(TAXONOMIES_PREFIX_URL, { searchParams: parseSearchParams(searchParams) })
+			.json();
+	}
+
+	public async getTaxonomy(taxonomyId: string): Promise<TaxonomyDetailResponse> {
+		return await api.get(`${TAXONOMIES_PREFIX_URL}/${taxonomyId}`).json();
+	}
+
+	public async createTaxonomy(taxonomy: CreateTaxonomyPayload): Promise<TaxonomyDetailResponse> {
+		return await api.post(`${TAXONOMIES_PREFIX_URL}/`, { json: taxonomy }).json();
+	}
+
+	public async updateTaxonomy(taxonomy: UpdateTaxonomyPayload): Promise<TaxonomyDetailResponse> {
+		return await api
+			.put(`${TAXONOMIES_PREFIX_URL}/${taxonomy.uuid}`, { json: taxonomy })
+			.json();
+	}
+}
+
+export const taxonomiesApiService = new TaxonomiesApiService();
