@@ -1,4 +1,4 @@
-const { getModuleConfig } = require('@redactie/utils/dist/webpack');
+const { getModuleConfig, getWorkerConfig } = require('@redactie/utils/dist/webpack');
 
 const packageJSON = require('./package.json');
 
@@ -12,5 +12,7 @@ module.exports = env => {
 		},
 	})(env);
 
-	return defaultConfig;
+	const workerConfig = getWorkerConfig();
+
+	return [workerConfig, defaultConfig];
 };
