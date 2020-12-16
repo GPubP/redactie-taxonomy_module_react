@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { Tab } from '../../customCC.types';
+import { Tab } from '../../taxonomy.types';
 
 const useActiveTabs = (tabs: Tab[], pathname: string): Tab[] => {
 	const activeTabs = useMemo(() => {

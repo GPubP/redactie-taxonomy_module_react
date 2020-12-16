@@ -196,7 +196,7 @@ export class TaxonomiesFacade {
 					isCreating: false,
 					error: null,
 				});
-				this.detailStore.upsert(taxonomy.uuid, taxonomy);
+				this.detailStore.upsert(taxonomy.id, taxonomy);
 				this.listPaginator.clearCache();
 
 				// Timeout because the alert is visible on the edit page
@@ -235,7 +235,7 @@ export class TaxonomiesFacade {
 					isUpdating: false,
 					error: null,
 				});
-				this.detailStore.upsert(taxonomy.uuid, taxonomy);
+				this.detailStore.upsert(taxonomy.id, taxonomy);
 				// update item in list?
 
 				this.listPaginator.clearCache();
@@ -268,8 +268,8 @@ export class TaxonomiesFacade {
 		return this.service
 			.getTaxonomy(taxonomyId)
 			.then(response => {
-				this.detailStore.upsert(response.uuid, response);
-				this.detailStore.ui.upsert(response.uuid, { error: null, isFetching: false });
+				this.detailStore.upsert(response.id, response);
+				this.detailStore.ui.upsert(response.id, { error: null, isFetching: false });
 			})
 			.catch(error => {
 				showAlert(serviceOptions.alertContainerId, 'error', alertMessages.fetchOne.error);
