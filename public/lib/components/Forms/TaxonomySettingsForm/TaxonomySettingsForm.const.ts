@@ -6,7 +6,7 @@ import { SelectOption } from '../../../taxonomy.types';
 export const TAXONOMY_SETTINGS_VALIDATION_SCHEMA = object().shape({
 	label: string().required('Naam is een verplicht veld'),
 	description: string(),
-	status: string().required('Status is een verplicht veld'),
+	publishStatus: string().required('Status is een verplicht veld'),
 });
 
 export const SETTINGS_PUBLISH_STATUS_OPTIONS: SelectOption[] = [
