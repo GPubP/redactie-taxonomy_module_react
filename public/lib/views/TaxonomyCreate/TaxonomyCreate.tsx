@@ -23,8 +23,9 @@ import {
 	DETAIL_TABS,
 	MODULE_PATHS,
 } from '../../taxonomy.const';
+import { TaxonomyRouteProps } from '../../taxonomy.types';
 
-const TaxonomyCreate: FC<any> = ({ location, route, taxonomy }) => {
+const TaxonomyCreate: FC<TaxonomyRouteProps> = ({ location, route }) => {
 	/**
 	 * Hooks
 	 */
@@ -39,7 +40,7 @@ const TaxonomyCreate: FC<any> = ({ location, route, taxonomy }) => {
 		...BREADCRUMB_OPTIONS(generatePath),
 		extraBreadcrumbs: [
 			...(BREADCRUMB_OPTIONS(generatePath).extraBreadcrumbs || []),
-			{ name: 'Content componenten', target: generatePath(MODULE_PATHS.overview) },
+			{ name: 'Taxonomie', target: generatePath(MODULE_PATHS.overview) },
 		],
 	});
 
@@ -72,8 +73,8 @@ const TaxonomyCreate: FC<any> = ({ location, route, taxonomy }) => {
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			allowedPaths: [],
-			taxonomy: taxonomy || generateEmptyTaxonomy(),
-			onCancel: () => navigate(MODULE_PATHS.admin),
+			taxonomy: generateEmptyTaxonomy(),
+			onCancel: () => navigate(MODULE_PATHS.overview),
 			onSubmit: createTaxonomy,
 		};
 
@@ -95,7 +96,7 @@ const TaxonomyCreate: FC<any> = ({ location, route, taxonomy }) => {
 					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),
 					component: Link,
 				})}
-				title="Content type aanmaken"
+				title="Taxonomie aanmaken"
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>

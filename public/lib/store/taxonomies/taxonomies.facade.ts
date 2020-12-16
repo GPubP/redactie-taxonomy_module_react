@@ -35,7 +35,6 @@ import {
 	GetTaxonomiesPaginatedPayloadOptions,
 	GetTaxonomiesPayloadOptions,
 	GetTaxonomyPayloadOptions,
-	TaxonomyUIModel,
 	UpdateTaxonomyPayloadOptions,
 } from './taxonomies.types';
 
@@ -53,11 +52,9 @@ export class TaxonomiesFacade {
 	public readonly taxonomies$ = this.listQuery.taxonomies$;
 	public readonly listError$ = this.listQuery.error$;
 	public readonly isFetching$ = this.listQuery.isFetching$;
+	public readonly UIState$ = this.listQuery.selectUIState();
 	public setIsFetching(isFetching = false): void {
 		this.listStore.setIsFetching(isFetching);
-	}
-	public selectUIState(): Observable<TaxonomyUIModel> {
-		return this.listQuery.selectUIState();
 	}
 	public getIsFetching(): boolean {
 		return this.listQuery.getIsFetching();
