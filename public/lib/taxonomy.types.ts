@@ -53,3 +53,11 @@ export interface SelectOption {
 	value: string;
 	disabled?: boolean;
 }
+
+export interface Tab {
+	id?: string;
+	name: string;
+	target: string;
+	active: boolean;
+	disabled?: boolean;
+}
