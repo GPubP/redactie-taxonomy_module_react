@@ -14,8 +14,10 @@ export const MODULE_PATHS = {
 	overview: `${root}/overzicht`,
 
 	create: `${root}/aanmaken`,
+	createSettings: `${root}/aanmaken/instellingen`,
 
 	detail: `${root}/:taxonomyUuid`,
+	detailSettings: `${root}/:taxonomyUuid/instellingen`,
 	detailTerms: `${root}/:taxonomyUuid/termen`,
 };
 
@@ -61,5 +63,6 @@ export const PUBLISH_STATUS_OPTIONS = [
 
 export const ALERT_CONTAINER_IDS = {
 	create: 'taxonomy-create',
+	detailSettings: 'taxonomy-detail-settings',
 	detailTerms: 'taxonomy-detail-terms',
 };

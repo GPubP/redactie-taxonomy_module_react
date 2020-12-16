@@ -3,6 +3,9 @@ import { AlertProps } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 
+import { CreateTaxonomyPayload } from './services/taxonomies';
+import { TaxonomyDetailModel } from './store/taxonomies';
+
 export interface TaxonomyModuleRouteProps<Params extends { [K in keyof Params]?: string } = {}>
 	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
@@ -16,6 +19,14 @@ export interface TaxonomyRouteParams {
 export interface TaxonomyRouteProps<Params = TaxonomyRouteParams>
 	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
+}
+
+export interface TaxonomyDetailRouteProps<Params = TaxonomyRouteParams>
+	extends RouteConfigComponentProps<Params> {
+	readonly allowedPaths?: string[];
+	readonly taxonomy: TaxonomyDetailModel;
+	onCancel: () => void;
+	onSubmit: (data: CreateTaxonomyPayload | TaxonomyDetailModel, tab: Tab) => void;
 }
 
 // TODO: move to utils types

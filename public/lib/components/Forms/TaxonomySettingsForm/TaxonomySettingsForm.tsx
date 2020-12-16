@@ -14,6 +14,7 @@ import { TaxonomySettingFormProps } from './TaxonomySettingsForm.types';
 const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 	children,
 	formikRef,
+	isUpdate = false,
 	taxonomy,
 	onSubmit,
 }) => {
@@ -77,6 +78,10 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 								<ErrorMessage component="p" name="publishStatus" />
 							</div>
 						</div>
+
+						{isUpdate && (
+							<div className="row u-margin-bottom-lg">{/* TODO: add delete */}</div>
+						)}
 
 						{typeof children === 'function'
 							? (children as FormikChildrenFn<TaxonomyDetailModel>)(formikProps)
