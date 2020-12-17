@@ -8,7 +8,7 @@ import {
 	TaxonomiesApiService,
 	taxonomiesApiService,
 	TaxonomyDetailResponse,
-	UpdateTaxonomyPayload,
+	UpdateTaxonomySettingsPayload,
 } from '../../services/taxonomies';
 
 import {
@@ -217,13 +217,13 @@ export class TaxonomiesFacade {
 	}
 
 	public updateTaxonomy(
-		payload: UpdateTaxonomyPayload,
+		payload: UpdateTaxonomySettingsPayload,
 		options: UpdateTaxonomyPayloadOptions = {
 			alertContainerId: TAXONOMIES_ALERT_CONTAINER_IDS.create,
 		}
 	): Promise<TaxonomyDetailResponse | void> {
 		this.detailStore.setIsUpdatingEntity(true, payload.id);
-		const alertMessages = getAlertMessages(payload.label);
+		const alertMessages = getAlertMessages(payload.body.label);
 
 		return this.service
 			.updateTaxonomySettings(payload)

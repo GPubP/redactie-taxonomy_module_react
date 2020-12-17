@@ -1,12 +1,15 @@
-export interface Taxonomy {
+export interface Taxonomy extends TaxonomySettings {
 	createdAt: string;
 	createdBy: string;
-	description: string;
 	id: number;
-	label: string;
-	publishStatus: string;
 	updatedAt: string;
 	updatedBy: string;
+}
+
+export interface TaxonomySettings {
+	description: string;
+	label: string;
+	publishStatus: string;
 }
 
 /**
@@ -35,15 +38,9 @@ export type TaxonomyDetailResponse = Taxonomy;
  * =========================
  */
 
-export interface CreateTaxonomyPayload {
-	label: string;
-	description: string;
-	publishStatus: string;
-}
+export type CreateTaxonomyPayload = TaxonomySettings;
 
-export interface UpdateTaxonomyPayload {
+export type UpdateTaxonomySettingsPayload = {
 	id: number;
-	label: string;
-	description: string;
-	publishStatus: string;
-}
+	body: TaxonomySettings;
+};

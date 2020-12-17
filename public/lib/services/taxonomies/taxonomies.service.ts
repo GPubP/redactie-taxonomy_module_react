@@ -10,7 +10,7 @@ import {
 	CreateTaxonomyPayload,
 	TaxonomiesResponse,
 	TaxonomyDetailResponse,
-	UpdateTaxonomyPayload,
+	UpdateTaxonomySettingsPayload,
 } from './taxonomies.service.types';
 
 export class TaxonomiesApiService {
@@ -30,9 +30,11 @@ export class TaxonomiesApiService {
 		return await api.post(`${TAXONOMIES_PREFIX_URL}/`, { json: taxonomy }).json();
 	}
 
-	public async updateTaxonomy(taxonomy: UpdateTaxonomyPayload): Promise<TaxonomyDetailResponse> {
+	public async updateTaxonomySettings(
+		taxonomy: UpdateTaxonomySettingsPayload
+	): Promise<TaxonomyDetailResponse> {
 		return await api
-			.put(`${TAXONOMIES_PREFIX_URL}/${taxonomy.uuid}`, { json: taxonomy })
+			.put(`${TAXONOMIES_PREFIX_URL}/${taxonomy.id}/settings`, { json: taxonomy.body })
 			.json();
 	}
 }
