@@ -1,6 +1,6 @@
 {
   "name": "@redactie/taxonomy-module",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "redactie taxonomy module",
   "main": "dist/redactie-taxonomy-module.umd.js",
   "module": "dist/redactie-taxonomy-module.umd.js",
@@ -88,6 +88,8 @@
     "typescript-plugin-css-modules": "2.1.2",
     "webpack": "4.41.5",
     "webpack-cli": "3.3.10",
-    "yup": "0.28.5"
-  }
+    "yup": "0.28.5",
+    "list-to-tree-lite": "0.1.0"
+  },
+  "dependencies": {}
 }

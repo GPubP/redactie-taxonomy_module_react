@@ -5,6 +5,7 @@ import { Tab } from './taxonomy.types';
 
 export const TENANT_ROOT = '/:tenantId';
 export const root = '/taxonomie';
+export const detail = `${root}/:taxonomyUuid`;
 
 export const MODULE_PATHS = {
 	admin: '/dashboard',
@@ -19,10 +20,21 @@ export const MODULE_PATHS = {
 	detail: `${root}/:taxonomyUuid`,
 	detailSettings: `${root}/:taxonomyUuid/instellingen`,
 	detailTerms: `${root}/:taxonomyUuid/termen`,
+
+	terms: {
+		create: `${detail}/termen/aanmaken`,
+
+		detail: `${detail}/termen/:termId`,
+	},
 };
 
 export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): BreadcrumbOptions => ({
-	excludePaths: ['/', `${TENANT_ROOT}`, `${TENANT_ROOT}${root}`],
+	excludePaths: [
+		'/',
+		`${TENANT_ROOT}`,
+		`${TENANT_ROOT}${root}`,
+		`${TENANT_ROOT}${MODULE_PATHS.terms.detail}`,
+	],
 	extraBreadcrumbs: [
 		{
 			name: 'Home',
