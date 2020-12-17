@@ -6,43 +6,43 @@ export const getAlertMessages = (
 	create: {
 		success: {
 			title: 'Aangemaakt',
-			message: `U hebt de taxonomy ${name} succesvol aangemaakt`,
+			message: `U hebt de taxonomie ${name} succesvol aangemaakt`,
 		},
 		error: {
 			title: 'Aanmaken mislukt',
-			message: `Aanmaken van de taxonomy ${name} is mislukt`,
+			message: `Aanmaken van de taxonomie ${name} is mislukt`,
 		},
 	},
 	update: {
 		success: {
 			title: 'Bewaard',
-			message: `U hebt de taxonomy ${name} succesvol gewijzigd`,
+			message: `U hebt de taxonomie ${name} succesvol gewijzigd`,
 		},
 		error: {
 			title: 'Bewaren mislukt',
-			message: `Bewaren van de taxonomy ${name} is mislukt`,
+			message: `Bewaren van de taxonomie ${name} is mislukt`,
 		},
 	},
 	fetch: {
 		error: {
 			title: 'Ophalen',
-			message: 'Ophalen van taxonomies is mislukt',
+			message: 'Ophalen van taxonomieën is mislukt',
 		},
 	},
 	fetchOne: {
 		error: {
 			title: 'Ophalen',
-			message: 'Ophalen van taxonomy is mislukt',
+			message: 'Ophalen van taxonomie is mislukt',
 		},
 	},
 	delete: {
 		success: {
 			title: 'Verwijderen',
-			message: `U hebt de taxonomy ${name} succesvol verwijderd`,
+			message: `U hebt de taxonomie ${name} succesvol verwijderd`,
 		},
 		error: {
 			title: 'Verwijderen',
-			message: `Verwijderen van taxonomy ${name} is mislukt`,
+			message: `Verwijderen van taxonomie ${name} is mislukt`,
 		},
 	},
 });

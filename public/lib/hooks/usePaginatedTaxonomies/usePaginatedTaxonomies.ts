@@ -1,6 +1,6 @@
 import { PaginationResponse } from '@datorama/akita';
 import { SearchParams, useObservable, usePrevious } from '@redactie/utils';
-import { equals, omit } from 'ramda';
+import { equals } from 'ramda';
 import { useEffect, useState } from 'react';
 import { combineLatest, Subject } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
@@ -56,7 +56,8 @@ const usePaginatedTaxonomies: UsePaginatedTaxonomies = (searchParams, clearCache
 
 		if (
 			searchParams.sort !== prevSearchParams?.sort ||
-			searchParams.search !== prevSearchParams?.search ||
+			searchParams.label !== prevSearchParams?.label ||
+			searchParams.publishStatus !== prevSearchParams?.publishStatus ||
 			clearCache
 		) {
 			paginator.clearCache();
@@ -74,8 +75,9 @@ const usePaginatedTaxonomies: UsePaginatedTaxonomies = (searchParams, clearCache
 		prevSearchParams,
 		searchParams,
 		searchParams.page,
-		searchParams.search,
+		searchParams.label,
 		searchParams.sort,
+		searchParams.publishStatus,
 	]);
 
 	return {

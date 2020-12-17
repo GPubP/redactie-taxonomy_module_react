@@ -29,7 +29,7 @@ import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
 import { TaxonomyTermRouteProps } from './TaxonomyTermDetail.types';
 
 export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
-	const taxonomyId = match.params.taxonomyUuid ? parseInt(match.params.taxonomyUuid) : null;
+	const taxonomyId = match.params.taxonomyId ? parseInt(match.params.taxonomyId) : null;
 	const termId = match.params.termId ? parseInt(match.params.termId) : null;
 	const isUpdate = !!termId;
 
@@ -40,15 +40,17 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	const { generatePath, navigate } = useNavigate();
 	const routes = useRoutes();
 	const formikRef = useRef<FormikProps<FormikValues>>();
+
+	const taxonomyTerms = useTaxonomyTerms();
+	const [taxonomyTerm] = useActiveTaxonomyTerm(taxonomyId, termId);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS(generatePath),
 		extraBreadcrumbs: [
 			...(BREADCRUMB_OPTIONS(generatePath).extraBreadcrumbs || []),
-			{ name: 'Content componenten', target: generatePath(MODULE_PATHS.overview) },
+			{ name: 'Taxonomie', target: generatePath(MODULE_PATHS.overview) },
+			{ name: 'Termen', target: generatePath(MODULE_PATHS.overview) },
 		],
 	});
-	const taxonomyTerms = useTaxonomyTerms();
-	const [taxonomyTerm] = useActiveTaxonomyTerm(taxonomyId, termId);
 	const [listState, detailState] = useTaxonomyTermsUIStates();
 	const isLoading = useMemo(
 		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
@@ -94,7 +96,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		isUpdate ? updateTerm(values) : createTerm(values);
 	};
 	const onCancel = (): void => {
-		taxonomyId && navigate(MODULE_PATHS.detailTerms, { taxonomyUuid: taxonomyId });
+		taxonomyId && navigate(MODULE_PATHS.detailTerms, { taxonomyId });
 	};
 
 	/**

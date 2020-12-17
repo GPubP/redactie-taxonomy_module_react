@@ -5,10 +5,12 @@ import React, { FC } from 'react';
 
 import { getFieldState } from '../../../helpers';
 import { TaxonomyDetailModel } from '../../../store/taxonomies';
-import { PUBLISH_STATUS_OPTIONS } from '../../../taxonomy.const';
 import { FormikChildrenFn } from '../../../taxonomy.types';
 
-import { TAXONOMY_SETTINGS_VALIDATION_SCHEMA } from './TaxonomySettingsForm.const';
+import {
+	SETTINGS_PUBLISH_STATUS_OPTIONS,
+	TAXONOMY_SETTINGS_VALIDATION_SCHEMA,
+} from './TaxonomySettingsForm.const';
 import { TaxonomySettingFormProps } from './TaxonomySettingsForm.types';
 
 const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
@@ -30,25 +32,23 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 
 				return (
 					<>
-						<div className="row">
-							<div className="col-xs-12 col-md-8 row middle-xs">
-								<div className="col-xs-12 col-md-8">
-									<Field
-										as={TextField}
-										description="Geef de taxonomie een korte en duidelijke naam. Deze naam verschijnt in de applicatie."
-										id="label"
-										label="Naam"
-										name="label"
-										required
-										state={getFieldState(touched, errors, 'label')}
-									/>
-									<ErrorMessage component="p" name="label" />
-								</div>
+						<div className="row u-margin-bottom">
+							<div className="col-xs-12 col-md-6">
+								<Field
+									as={TextField}
+									description="Geef de taxonomie een korte en duidelijke naam. Deze naam verschijnt in de applicatie."
+									id="label"
+									label="Naam"
+									name="label"
+									required
+									state={getFieldState(touched, errors, 'label')}
+								/>
+								<ErrorMessage component="p" name="label" />
 							</div>
 						</div>
 
-						<div className="row u-margin-bottom-lg">
-							<div className="col-xs-12 u-margin-top">
+						<div className="row u-margin-bottom">
+							<div className="col-xs-12">
 								<Field
 									as={Textarea}
 									id="description"
@@ -63,13 +63,14 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 						</div>
 
 						<div className="row u-margin-bottom-lg">
-							<div className="col-xs-12 u-margin-top">
+							<div className="col-xs-12 col-md-6">
 								<Field
 									as={Select}
 									id="publishStatus"
-									label="Beschrijving"
+									label="Status"
 									name="publishStatus"
-									options={PUBLISH_STATUS_OPTIONS}
+									options={SETTINGS_PUBLISH_STATUS_OPTIONS}
+									required
 								/>
 								<small className="u-block u-text-light u-margin-top-xs">
 									Geef de taxonomie een duidelijke beschrijving voor in het
@@ -79,9 +80,7 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 							</div>
 						</div>
 
-						{isUpdate && (
-							<div className="row u-margin-bottom-lg">{/* TODO: add delete */}</div>
-						)}
+						{isUpdate && <div className="row">{/* TODO: add delete */}</div>}
 
 						{typeof children === 'function'
 							? (children as FormikChildrenFn<TaxonomyDetailModel>)(formikProps)

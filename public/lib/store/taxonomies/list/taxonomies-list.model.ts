@@ -4,4 +4,4 @@ import { Taxonomy } from '../../../services/taxonomies';
 
 export type TaxonomyListModel = Taxonomy;
 
-export type TaxonomiesListState = CacheEntityState<TaxonomyListModel, string>;
+export type TaxonomiesListState = CacheEntityState<TaxonomyListModel, number>;

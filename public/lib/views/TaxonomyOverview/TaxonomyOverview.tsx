@@ -58,10 +58,10 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 
 	// Set initial values with query params
 	useEffect(() => {
-		const { search = '', publishStatus = '' } = query;
+		const { label = '', publishStatus = '' } = query;
 
-		if (search || publishStatus) {
-			setFilterFormState({ search, publishStatus });
+		if (label || publishStatus) {
+			setFilterFormState({ label, publishStatus });
 		}
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -72,15 +72,20 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 	const createFilters = (values: FilterFormState): FilterItem[] => {
 		return [
 			{
-				key: 'search',
+				key: 'label',
 				valuePrefix: 'Zoekterm',
-				value: values.search,
+				value: values.label,
+			},
+			{
+				key: 'publishStatus',
+				valuePrefix: 'Status',
+				value: values.publishStatus,
 			},
 		].filter(f => !!f.value);
 	};
 
 	const clearAllFilters = (): void => {
-		setQuery({ search: '' });
+		setQuery({ label: '', publishStatus: '' });
 		setFilterFormState(DEFAULT_FILTER_FORM);
 	};
 
@@ -102,7 +107,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 
 	const onApplyFilters = (values: FilterFormState): void => {
 		setFilterFormState(values);
-		setQuery({ search: values.search });
+		setQuery(values);
 	};
 
 	const activeSorting = parseStringToOrderBy(query.sort);
@@ -117,9 +122,9 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 			return null;
 		}
 
-		const customCCRows: OverviewTableRow[] = pagination.data.map(taxonomy => ({
+		const customTaxonomyRows: OverviewTableRow[] = pagination.data.map(taxonomy => ({
 			id: taxonomy.id,
-			name: taxonomy.label,
+			label: taxonomy.label,
 			description: taxonomy.description,
 			publishStatus: taxonomy.publishStatus,
 			navigate,
@@ -139,7 +144,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 				<PaginatedTable
 					className="u-margin-top"
 					columns={OVERVIEW_COLUMNS(t)}
-					rows={customCCRows}
+					rows={customTaxonomyRows}
 					currentPage={pagination?.currentPage || 1}
 					itemsPerPage={query.pagesize}
 					onPageChange={onPageChange}

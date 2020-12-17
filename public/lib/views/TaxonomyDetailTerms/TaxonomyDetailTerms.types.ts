@@ -1,9 +1,9 @@
 import { NavigateFn } from '@redactie/utils';
 
-export interface OverviewTableRow {
+export interface DetailTermTableRow {
 	id: number;
+	taxonomyId: number;
 	label: string;
 	description: string;
-	publishStatus: string;
 	navigate: NavigateFn;
 }

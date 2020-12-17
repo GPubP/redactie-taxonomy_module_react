@@ -8,7 +8,7 @@ import {
 	TaxonomiesApiService,
 	taxonomiesApiService,
 	TaxonomyDetailResponse,
-	UpdateTaxonomyPayload,
+	UpdateTaxonomySettingsPayload,
 } from '../../services/taxonomies';
 
 import {
@@ -35,7 +35,6 @@ import {
 	GetTaxonomiesPaginatedPayloadOptions,
 	GetTaxonomiesPayloadOptions,
 	GetTaxonomyPayloadOptions,
-	TaxonomyUIModel,
 	UpdateTaxonomyPayloadOptions,
 } from './taxonomies.types';
 
@@ -53,11 +52,9 @@ export class TaxonomiesFacade {
 	public readonly taxonomies$ = this.listQuery.taxonomies$;
 	public readonly listError$ = this.listQuery.error$;
 	public readonly isFetching$ = this.listQuery.isFetching$;
+	public readonly UIState$ = this.listQuery.selectUIState();
 	public setIsFetching(isFetching = false): void {
 		this.listStore.setIsFetching(isFetching);
-	}
-	public selectUIState(): Observable<TaxonomyUIModel> {
-		return this.listQuery.selectUIState();
 	}
 	public getIsFetching(): boolean {
 		return this.listQuery.getIsFetching();
@@ -72,7 +69,7 @@ export class TaxonomiesFacade {
 		TaxonomyDetailUIModel
 	>() as Observable<TaxonomyDetailUIModel>;
 
-	public selectTaxonomyUIState(taxonomyId: string): Observable<TaxonomyDetailUIModel> {
+	public selectTaxonomyUIState(taxonomyId?: number): Observable<TaxonomyDetailUIModel> {
 		return this.detailQuery.ui.selectEntity(taxonomyId);
 	}
 
@@ -161,7 +158,7 @@ export class TaxonomiesFacade {
 	}
 
 	// DETAIL FUNCTIONS
-	public setActiveTaxonomy(taxonomyId: string): void {
+	public setActiveTaxonomy(taxonomyId: number): void {
 		this.detailStore.setActive(taxonomyId);
 		this.detailStore.ui.setActive(taxonomyId);
 	}
@@ -171,11 +168,11 @@ export class TaxonomiesFacade {
 		this.detailStore.ui.setActive(null);
 	}
 
-	public hasActiveTaxonomy(taxonomyId: string): boolean {
+	public hasActiveTaxonomy(taxonomyId: number): boolean {
 		return this.detailQuery.hasActive(taxonomyId);
 	}
 
-	public hasTaxonomy(taxonomyId: string): boolean {
+	public hasTaxonomy(taxonomyId: number): boolean {
 		return this.detailQuery.hasEntity(taxonomyId);
 	}
 
@@ -220,18 +217,18 @@ export class TaxonomiesFacade {
 	}
 
 	public updateTaxonomy(
-		payload: UpdateTaxonomyPayload,
+		payload: UpdateTaxonomySettingsPayload,
 		options: UpdateTaxonomyPayloadOptions = {
 			alertContainerId: TAXONOMIES_ALERT_CONTAINER_IDS.create,
 		}
 	): Promise<TaxonomyDetailResponse | void> {
-		this.detailStore.setIsUpdatingEntity(true, payload.uuid);
-		const alertMessages = getAlertMessages(payload.label);
+		this.detailStore.setIsUpdatingEntity(true, payload.id);
+		const alertMessages = getAlertMessages(payload.body.label);
 
 		return this.service
-			.updateTaxonomy(payload)
+			.updateTaxonomySettings(payload)
 			.then(taxonomy => {
-				this.detailStore.ui.update(payload.uuid, {
+				this.detailStore.ui.update(payload.id, {
 					isUpdating: false,
 					error: null,
 				});
@@ -242,16 +239,16 @@ export class TaxonomiesFacade {
 				showAlert(options.alertContainerId, 'success', alertMessages.update.success);
 				return taxonomy;
 			})
-			.then(error => {
+			.catch(error => {
 				showAlert(options.alertContainerId, 'error', alertMessages.update.error);
-				this.detailStore.ui.update(payload.uuid, {
+				this.detailStore.ui.update(payload.id, {
 					isUpdating: false,
 					error,
 				});
 			});
 	}
 
-	public getTaxonomy(taxonomyId: string, options?: GetTaxonomyPayloadOptions): Promise<void> {
+	public getTaxonomy(taxonomyId: number, options?: GetTaxonomyPayloadOptions): Promise<void> {
 		const defaultOptions = {
 			alertContainerId: TAXONOMIES_ALERT_CONTAINER_IDS.fetchOne,
 			force: false,

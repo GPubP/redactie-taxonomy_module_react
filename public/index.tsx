@@ -8,8 +8,10 @@ import { TaxonomyModuleRouteProps } from './lib/taxonomy.types';
 import {
 	TaxonomyCreate,
 	TaxonomyDetailSettings,
+	TaxonomyDetailTerms,
 	TaxonomyOverview,
 	TaxonomyTermDetail,
+	TaxonomyUpdate,
 } from './lib/views';
 
 const TaxonomyRoot: FC<TaxonomyModuleRouteProps> = ({ route, tenantId }) => {
@@ -79,6 +81,22 @@ Core.routes.register({
 			path: MODULE_PATHS.terms.detail,
 			breadcrumb: null,
 			component: TaxonomyTermDetail,
+		},
+		{
+			path: MODULE_PATHS.detail,
+			breadcrumb: null,
+			component: TaxonomyUpdate,
+			redirect: MODULE_PATHS.detailSettings,
+			routes: [
+				{
+					path: MODULE_PATHS.detailSettings,
+					component: TaxonomyDetailSettings,
+				},
+				{
+					path: MODULE_PATHS.detailTerms,
+					component: TaxonomyDetailTerms,
+				},
+			],
 		},
 	],
 });

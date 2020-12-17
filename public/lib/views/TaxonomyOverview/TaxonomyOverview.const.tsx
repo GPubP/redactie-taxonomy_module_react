@@ -15,21 +15,29 @@ export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
 		defaultValue: 10,
 		type: 'number',
 	},
+	label: {
+		defaultValue: '',
+		type: 'string',
+	},
+	publishStatus: {
+		defaultValue: '',
+		type: 'string',
+	},
 };
 
 export const DEFAULT_FILTER_FORM: FilterFormState = {
-	search: '',
+	label: '',
 	publishStatus: '',
 };
 
 export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow>[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
-		value: 'name',
-		component(name: string, { description }: OverviewTableRow) {
+		value: 'label',
+		component(label: string, { description }: OverviewTableRow) {
 			return (
 				<>
-					{name}
+					{label}
 					{description && (
 						<p>
 							<small>{description}</small>
@@ -55,7 +63,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 				<Button
 					ariaLabel="Edit"
 					icon="edit"
-					onClick={() => navigate(MODULE_PATHS.detail, { taxonomyUuid: id })}
+					onClick={() => navigate(MODULE_PATHS.detail, { taxonomyId: id })}
 					transparent
 				/>
 			);

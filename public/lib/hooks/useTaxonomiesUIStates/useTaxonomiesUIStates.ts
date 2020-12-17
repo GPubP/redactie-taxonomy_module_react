@@ -1,22 +1,27 @@
 import { useObservable } from '@redactie/utils';
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
-import { taxonomiesFacade } from '../../store/taxonomies';
+import { taxonomiesFacade, TaxonomyDetailUIModel } from '../../store/taxonomies';
 
 import { UseTaxonomiesUIStates } from './useTaxonomiesUIStates.types';
 
-const useTaxonomiesUIStates: UseTaxonomiesUIStates = (taxonomyId = '') => {
-	const taxonomyDetailUIStateObservable = useMemo(
-		() => taxonomiesFacade.selectTaxonomyUIState(taxonomyId),
-		[taxonomyId]
-	);
-	const taxonomyUIStateObservable = useMemo(() => taxonomiesFacade.selectUIState(), []);
-	const taxonomyUIState = useObservable(taxonomyUIStateObservable, {
+const useTaxonomiesUIStates: UseTaxonomiesUIStates = taxonomyId => {
+	const taxonomyUIState = useObservable(taxonomiesFacade.UIState$, {
 		isFetching: false,
 		isCreating: false,
 		error: null,
 	});
-	const taxonomyDetailUIState = useObservable(taxonomyDetailUIStateObservable);
+	const [taxonomyDetailUIState, setTaxonomyDetailUIState] = useState<TaxonomyDetailUIModel>();
+
+	useEffect(() => {
+		const s = taxonomiesFacade
+			.selectTaxonomyUIState(taxonomyId)
+			.subscribe(setTaxonomyDetailUIState);
+
+		return () => {
+			s.unsubscribe();
+		};
+	}, [taxonomyId]);
 
 	return [taxonomyUIState, taxonomyDetailUIState];
 };

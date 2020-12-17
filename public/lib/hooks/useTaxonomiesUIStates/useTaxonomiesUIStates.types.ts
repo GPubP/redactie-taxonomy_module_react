@@ -1,5 +1,5 @@
 import { TaxonomyDetailUIModel, TaxonomyUIModel } from '../../store/taxonomies';
 
 export type UseTaxonomiesUIStates = (
-	taxonomyId?: string
+	taxonomyId?: number
 ) => [TaxonomyUIModel, TaxonomyDetailUIModel | undefined];
