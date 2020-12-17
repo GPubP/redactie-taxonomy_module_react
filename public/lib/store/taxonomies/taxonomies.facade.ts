@@ -239,7 +239,7 @@ export class TaxonomiesFacade {
 				showAlert(options.alertContainerId, 'success', alertMessages.update.success);
 				return taxonomy;
 			})
-			.then(error => {
+			.catch(error => {
 				showAlert(options.alertContainerId, 'error', alertMessages.update.error);
 				this.detailStore.ui.update(payload.id, {
 					isUpdating: false,

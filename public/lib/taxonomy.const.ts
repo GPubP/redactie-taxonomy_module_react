@@ -27,6 +27,7 @@ export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): Breadcrumb
 		`${TENANT_ROOT}`,
 		`${TENANT_ROOT}${root}`,
 		`${TENANT_ROOT}${root}/aanmaken`,
+		`${TENANT_ROOT}${root}/:taxonomyid`,
 	],
 	extraBreadcrumbs: [
 		{
