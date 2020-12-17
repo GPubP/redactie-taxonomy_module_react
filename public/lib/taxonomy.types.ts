@@ -13,7 +13,7 @@ export interface TaxonomyModuleRouteProps<Params extends { [K in keyof Params]?:
 }
 
 export interface TaxonomyRouteParams {
-	taxonomyUuid: string;
+	taxonomyId: string;
 }
 
 export interface TaxonomyRouteProps<Params = TaxonomyRouteParams>

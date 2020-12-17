@@ -25,6 +25,8 @@ import {
 } from '../../taxonomy.const';
 import { TaxonomyRouteProps } from '../../taxonomy.types';
 
+import { TAXONOMY_CREATE_ALLOWED_PATHS } from './TaxonomyCreate.const';
+
 const TaxonomyCreate: FC<TaxonomyRouteProps> = ({ location, route }) => {
 	/**
 	 * Hooks
@@ -62,7 +64,7 @@ const TaxonomyCreate: FC<TaxonomyRouteProps> = ({ location, route }) => {
 			})
 			.then(response => {
 				if (response && response.id) {
-					navigate(MODULE_PATHS.detailTerms, { taxonomyUuid: response.id });
+					navigate(MODULE_PATHS.detailTerms, { taxonomyId: response.id });
 				}
 			});
 	};
@@ -72,7 +74,7 @@ const TaxonomyCreate: FC<TaxonomyRouteProps> = ({ location, route }) => {
 	 */
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
-			allowedPaths: [],
+			allowedPaths: TAXONOMY_CREATE_ALLOWED_PATHS,
 			taxonomy: generateEmptyTaxonomy(),
 			onCancel: () => navigate(MODULE_PATHS.overview),
 			onSubmit: createTaxonomy,
