@@ -222,13 +222,13 @@ export class TaxonomiesFacade {
 			alertContainerId: TAXONOMIES_ALERT_CONTAINER_IDS.create,
 		}
 	): Promise<TaxonomyDetailResponse | void> {
-		this.detailStore.setIsUpdatingEntity(true, payload.uuid);
+		this.detailStore.setIsUpdatingEntity(true, payload.id);
 		const alertMessages = getAlertMessages(payload.label);
 
 		return this.service
 			.updateTaxonomySettings(payload)
 			.then(taxonomy => {
-				this.detailStore.ui.update(payload.uuid, {
+				this.detailStore.ui.update(payload.id, {
 					isUpdating: false,
 					error: null,
 				});
@@ -241,7 +241,7 @@ export class TaxonomiesFacade {
 			})
 			.then(error => {
 				showAlert(options.alertContainerId, 'error', alertMessages.update.error);
-				this.detailStore.ui.update(payload.uuid, {
+				this.detailStore.ui.update(payload.id, {
 					isUpdating: false,
 					error,
 				});
