@@ -1,9 +1,10 @@
-import { object, string } from 'yup';
+import { object, ObjectSchema, string } from 'yup';
 
+import { TaxonomySettings } from '../../../services/taxonomies';
 import { PUBLISH_STATUS_OPTIONS } from '../../../taxonomy.const';
 import { SelectOption } from '../../../taxonomy.types';
 
-export const TAXONOMY_SETTINGS_VALIDATION_SCHEMA = object().shape({
+export const TAXONOMY_SETTINGS_VALIDATION_SCHEMA: ObjectSchema<TaxonomySettings> = object().shape({
 	label: string().required('Naam is een verplicht veld'),
 	description: string(),
 	publishStatus: string().required('Status is een verplicht veld'),

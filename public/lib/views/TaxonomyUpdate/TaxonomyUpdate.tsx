@@ -9,8 +9,16 @@ import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useActiveTabs, useActiveTaxonomy, useTaxonomiesUIStates } from '../../hooks';
-import { BREADCRUMB_OPTIONS, DETAIL_TABS, MODULE_PATHS } from '../../taxonomy.const';
-import { TaxonomyRouteProps } from '../../taxonomy.types';
+import { UpdateTaxonomySettingsPayload } from '../../services/taxonomies';
+import { taxonomiesFacade } from '../../store/taxonomies';
+import {
+	ALERT_CONTAINER_IDS,
+	BREADCRUMB_OPTIONS,
+	DETAIL_TAB_MAP,
+	DETAIL_TABS,
+	MODULE_PATHS,
+} from '../../taxonomy.const';
+import { Tab, TaxonomyRouteProps } from '../../taxonomy.types';
 
 const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 	const { taxonomyId } = match.params;
@@ -51,7 +59,21 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 		navigate(MODULE_PATHS.overview);
 	};
 
-	const pageTitle = activeTaxonomy ? `${activeTaxonomy?.id} bewerken` : 'Taxonomie bewerken';
+	const updateTaxonomy = (body: UpdateTaxonomySettingsPayload['body'], tab: Tab): void => {
+		switch (tab.name) {
+			case DETAIL_TAB_MAP.settings.name: {
+				const payload = { id: Number(taxonomyId), body };
+				const options = { alertContainerId: ALERT_CONTAINER_IDS.detailSettings };
+
+				taxonomiesFacade.updateTaxonomy(payload, options);
+				break;
+			}
+			default:
+				break;
+		}
+	};
+
+	const pageTitle = activeTaxonomy ? `${activeTaxonomy?.label} bewerken` : 'Taxonomie bewerken';
 
 	/**
 	 * Render
@@ -61,6 +83,7 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 		const extraOptions = {
 			taxonomy: activeTaxonomy,
 			onCancel,
+			onSubmit: updateTaxonomy,
 		};
 
 		return (
