@@ -1,6 +1,6 @@
 import { PaginationResponse } from '@datorama/akita';
 import { SearchParams, useObservable, usePrevious } from '@redactie/utils';
-import { equals, omit } from 'ramda';
+import { equals } from 'ramda';
 import { useEffect, useState } from 'react';
 import { combineLatest, Subject } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';

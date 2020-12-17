@@ -3,6 +3,9 @@ import { AlertProps } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 
+import { CreateTaxonomyPayload } from './services/taxonomies';
+import { TaxonomyDetailModel } from './store/taxonomies';
+
 export interface TaxonomyModuleRouteProps<Params extends { [K in keyof Params]?: string } = {}>
 	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
@@ -10,12 +13,20 @@ export interface TaxonomyModuleRouteProps<Params extends { [K in keyof Params]?:
 }
 
 export interface TaxonomyRouteParams {
-	taxonomyUuid: string;
+	taxonomyId: string;
 }
 
 export interface TaxonomyRouteProps<Params = TaxonomyRouteParams>
 	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
+}
+
+export interface TaxonomyDetailRouteProps<Params = TaxonomyRouteParams>
+	extends RouteConfigComponentProps<Params> {
+	readonly allowedPaths?: string[];
+	readonly taxonomy: TaxonomyDetailModel;
+	onCancel: () => void;
+	onSubmit: (data: CreateTaxonomyPayload | TaxonomyDetailModel, tab: Tab) => void;
 }
 
 // TODO: move to utils types
@@ -51,5 +62,13 @@ export type FormikChildrenFn<Values = FormikValues> = (
 export interface SelectOption {
 	label: string;
 	value: string;
+	disabled?: boolean;
+}
+
+export interface Tab {
+	id?: string;
+	name: string;
+	target: string;
+	active: boolean;
 	disabled?: boolean;
 }

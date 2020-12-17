@@ -22,7 +22,7 @@ export class TaxonomiesApiService {
 			.json();
 	}
 
-	public async getTaxonomy(taxonomyId: string): Promise<TaxonomyDetailResponse> {
+	public async getTaxonomy(taxonomyId: number): Promise<TaxonomyDetailResponse> {
 		return await api.get(`${TAXONOMIES_PREFIX_URL}/${taxonomyId}`).json();
 	}
 

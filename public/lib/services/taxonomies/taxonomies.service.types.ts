@@ -26,9 +26,7 @@ export interface TaxonomiesResponse {
 	};
 }
 
-export interface TaxonomyDetailResponse {
-	uuid: string;
-}
+export type TaxonomyDetailResponse = Taxonomy;
 
 /**
  * =========================
@@ -40,12 +38,12 @@ export interface TaxonomyDetailResponse {
 export interface CreateTaxonomyPayload {
 	label: string;
 	description: string;
-	status: string;
+	publishStatus: string;
 }
 
 export interface UpdateTaxonomyPayload {
-	uuid: string;
+	id: number;
 	label: string;
 	description: string;
-	status: string;
+	publishStatus: string;
 }

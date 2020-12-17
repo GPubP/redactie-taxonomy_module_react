@@ -5,7 +5,13 @@ import React, { FC, useMemo } from 'react';
 import { rolesRightsConnector } from './lib/connectors';
 import { MODULE_PATHS } from './lib/taxonomy.const';
 import { TaxonomyModuleRouteProps } from './lib/taxonomy.types';
-import { TaxonomyOverview } from './lib/views';
+import {
+	TaxonomyCreate,
+	TaxonomyDetailSettings,
+	TaxonomyDetailTerms,
+	TaxonomyOverview,
+	TaxonomyUpdate,
+} from './lib/views';
 
 const TaxonomyRoot: FC<TaxonomyModuleRouteProps> = ({ route, tenantId }) => {
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
@@ -45,6 +51,41 @@ Core.routes.register({
 					]),
 				],
 			},
+		},
+		{
+			path: MODULE_PATHS.create,
+			component: TaxonomyCreate,
+			redirect: MODULE_PATHS.createSettings,
+			guardOptions: {
+				guards: [
+					rolesRightsConnector.guards.securityRightsTenantGuard([
+						// TODO: Uncomment this line when the securityright are set
+						// rolesRightsConnector.securityRights.create,
+					]),
+				],
+			},
+			routes: [
+				{
+					path: MODULE_PATHS.createSettings,
+					component: TaxonomyDetailSettings,
+				},
+			],
+		},
+		{
+			path: MODULE_PATHS.detail,
+			breadcrumb: null,
+			component: TaxonomyUpdate,
+			redirect: MODULE_PATHS.detailSettings,
+			routes: [
+				{
+					path: MODULE_PATHS.detailSettings,
+					component: TaxonomyDetailSettings,
+				},
+				{
+					path: MODULE_PATHS.detailTerms,
+					component: TaxonomyDetailTerms,
+				},
+			],
 		},
 	],
 });

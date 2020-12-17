@@ -1,6 +1,8 @@
 import { BreadcrumbOptions } from '@redactie/redactie-core';
 import { NavigateGenerateFn } from '@redactie/utils';
 
+import { Tab } from './taxonomy.types';
+
 export const TENANT_ROOT = '/:tenantId';
 export const root = '/taxonomie';
 
@@ -12,12 +14,20 @@ export const MODULE_PATHS = {
 	overview: `${root}/overzicht`,
 
 	create: `${root}/aanmaken`,
+	createSettings: `${root}/aanmaken/instellingen`,
 
-	detail: `${root}/:taxonomyUuid`,
+	detail: `${root}/:taxonomyId`,
+	detailSettings: `${root}/:taxonomyId/instellingen`,
+	detailTerms: `${root}/:taxonomyId/termen`,
 };
 
 export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): BreadcrumbOptions => ({
-	excludePaths: ['/', `${TENANT_ROOT}`, `${TENANT_ROOT}${root}`],
+	excludePaths: [
+		'/',
+		`${TENANT_ROOT}`,
+		`${TENANT_ROOT}${root}`,
+		`${TENANT_ROOT}${root}/aanmaken`,
+	],
 	extraBreadcrumbs: [
 		{
 			name: 'Home',
@@ -30,6 +40,21 @@ export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): Breadcrumb
 	],
 });
 
+export const DETAIL_TAB_MAP = {
+	settings: {
+		name: 'Instellingen',
+		target: 'instellingen',
+		active: true,
+	},
+	terms: {
+		name: 'Termen',
+		target: 'termen',
+		active: false,
+	},
+};
+
+export const DETAIL_TABS: Tab[] = [DETAIL_TAB_MAP.settings, DETAIL_TAB_MAP.terms];
+
 export const PUBLISH_STATUS_OPTIONS = [
 	{
 		label: 'Werkversie',
@@ -40,3 +65,9 @@ export const PUBLISH_STATUS_OPTIONS = [
 		value: 'published',
 	},
 ];
+
+export const ALERT_CONTAINER_IDS = {
+	create: 'taxonomy-create',
+	detailSettings: 'taxonomy-detail-settings',
+	detailTerms: 'taxonomy-detail-terms',
+};
