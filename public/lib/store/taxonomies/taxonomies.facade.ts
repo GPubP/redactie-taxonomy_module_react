@@ -69,7 +69,7 @@ export class TaxonomiesFacade {
 		TaxonomyDetailUIModel
 	>() as Observable<TaxonomyDetailUIModel>;
 
-	public selectTaxonomyUIState(taxonomyId: number): Observable<TaxonomyDetailUIModel> {
+	public selectTaxonomyUIState(taxonomyId?: number): Observable<TaxonomyDetailUIModel> {
 		return this.detailQuery.ui.selectEntity(taxonomyId);
 	}
 

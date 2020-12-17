@@ -33,8 +33,8 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 			{ name: 'Taxonomie', target: generatePath(MODULE_PATHS.overview) },
 		],
 	});
-	const [activeTaxonomy] = useActiveTaxonomy(taxonomyId);
-	const [, detailState] = useTaxonomiesUIStates(taxonomyId);
+	const [activeTaxonomy] = useActiveTaxonomy(Number(taxonomyId));
+	const [, detailState] = useTaxonomiesUIStates(Number(taxonomyId));
 
 	// Set initial loading
 	useEffect(() => {

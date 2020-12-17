@@ -5,7 +5,7 @@ import { taxonomiesFacade, TaxonomyDetailUIModel } from '../../store/taxonomies'
 
 import { UseTaxonomiesUIStates } from './useTaxonomiesUIStates.types';
 
-const useTaxonomiesUIStates: UseTaxonomiesUIStates = (taxonomyId = '') => {
+const useTaxonomiesUIStates: UseTaxonomiesUIStates = taxonomyId => {
 	const taxonomyUIState = useObservable(taxonomiesFacade.UIState$, {
 		isFetching: false,
 		isCreating: false,
