@@ -11,12 +11,12 @@ const useTaxonomiesUIStates: UseTaxonomiesUIStates = taxonomyId => {
 		isCreating: false,
 		error: null,
 	});
-	const [taxonomyDetailUIState, setPresetDetailUIState] = useState<TaxonomyDetailUIModel>();
+	const [taxonomyDetailUIState, setTaxonomyDetailUIState] = useState<TaxonomyDetailUIModel>();
 
 	useEffect(() => {
 		const s = taxonomiesFacade
 			.selectTaxonomyUIState(taxonomyId)
-			.subscribe(setPresetDetailUIState);
+			.subscribe(setTaxonomyDetailUIState);
 
 		return () => {
 			s.unsubscribe();
