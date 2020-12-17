@@ -52,7 +52,7 @@ const FilterForm: FC<FilterFormProps> = ({
 								<Field
 									as={TextField}
 									label="Zoeken"
-									name="search"
+									name="label"
 									iconright="search"
 									placeholder="Zoek op woord"
 								/>
@@ -61,7 +61,7 @@ const FilterForm: FC<FilterFormProps> = ({
 								<Field
 									as={Select}
 									label="Status"
-									name="status"
+									name="publishStatus"
 									options={FILTER_PUBLISH_STATUS_OPTIONS}
 									placeholder="Status"
 								/>

@@ -2,7 +2,7 @@ import { NavigateFn } from '@redactie/utils';
 
 export interface OverviewTableRow {
 	id: number;
-	name: string;
+	label: string;
 	description: string;
 	publishStatus: string;
 	navigate: NavigateFn;
