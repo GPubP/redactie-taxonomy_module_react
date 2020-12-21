@@ -2,7 +2,7 @@ import { FormikProps, FormikValues } from 'formik';
 import { ReactNode, Ref } from 'react';
 
 import { TaxonomyTerm } from '../../../services/taxonomyTerms';
-import { TaxonomyTermDetailModel } from '../../../store/taxonomyTerms';
+import { TaxonomyTermDetailModel } from '../../../store/taxonomies';
 import { FormikChildrenFn } from '../../../taxonomy.types';
 
 export interface TaxonomyTermFormProps {

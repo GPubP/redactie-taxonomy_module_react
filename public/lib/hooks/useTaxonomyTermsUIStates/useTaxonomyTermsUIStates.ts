@@ -1,24 +1,18 @@
 import { useObservable } from '@redactie/utils';
 import { useMemo } from 'react';
 
-import { taxonomyTermsFacade } from '../../store/taxonomyTerms';
+import { taxonomiesFacade } from '../../store/taxonomies';
 
 import { UseTaxonomyTermsUIStates } from './useTaxonomyTermsUIStates.types';
 
 const useTaxonomyTermsUIStates: UseTaxonomyTermsUIStates = (termId = 0) => {
 	const taxonomyTermDetailUIStateObservable = useMemo(
-		() => taxonomyTermsFacade.selectTaxonomyTermUIState(termId),
+		() => taxonomiesFacade.selectTaxonomyTermUIState(termId),
 		[termId]
 	);
-	const taxonomyUIStateObservable = useMemo(() => taxonomyTermsFacade.selectUIState(), []);
-	const taxonomyTermUIState = useObservable(taxonomyUIStateObservable, {
-		isFetching: false,
-		isCreating: false,
-		error: null,
-	});
 	const taxonomyTermDetailUIState = useObservable(taxonomyTermDetailUIStateObservable);
 
-	return [taxonomyTermUIState, taxonomyTermDetailUIState];
+	return [taxonomyTermDetailUIState];
 };
 
 export default useTaxonomyTermsUIStates;

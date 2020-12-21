@@ -4,7 +4,6 @@ import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { useCoreTranslation } from '../../connectors';
 import { useActiveTaxonomy, useTaxonomiesUIStates } from '../../hooks';
-import { taxonomyTermsFacade } from '../../store/taxonomyTerms';
 import { ALERT_CONTAINER_IDS } from '../../taxonomy.const';
 import { TaxonomyRouteProps } from '../../taxonomy.types';
 
@@ -29,10 +28,6 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 			setInitialLoading(false);
 		}
 	}, [initialLoading, isLoading]);
-
-	useEffect(() => {
-		taxonomyTermsFacade.getTaxonomyTerms(taxonomyId);
-	}, [taxonomyId]);
 
 	/**
 	 * RENDER

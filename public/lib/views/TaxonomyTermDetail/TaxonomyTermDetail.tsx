@@ -15,22 +15,21 @@ import {
 	useRoutes,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
-import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, ReactElement, useMemo, useRef, useState } from 'react';
 
 import { TermForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
-import { useTaxonomyTermsUIStates } from '../../hooks';
+import { useActiveTaxonomy, useTaxonomyTermsUIStates } from '../../hooks';
 import useActiveTaxonomyTerm from '../../hooks/useActiveTaxonomyTerm/useActiveTaxonomyTerm';
-import { useTaxonomyTerms } from '../../hooks/useTaxonomyTerms/useTaxonomyTerms';
 import { TaxonomyTerm } from '../../services/taxonomyTerms';
-import { TaxonomyTermDetailModel, taxonomyTermsFacade } from '../../store/taxonomyTerms';
+import { taxonomiesFacade, TaxonomyTermDetailModel } from '../../store/taxonomies';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
 
 import { TaxonomyTermRouteProps } from './TaxonomyTermDetail.types';
 
 export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
-	const taxonomyId = match.params.taxonomyId ? parseInt(match.params.taxonomyId) : null;
-	const termId = match.params.termId ? parseInt(match.params.termId) : null;
+	const taxonomyId = match.params.taxonomyId ? parseInt(match.params.taxonomyId) : undefined;
+	const termId = match.params.termId ? parseInt(match.params.termId) : undefined;
 	const isUpdate = !!termId;
 
 	/**
@@ -41,7 +40,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	const routes = useRoutes();
 	const formikRef = useRef<FormikProps<FormikValues>>();
 
-	const taxonomyTerms = useTaxonomyTerms();
+	const [taxonomy] = useActiveTaxonomy(taxonomyId);
 	const [taxonomyTerm] = useActiveTaxonomyTerm(taxonomyId, termId);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS(generatePath),
@@ -51,11 +50,12 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			{ name: 'Termen', target: generatePath(MODULE_PATHS.overview) },
 		],
 	});
-	const [listState, detailState] = useTaxonomyTermsUIStates();
-	const isLoading = useMemo(
-		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
-		[detailState, isUpdate, listState]
-	);
+	const [detailState] = useTaxonomyTermsUIStates();
+	// false should be this => !!detailState?.isCreating
+	const isLoading = useMemo(() => (isUpdate ? !!detailState?.isUpdating : false), [
+		detailState,
+		isUpdate,
+	]);
 	const [formValue, setFormValue] = useState<TaxonomyTermDetailModel | null>(null);
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
 		!isLoading,
@@ -63,22 +63,18 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		BFF_MODULE_PUBLIC_PATH
 	);
 
-	useEffect(() => {
-		taxonomyId && taxonomyTermsFacade.getTaxonomyTerms(taxonomyId);
-	}, [taxonomyId]);
-
 	/**
 	 * METHODS
 	 */
 	const updateTerm = async (taxonomyTerm: TaxonomyTerm): Promise<void> => {
-		taxonomyId && (await taxonomyTermsFacade.updateTaxonomyTerm(taxonomyId, taxonomyTerm));
+		taxonomyId && (await taxonomiesFacade.updateTaxonomyTerm(taxonomyId, taxonomyTerm));
 	};
 	const createTerm = async (taxonomyTerm: TaxonomyTerm): Promise<void> => {
 		if (!taxonomyId) {
 			return;
 		}
 
-		const newTaxonomyTerm = await taxonomyTermsFacade.createTaxonomyTerm(taxonomyId, {
+		const newTaxonomyTerm = await taxonomiesFacade.createTaxonomyTerm(taxonomyId, {
 			...taxonomyTerm,
 			// Should always be published on create
 			publishStatus: 'PUBLISHED',
@@ -107,7 +103,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		<TermForm
 			formikRef={instance => (formikRef.current = instance || undefined)}
 			onSubmit={onFormSubmit}
-			allTerms={taxonomyTerms}
+			allTerms={taxonomy?.terms || []}
 			taxonomyTerm={taxonomyTerm}
 		>
 			{({ submitForm, values }) => {

@@ -1,6 +1,6 @@
-import { TaxonomyTermDetailUIModel, TaxonomyTermUIModel } from '../../store/taxonomyTerms';
+import { TaxonomyTermDetailUIModel } from '../../store/taxonomies';
 
 export type UseTaxonomyTermsUIStates = (
 	taxonomyId?: number,
 	termId?: number
-) => [TaxonomyTermUIModel, TaxonomyTermDetailUIModel | undefined];
+) => [TaxonomyTermDetailUIModel | undefined];

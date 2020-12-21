@@ -1,4 +1,4 @@
-import { TaxonomyTermDetailModel, TaxonomyTermDetailUIModel } from '../../store/taxonomyTerms';
+import { TaxonomyTermDetailModel, TaxonomyTermDetailUIModel } from '../../store/taxonomies';
 
 export type UseActiveTaxonomyTerm = (
 	taxonomyId?: number | null,

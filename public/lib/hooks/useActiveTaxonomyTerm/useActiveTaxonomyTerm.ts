@@ -1,7 +1,7 @@
 import { useObservable } from '@redactie/utils';
 import { useEffect } from 'react';
 
-import { taxonomyTermsFacade } from '../../store/taxonomyTerms';
+import { taxonomiesFacade } from '../../store/taxonomies';
 
 import { UseActiveTaxonomyTerm } from './useActiveTaxonomyTerm.types';
 
@@ -9,28 +9,28 @@ const useActiveTaxonomyTerm: UseActiveTaxonomyTerm = (taxonomyId, termId) => {
 	useEffect(() => {
 		if (!termId) {
 			// remove active Taxonomy when taxonomyId is undefined
-			taxonomyTermsFacade.removeActiveTaxonomyTerm();
+			taxonomiesFacade.removeActiveTaxonomyTerm();
 			return;
 		}
 
-		const hasTaxonomy = taxonomyTermsFacade.hasTaxonomyTerm(termId);
+		const hasTaxonomy = taxonomiesFacade.hasTaxonomyTerm(termId);
 
-		if (hasTaxonomy && taxonomyTermsFacade.hasActiveTaxonomyTerm(termId)) {
+		if (hasTaxonomy && taxonomiesFacade.hasActiveTaxonomyTerm(termId)) {
 			return;
 		}
 
 		if (!hasTaxonomy && taxonomyId) {
-			taxonomyTermsFacade
+			taxonomiesFacade
 				.getTaxonomyTerm(taxonomyId, termId)
-				.then(() => taxonomyTermsFacade.setActiveTaxonomyTerm(termId));
+				.then(() => taxonomiesFacade.setActiveTaxonomyTerm(termId));
 			return;
 		}
 
-		taxonomyTermsFacade.setActiveTaxonomyTerm(termId);
+		taxonomiesFacade.setActiveTaxonomyTerm(termId);
 	}, [taxonomyId, termId]);
 
-	const taxonomy = useObservable(taxonomyTermsFacade.activeTaxonomyTerm$);
-	const taxonomyUI = useObservable(taxonomyTermsFacade.activeTaxonomyTermUI$);
+	const taxonomy = useObservable(taxonomiesFacade.activeTaxonomyTerm$);
+	const taxonomyUI = useObservable(taxonomiesFacade.activeTaxonomyTermUI$);
 
 	return [taxonomy, taxonomyUI];
 };
