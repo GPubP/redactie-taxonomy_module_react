@@ -24,7 +24,7 @@ import {
 import { Tab, TaxonomyRouteProps } from '../../taxonomy.types';
 
 const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
-	const { taxonomyId } = match.params;
+	const taxonomyId = parseInt(match.params.taxonomyId);
 
 	/**
 	 * Hooks
@@ -74,7 +74,7 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 	const updateTaxonomy = (body: UpdateTaxonomySettingsPayload['body'], tab: Tab): void => {
 		switch (tab.name) {
 			case DETAIL_TAB_MAP.settings.name: {
-				const payload = { id: Number(taxonomyId), body };
+				const payload = { id: taxonomyId, body };
 				const options = { alertContainerId: ALERT_CONTAINER_IDS.detailSettings };
 
 				taxonomiesFacade.updateTaxonomy(payload, options);

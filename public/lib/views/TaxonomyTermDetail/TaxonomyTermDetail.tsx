@@ -88,9 +88,11 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			});
 		}
 	};
+
 	const onFormSubmit = (values: TaxonomyTerm): void => {
 		isUpdate ? updateTerm(values) : createTerm(values);
 	};
+
 	const onCancel = (): void => {
 		taxonomyId && navigate(MODULE_PATHS.detailTerms, { taxonomyId });
 	};
@@ -98,7 +100,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	/**
 	 * RENDER
 	 */
-	console.log(taxonomyTerm);
+
 	const renderForm = (): ReactElement => (
 		<TermForm
 			formikRef={instance => (formikRef.current = instance || undefined)}
@@ -134,7 +136,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 							</ActionBarContentSection>
 						</ActionBar>
 						<LeavePrompt
-							allowedPaths={[MODULE_PATHS.terms.detail]}
+							allowedPaths={TERM_DETAIL_ALLOWED_PATHS}
 							when={hasChanges}
 							shouldBlockNavigationOnConfirm
 							onConfirm={submitForm}

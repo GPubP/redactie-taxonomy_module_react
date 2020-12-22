@@ -85,7 +85,7 @@ export const TermForm: FC<TaxonomyTermFormProps> = ({
 						)}
 
 						{typeof children === 'function'
-							? (children as FormikChildrenFn<any>)(formikProps)
+							? (children as FormikChildrenFn)(formikProps)
 							: children}
 					</>
 				);
