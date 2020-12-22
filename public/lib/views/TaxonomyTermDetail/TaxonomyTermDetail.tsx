@@ -25,6 +25,7 @@ import { TaxonomyTerm } from '../../services/taxonomyTerms';
 import { taxonomiesFacade, TaxonomyTermDetailModel } from '../../store/taxonomies';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
 
+import { TERM_DETAIL_ALLOWED_PATHS } from './TaxonomyTermDetail.const';
 import { TaxonomyTermRouteProps } from './TaxonomyTermDetail.types';
 
 export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
@@ -47,15 +48,14 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		extraBreadcrumbs: [
 			...(BREADCRUMB_OPTIONS(generatePath).extraBreadcrumbs || []),
 			{ name: 'Taxonomie', target: generatePath(MODULE_PATHS.overview) },
-			{ name: 'Termen', target: generatePath(MODULE_PATHS.overview) },
+			{ name: 'Termen', target: generatePath(MODULE_PATHS.detailTerms, { taxonomyId }) },
 		],
 	});
-	const [detailState] = useTaxonomyTermsUIStates();
-	// false should be this => !!detailState?.isCreating
-	const isLoading = useMemo(() => (isUpdate ? !!detailState?.isUpdating : false), [
-		detailState,
-		isUpdate,
-	]);
+	const [listState, detailState] = useTaxonomyTermsUIStates();
+	const isLoading = useMemo(
+		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
+		[detailState, isUpdate, listState]
+	);
 	const [formValue, setFormValue] = useState<TaxonomyTermDetailModel | null>(null);
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
 		!isLoading,

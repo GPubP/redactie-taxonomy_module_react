@@ -10,9 +10,11 @@ const useTaxonomyTermsUIStates: UseTaxonomyTermsUIStates = (termId = 0) => {
 		() => taxonomiesFacade.selectTaxonomyTermUIState(termId),
 		[termId]
 	);
+	const isCreating = useObservable(taxonomiesFacade.isTermCreating$, false);
+	const taxonomyTermDetailState = { isCreating };
 	const taxonomyTermDetailUIState = useObservable(taxonomyTermDetailUIStateObservable);
 
-	return [taxonomyTermDetailUIState];
+	return [taxonomyTermDetailState, taxonomyTermDetailUIState];
 };
 
 export default useTaxonomyTermsUIStates;
