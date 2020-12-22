@@ -8,6 +8,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
+	AlertContainer,
 	DataLoader,
 	LeavePrompt,
 	useDetectValueChangesWorker,
@@ -23,7 +24,7 @@ import { useActiveTaxonomy, useTaxonomyTermsUIStates } from '../../hooks';
 import useActiveTaxonomyTerm from '../../hooks/useActiveTaxonomyTerm/useActiveTaxonomyTerm';
 import { TaxonomyTerm } from '../../services/taxonomyTerms';
 import { taxonomiesFacade, TaxonomyTermDetailModel } from '../../store/taxonomies';
-import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
+import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
 
 import { TERM_DETAIL_ALLOWED_PATHS } from './TaxonomyTermDetail.const';
 import { TaxonomyTermRouteProps } from './TaxonomyTermDetail.types';
@@ -52,13 +53,20 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		],
 	});
 	const [listState, detailState] = useTaxonomyTermsUIStates();
+	const [formValue, setFormValue] = useState<TaxonomyTermDetailModel | null>(null);
 	const isLoading = useMemo(
 		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
 		[detailState, isUpdate, listState]
 	);
-	const [formValue, setFormValue] = useState<TaxonomyTermDetailModel | null>(null);
+	const isInitialLoading = useMemo(() => {
+		if (!isUpdate || (detailState && detailState.isFetching)) {
+			return false;
+		}
+
+		return true;
+	}, [detailState, isUpdate]);
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
-		!isLoading,
+		!isInitialLoading && !isLoading,
 		formValue,
 		BFF_MODULE_PUBLIC_PATH
 	);
@@ -66,19 +74,31 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	/**
 	 * METHODS
 	 */
+
 	const updateTerm = async (taxonomyTerm: TaxonomyTerm): Promise<void> => {
-		taxonomyId && (await taxonomiesFacade.updateTaxonomyTerm(taxonomyId, taxonomyTerm));
+		taxonomyId &&
+			(await taxonomiesFacade.updateTaxonomyTerm(taxonomyId, taxonomyTerm, {
+				alertContainerId: ALERT_CONTAINER_IDS.termDetail,
+			}));
 	};
+
 	const createTerm = async (taxonomyTerm: TaxonomyTerm): Promise<void> => {
 		if (!taxonomyId) {
 			return;
 		}
 
-		const newTaxonomyTerm = await taxonomiesFacade.createTaxonomyTerm(taxonomyId, {
-			...taxonomyTerm,
-			// Should always be published on create
-			publishStatus: 'PUBLISHED',
-		});
+		const newTaxonomyTerm = await taxonomiesFacade.createTaxonomyTerm(
+			taxonomyId,
+			{
+				...taxonomyTerm,
+				// Should always be published on create
+				publishStatus: 'PUBLISHED',
+			},
+			{
+				errorAlertContainerId: ALERT_CONTAINER_IDS.termDetail,
+				successAlertContainerId: ALERT_CONTAINER_IDS.termDetail,
+			}
+		);
 
 		if ((newTaxonomyTerm as TaxonomyTerm)?.id) {
 			resetChangeDetection();
@@ -153,7 +173,11 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
-				<DataLoader loadingState={isLoading} render={renderForm} />
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={ALERT_CONTAINER_IDS.termDetail}
+				/>
+				<DataLoader loadingState={isInitialLoading} render={renderForm} />
 			</Container>
 		</>
 	);
