@@ -29,29 +29,29 @@ Core.routes.register({
 	component: TaxonomyRoot,
 	breadcrumb: null,
 	redirect: MODULE_PATHS.overview,
+	navigation: {
+		label: 'Taxonomie',
+		order: 2,
+		parentPath: MODULE_PATHS.contentTypes,
+		canShown: [
+			rolesRightsConnector.canShowns.securityRightsTenantCanShown([
+				// TODO: Uncomment this line when the securityright are set
+				// rolesRightsConnector.securityRights.read,
+			]),
+		],
+	},
+	guardOptions: {
+		guards: [
+			rolesRightsConnector.guards.securityRightsTenantGuard([
+				// TODO: Uncomment this line when the securityright are set
+				// rolesRightsConnector.securityRights.read,
+			]),
+		],
+	},
 	routes: [
 		{
 			path: MODULE_PATHS.overview,
 			component: TaxonomyOverview,
-			navigation: {
-				label: 'Taxonomie',
-				order: 2,
-				parentPath: MODULE_PATHS.contentTypes,
-				canShown: [
-					rolesRightsConnector.canShowns.securityRightsTenantCanShown([
-						// TODO: Uncomment this line when the securityright are set
-						// rolesRightsConnector.securityRights.read,
-					]),
-				],
-			},
-			guardOptions: {
-				guards: [
-					rolesRightsConnector.guards.securityRightsTenantGuard([
-						// TODO: Uncomment this line when the securityright are set
-						// rolesRightsConnector.securityRights.read,
-					]),
-				],
-			},
 		},
 		{
 			path: MODULE_PATHS.create,
