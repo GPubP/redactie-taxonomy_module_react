@@ -77,10 +77,17 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	 */
 
 	const updateTerm = async (taxonomyTerm: TaxonomyTerm): Promise<void> => {
-		taxonomyId &&
-			(await taxonomiesFacade.updateTaxonomyTerm(taxonomyId, taxonomyTerm, {
+		if (!taxonomyId) {
+			return;
+		}
+
+		await taxonomiesFacade
+			.updateTaxonomyTerm(taxonomyId, taxonomyTerm, {
 				alertContainerId: ALERT_CONTAINER_IDS.termDetail,
-			}));
+			})
+			.then(() => {
+				resetChangeDetection();
+			});
 	};
 
 	const createTerm = async (taxonomyTerm: TaxonomyTerm): Promise<void> => {
