@@ -16,7 +16,7 @@ import {
 	useRoutes,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
-import React, { FC, ReactElement, useMemo, useRef, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
 import { TermForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
@@ -52,24 +52,25 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			{ name: 'Termen', target: generatePath(MODULE_PATHS.detailTerms, { taxonomyId }) },
 		],
 	});
-	const [listState, detailState] = useTaxonomyTermsUIStates();
+	const [listState, detailState] = useTaxonomyTermsUIStates(termId);
 	const [formValue, setFormValue] = useState<TaxonomyTermDetailModel | null>(null);
+	const [isInitialLoading, setInitialLoading] = useState(isUpdate);
 	const isLoading = useMemo(
 		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
 		[detailState, isUpdate, listState]
 	);
-	const isInitialLoading = useMemo(() => {
-		if (!isUpdate || (detailState && detailState.isFetching)) {
-			return false;
-		}
-
-		return true;
-	}, [detailState, isUpdate]);
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
 		!isInitialLoading && !isLoading,
 		formValue,
 		BFF_MODULE_PUBLIC_PATH
 	);
+
+	// Set initial loading
+	useEffect(() => {
+		if (isUpdate && detailState) {
+			setInitialLoading(detailState.isFetching);
+		}
+	}, [detailState, isUpdate]);
 
 	/**
 	 * METHODS
