@@ -1,6 +1,6 @@
 import { Select } from '@acpaas-ui/react-components';
 import { Cascader } from '@acpaas-ui/react-editorial-components';
-import React, { FC, useMemo } from 'react';
+import React, { ChangeEvent, FC, useMemo } from 'react';
 
 import { listToTree } from '../../helpers';
 import { TaxonomyTerm } from '../../services/taxonomyTerms';
@@ -71,6 +71,9 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 				label={label}
 				description={description}
 				{...field}
+				onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+					setValue(parseInt(e.target.value));
+				}}
 			/>
 		);
 	}
