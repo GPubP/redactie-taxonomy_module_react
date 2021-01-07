@@ -1,9 +1,12 @@
+import { TaxonomyTerm } from '../taxonomyTerms';
+
 export interface Taxonomy extends TaxonomySettings {
 	createdAt: string;
 	createdBy: string;
 	id: number;
 	updatedAt: string;
 	updatedBy: string;
+	terms: TaxonomyTerm[];
 }
 
 export interface TaxonomySettings {

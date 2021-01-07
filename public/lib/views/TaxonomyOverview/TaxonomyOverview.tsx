@@ -122,7 +122,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 			return null;
 		}
 
-		const customCCRows: OverviewTableRow[] = pagination.data.map(taxonomy => ({
+		const customTaxonomyRows: OverviewTableRow[] = pagination.data.map(taxonomy => ({
 			id: taxonomy.id,
 			label: taxonomy.label,
 			description: taxonomy.description,
@@ -144,7 +144,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 				<PaginatedTable
 					className="u-margin-top"
 					columns={OVERVIEW_COLUMNS(t)}
-					rows={customCCRows}
+					rows={customTaxonomyRows}
 					currentPage={pagination?.currentPage || 1}
 					itemsPerPage={query.pagesize}
 					onPageChange={onPageChange}

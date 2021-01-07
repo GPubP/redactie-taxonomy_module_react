@@ -10,6 +10,13 @@ import {
 	TaxonomyDetailResponse,
 	UpdateTaxonomySettingsPayload,
 } from '../../services/taxonomies';
+import {
+	CreateTaxonomyTermPayload,
+	TaxonomyTerm,
+	taxonomyTermsApiService,
+	TaxonomyTermsApiService,
+	UpdateTaxonomyTermPayload,
+} from '../../services/taxonomyTerms';
 
 import {
 	TaxonomiesDetailQuery,
@@ -28,15 +35,29 @@ import {
 	taxonomiesListStore,
 	TaxonomyListModel,
 } from './list';
-import { getAlertMessages } from './taxonomies.alertMessages';
-import { TAXONOMIES_ALERT_CONTAINER_IDS } from './taxonomies.const';
+import { getAlertMessages, getTermsAlertMessages } from './taxonomies.alertMessages';
+import {
+	TAXONOMIES_ALERT_CONTAINER_IDS,
+	TAXONOMY_TERMS_ALERT_CONTAINER_IDS,
+} from './taxonomies.const';
 import {
 	CreateTaxonomyPayloadOptions,
+	CreateTaxonomyTermPayloadOptions,
 	GetTaxonomiesPaginatedPayloadOptions,
 	GetTaxonomiesPayloadOptions,
 	GetTaxonomyPayloadOptions,
+	GetTaxonomyTermPayloadOptions,
 	UpdateTaxonomyPayloadOptions,
+	UpdateTaxonomyTermPayloadOptions,
 } from './taxonomies.types';
+import {
+	TaxonomyTermDetailModel,
+	TaxonomyTermDetailUIModel,
+	taxonomyTermsDetailQuery,
+	TaxonomyTermsDetailQuery,
+	taxonomyTermsDetailStore,
+	TaxonomyTermsDetailStore,
+} from './terms';
 
 export class TaxonomiesFacade {
 	constructor(
@@ -45,7 +66,10 @@ export class TaxonomiesFacade {
 		public listPaginator: PaginatorPlugin<TaxonomiesListState>,
 		protected detailStore: TaxonomiesDetailStore,
 		protected detailQuery: TaxonomiesDetailQuery,
-		protected service: TaxonomiesApiService
+		protected detailTermsStore: TaxonomyTermsDetailStore,
+		protected detailTermsQuery: TaxonomyTermsDetailQuery,
+		protected service: TaxonomiesApiService,
+		protected termsService: TaxonomyTermsApiService
 	) {}
 
 	// LIST STATES
@@ -72,6 +96,15 @@ export class TaxonomiesFacade {
 	public selectTaxonomyUIState(taxonomyId?: number): Observable<TaxonomyDetailUIModel> {
 		return this.detailQuery.ui.selectEntity(taxonomyId);
 	}
+
+	// DETAIL TERMS STATES
+	public readonly isTermCreating$ = this.detailTermsQuery.isCreating$;
+	public readonly activeTaxonomyTerm$ = this.detailTermsQuery.selectActive<
+		TaxonomyTermDetailModel
+	>() as Observable<TaxonomyTermDetailModel>;
+	public readonly activeTaxonomyTermUI$ = this.detailTermsQuery.ui.selectActive<
+		TaxonomyTermDetailUIModel
+	>() as Observable<TaxonomyTermDetailUIModel>;
 
 	// LIST FUNCTIONS
 	public getTaxonomiesPaginated(
@@ -267,10 +300,139 @@ export class TaxonomiesFacade {
 			.then(response => {
 				this.detailStore.upsert(response.id, response);
 				this.detailStore.ui.upsert(response.id, { error: null, isFetching: false });
+				this.detailTermsStore.add(response.terms);
 			})
 			.catch(error => {
 				showAlert(serviceOptions.alertContainerId, 'error', alertMessages.fetchOne.error);
 				this.detailStore.ui.upsert(taxonomyId, {
+					error,
+					isFetching: false,
+				});
+			});
+	}
+
+	// DETAIL TERMS FUNCTIONS
+	public selectTaxonomyTermUIState(termId: number): Observable<TaxonomyTermDetailUIModel> {
+		return this.detailTermsQuery.ui.selectEntity(termId);
+	}
+
+	public setActiveTaxonomyTerm(termId: number): void {
+		this.detailTermsStore.setActive(termId);
+		this.detailTermsStore.ui.setActive(termId);
+	}
+
+	public removeActiveTaxonomyTerm(): void {
+		this.detailTermsStore.setActive(null);
+		this.detailTermsStore.ui.setActive(null);
+	}
+
+	public hasActiveTaxonomyTerm(termId: number): boolean {
+		return this.detailTermsQuery.hasActive(termId);
+	}
+
+	public hasTaxonomyTerm(termId: number): boolean {
+		return this.detailTermsQuery.hasEntity(termId);
+	}
+
+	public createTaxonomyTerm(
+		taxonomyId: number,
+		payload: CreateTaxonomyTermPayload,
+		options: CreateTaxonomyTermPayloadOptions = {
+			successAlertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.create,
+			errorAlertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.create,
+		}
+	): Promise<TaxonomyTerm | void> {
+		this.detailTermsStore.setIsCreating(true);
+		const alertMessages = getTermsAlertMessages(payload.label);
+
+		return this.termsService
+			.createTerm(taxonomyId, payload)
+			.then(taxonomyTerm => {
+				this.detailTermsStore.update({
+					isCreating: false,
+					error: null,
+				});
+				this.detailTermsStore.upsert(taxonomyTerm.id, taxonomyTerm);
+
+				// Timeout because the alert is visible on the edit page
+				// and not on the create page
+				setTimeout(() => {
+					showAlert(
+						options.successAlertContainerId,
+						'success',
+						alertMessages.create.success
+					);
+				}, 300);
+
+				return taxonomyTerm;
+			})
+			.catch(error => {
+				showAlert(options.errorAlertContainerId, 'error', alertMessages.create.error);
+				this.detailTermsStore.update({
+					isCreating: false,
+					error,
+				});
+			});
+	}
+
+	public updateTaxonomyTerm(
+		taxonomyId: number,
+		payload: UpdateTaxonomyTermPayload,
+		options: UpdateTaxonomyTermPayloadOptions = {
+			alertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.create,
+		}
+	): Promise<TaxonomyTerm | void> {
+		this.detailTermsStore.setIsUpdatingEntity(true, payload.id);
+		const alertMessages = getTermsAlertMessages(payload.label);
+
+		return this.termsService
+			.updateTerm(taxonomyId, payload)
+			.then(taxonomyTerm => {
+				this.detailTermsStore.ui.update(payload.id, {
+					isUpdating: false,
+					error: null,
+				});
+				this.detailTermsStore.upsert(taxonomyTerm.id, taxonomyTerm);
+
+				showAlert(options.alertContainerId, 'success', alertMessages.update.success);
+				return taxonomyTerm;
+			})
+			.then(error => {
+				showAlert(options.alertContainerId, 'error', alertMessages.update.error);
+				this.detailTermsStore.ui.update(payload.id, {
+					isUpdating: false,
+					error,
+				});
+			});
+	}
+
+	public getTaxonomyTerm(
+		taxonomyId: number,
+		termId: number,
+		options?: GetTaxonomyTermPayloadOptions
+	): Promise<void> {
+		const defaultOptions = {
+			alertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.fetchOne,
+			force: false,
+		};
+		const serviceOptions = {
+			...defaultOptions,
+			...options,
+		};
+		if (this.detailQuery.hasEntity(termId) && !serviceOptions.force) {
+			return Promise.resolve();
+		}
+		const alertMessages = getTermsAlertMessages();
+		this.detailTermsStore.setIsFetchingEntity(true, termId);
+		return this.termsService
+			.getTerm(taxonomyId, termId)
+			.then(response => {
+				this.detailTermsStore.upsert(response.id, response);
+				this.detailTermsStore.ui.upsert(response.id, { error: null, isFetching: false });
+			})
+			.catch(error => {
+				showAlert(serviceOptions.alertContainerId, 'error', alertMessages.fetchOne.error);
+				this.detailTermsStore.ui.upsert(termId, {
 					error,
 					isFetching: false,
 				});
@@ -284,5 +446,8 @@ export const taxonomiesFacade = new TaxonomiesFacade(
 	taxonomiesListPaginator,
 	taxonomiesDetailStore,
 	taxonomiesDetailQuery,
-	taxonomiesApiService
+	taxonomyTermsDetailStore,
+	taxonomyTermsDetailQuery,
+	taxonomiesApiService,
+	taxonomyTermsApiService
 );

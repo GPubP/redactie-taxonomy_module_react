@@ -5,6 +5,7 @@ import { Tab } from './taxonomy.types';
 
 export const TENANT_ROOT = '/:tenantId';
 export const root = '/taxonomie';
+export const detail = `${root}/:taxonomyId`;
 
 export const MODULE_PATHS = {
 	admin: '/dashboard',
@@ -17,8 +18,14 @@ export const MODULE_PATHS = {
 	createSettings: `${root}/aanmaken/instellingen`,
 
 	detail: `${root}/:taxonomyId`,
-	detailSettings: `${root}/:taxonomyId/instellingen`,
-	detailTerms: `${root}/:taxonomyId/termen`,
+	detailSettings: `${detail}/instellingen`,
+	detailTerms: `${detail}/termen`,
+
+	terms: {
+		create: `${detail}/termen/aanmaken`,
+
+		detail: `${detail}/termen/:termId`,
+	},
 };
 
 export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): BreadcrumbOptions => ({
@@ -28,6 +35,7 @@ export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): Breadcrumb
 		`${TENANT_ROOT}${root}`,
 		`${TENANT_ROOT}${root}/aanmaken`,
 		`${TENANT_ROOT}${root}/:taxonomyid`,
+		`${TENANT_ROOT}${MODULE_PATHS.terms.detail}`,
 	],
 	extraBreadcrumbs: [
 		{
@@ -67,8 +75,10 @@ export const PUBLISH_STATUS_OPTIONS = [
 	},
 ];
 
+// TODO: use alert container id's from store
 export const ALERT_CONTAINER_IDS = {
 	create: 'taxonomy-create',
 	detailSettings: 'taxonomy-detail-settings',
 	detailTerms: 'taxonomy-detail-terms',
+	termDetail: 'taxonomy-term-detail',
 };

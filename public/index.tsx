@@ -10,6 +10,7 @@ import {
 	TaxonomyDetailSettings,
 	TaxonomyDetailTerms,
 	TaxonomyOverview,
+	TaxonomyTermDetail,
 	TaxonomyUpdate,
 } from './lib/views';
 
@@ -70,6 +71,16 @@ Core.routes.register({
 					component: TaxonomyDetailSettings,
 				},
 			],
+		},
+		{
+			path: MODULE_PATHS.terms.create,
+			breadcrumb: null,
+			component: TaxonomyTermDetail,
+		},
+		{
+			path: MODULE_PATHS.terms.detail,
+			breadcrumb: null,
+			component: TaxonomyTermDetail,
 		},
 		{
 			path: MODULE_PATHS.detail,

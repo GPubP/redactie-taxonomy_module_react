@@ -1,5 +1,6 @@
 declare module '@acpaas-ui/react-components';
 declare module '@acpaas-ui/react-editorial-components';
+declare module 'list-to-tree-lite';
 
 declare module '*.module.scss' {
 	const classes: { [key: string]: string };

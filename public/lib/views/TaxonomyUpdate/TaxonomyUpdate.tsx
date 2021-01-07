@@ -1,13 +1,16 @@
+import { Button } from '@acpaas-ui/react-components';
 import {
 	Container,
 	ContextHeader,
+	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { DataLoader, RenderChildRoutes, useNavigate, useTenantContext } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, matchPath } from 'react-router-dom';
 
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { useActiveTabs, useActiveTaxonomy, useTaxonomiesUIStates } from '../../hooks';
 import { UpdateTaxonomySettingsPayload } from '../../services/taxonomies';
 import { taxonomiesFacade } from '../../store/taxonomies';
@@ -21,7 +24,7 @@ import {
 import { Tab, TaxonomyRouteProps } from '../../taxonomy.types';
 
 const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
-	const { taxonomyId } = match.params;
+	const taxonomyId = parseInt(match.params.taxonomyId);
 
 	/**
 	 * Hooks
@@ -32,6 +35,14 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 
 	const [initialLoading, setInitialLoading] = useState(true);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
+	const isTermsOverview = useMemo(
+		() =>
+			!!matchPath(location.pathname, {
+				path: `/:tenantId${MODULE_PATHS.detailTerms}`,
+				exact: true,
+			}),
+		[location.pathname]
+	);
 
 	const activeTabs = useActiveTabs(DETAIL_TABS, location.pathname);
 	const breadcrumbs = useBreadcrumbs(route.routes as ModuleRouteConfig[], {
@@ -41,8 +52,9 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 			{ name: 'Taxonomie', target: generatePath(MODULE_PATHS.overview) },
 		],
 	});
-	const [activeTaxonomy] = useActiveTaxonomy(Number(taxonomyId));
-	const [, detailState] = useTaxonomiesUIStates(Number(taxonomyId));
+	const [t] = useCoreTranslation();
+	const [activeTaxonomy] = useActiveTaxonomy(taxonomyId);
+	const [, detailState] = useTaxonomiesUIStates(taxonomyId);
 
 	// Set initial loading
 	useEffect(() => {
@@ -62,7 +74,7 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 	const updateTaxonomy = (body: UpdateTaxonomySettingsPayload['body'], tab: Tab): void => {
 		switch (tab.name) {
 			case DETAIL_TAB_MAP.settings.name: {
-				const payload = { id: Number(taxonomyId), body };
+				const payload = { id: taxonomyId, body };
 				const options = { alertContainerId: ALERT_CONTAINER_IDS.detailSettings };
 
 				taxonomiesFacade.updateTaxonomy(payload, options);
@@ -109,6 +121,16 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 				title={pageTitle}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
+				{isTermsOverview && (
+					<ContextHeaderActionsSection>
+						<Button
+							iconLeft="plus"
+							onClick={() => navigate(MODULE_PATHS.terms.create, { taxonomyId })}
+						>
+							{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
+						</Button>
+					</ContextHeaderActionsSection>
+				)}
 			</ContextHeader>
 			<Container>
 				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />

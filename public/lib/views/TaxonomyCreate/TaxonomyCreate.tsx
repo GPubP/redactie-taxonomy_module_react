@@ -93,7 +93,7 @@ const TaxonomyCreate: FC<TaxonomyRouteProps> = ({ location, route }) => {
 		<>
 			<ContextHeader
 				tabs={activeTabs.slice(0, 1)}
-				linkProps={(props: any) => ({
+				linkProps={(props: { href: string }) => ({
 					...props,
 					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),
 					component: Link,
