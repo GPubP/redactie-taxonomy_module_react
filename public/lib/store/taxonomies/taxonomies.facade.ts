@@ -1,5 +1,6 @@
 import { PaginationResponse, PaginatorPlugin } from '@datorama/akita';
 import { SearchParams } from '@redactie/utils';
+import { update } from 'ramda';
 import { from, Observable } from 'rxjs';
 
 import { showAlert } from '../../helpers';
@@ -348,6 +349,12 @@ export class TaxonomiesFacade {
 		return this.termsService
 			.createTerm(taxonomyId, payload)
 			.then(taxonomyTerm => {
+				// Update terms overview
+				this.detailStore.update(taxonomyId, taxonomy => ({
+					...taxonomy,
+					terms: taxonomy.terms.concat(taxonomyTerm),
+				}));
+				// Update detail entity and ui
 				this.detailTermsStore.update({
 					isCreating: false,
 					error: null,
@@ -388,6 +395,13 @@ export class TaxonomiesFacade {
 		return this.termsService
 			.updateTerm(taxonomyId, payload)
 			.then(taxonomyTerm => {
+				// Update terms overview
+				this.detailStore.update(taxonomyId, taxonomy => {
+					const termIndex = taxonomy.terms.findIndex(term => term.id === payload.id);
+					const updatedTerms = update(termIndex, payload, taxonomy.terms);
+					return { ...taxonomy, terms: updatedTerms as TaxonomyTerm[] };
+				});
+				// Update detail entity and ui
 				this.detailTermsStore.ui.update(payload.id, {
 					isUpdating: false,
 					error: null,
