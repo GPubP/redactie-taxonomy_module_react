@@ -1,4 +1,4 @@
-import { PaginationResponse, PaginatorPlugin } from '@datorama/akita';
+import { arrayAdd, arrayUpdate, PaginationResponse, PaginatorPlugin } from '@datorama/akita';
 import { SearchParams } from '@redactie/utils';
 import { from, Observable } from 'rxjs';
 
@@ -348,6 +348,11 @@ export class TaxonomiesFacade {
 		return this.termsService
 			.createTerm(taxonomyId, payload)
 			.then(taxonomyTerm => {
+				// Update terms overview
+				this.detailStore.update(taxonomyId, ({ terms }) => ({
+					terms: arrayAdd(terms, taxonomyTerm),
+				}));
+				// Update detail entity and ui
 				this.detailTermsStore.update({
 					isCreating: false,
 					error: null,
@@ -388,6 +393,11 @@ export class TaxonomiesFacade {
 		return this.termsService
 			.updateTerm(taxonomyId, payload)
 			.then(taxonomyTerm => {
+				// Update terms overview
+				this.detailStore.update(taxonomyId, ({ terms }) => ({
+					terms: arrayUpdate(terms, payload.id, payload as Partial<TaxonomyTerm>),
+				}));
+				// Update detail entity and ui
 				this.detailTermsStore.ui.update(payload.id, {
 					isUpdating: false,
 					error: null,

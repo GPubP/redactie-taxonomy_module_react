@@ -12,6 +12,7 @@ export const DETAIL_TERMS_COLUMNS = (t: TranslateFunc): TableColumn<DetailTermTa
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
+		disableSorting: true,
 		component(label: string, { description }: DetailTermTableRow) {
 			return (
 				<>
