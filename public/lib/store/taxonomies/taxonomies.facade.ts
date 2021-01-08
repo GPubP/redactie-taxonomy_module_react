@@ -1,6 +1,5 @@
-import { PaginationResponse, PaginatorPlugin } from '@datorama/akita';
+import { arrayAdd, arrayUpdate, PaginationResponse, PaginatorPlugin } from '@datorama/akita';
 import { SearchParams } from '@redactie/utils';
-import { update } from 'ramda';
 import { from, Observable } from 'rxjs';
 
 import { showAlert } from '../../helpers';
@@ -350,9 +349,8 @@ export class TaxonomiesFacade {
 			.createTerm(taxonomyId, payload)
 			.then(taxonomyTerm => {
 				// Update terms overview
-				this.detailStore.update(taxonomyId, taxonomy => ({
-					...taxonomy,
-					terms: taxonomy.terms.concat(taxonomyTerm),
+				this.detailStore.update(taxonomyId, ({ terms }) => ({
+					terms: arrayAdd(terms, taxonomyTerm),
 				}));
 				// Update detail entity and ui
 				this.detailTermsStore.update({
@@ -396,11 +394,9 @@ export class TaxonomiesFacade {
 			.updateTerm(taxonomyId, payload)
 			.then(taxonomyTerm => {
 				// Update terms overview
-				this.detailStore.update(taxonomyId, taxonomy => {
-					const termIndex = taxonomy.terms.findIndex(term => term.id === payload.id);
-					const updatedTerms = update(termIndex, payload, taxonomy.terms);
-					return { ...taxonomy, terms: updatedTerms as TaxonomyTerm[] };
-				});
+				this.detailStore.update(taxonomyId, ({ terms }) => ({
+					terms: arrayUpdate(terms, payload.id, payload as Partial<TaxonomyTerm>),
+				}));
 				// Update detail entity and ui
 				this.detailTermsStore.ui.update(payload.id, {
 					isUpdating: false,
