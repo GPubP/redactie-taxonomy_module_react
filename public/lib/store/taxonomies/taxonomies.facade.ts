@@ -349,7 +349,7 @@ export class TaxonomiesFacade {
 			.createTerm(taxonomyId, payload)
 			.then(taxonomyTerm => {
 				// Update terms overview
-				this.detailStore.update(taxonomyId, ({ terms }) => ({
+				this.detailStore.update(taxonomyId, ({ terms = [] }) => ({
 					terms: arrayAdd(terms, taxonomyTerm),
 				}));
 				// Update detail entity and ui
