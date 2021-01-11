@@ -42,13 +42,12 @@ import {
 } from './taxonomies.const';
 import {
 	CreateTaxonomyPayloadOptions,
-	CreateTaxonomyTermPayloadOptions,
 	GetTaxonomiesPaginatedPayloadOptions,
 	GetTaxonomiesPayloadOptions,
 	GetTaxonomyPayloadOptions,
 	GetTaxonomyTermPayloadOptions,
+	TaxonomyTermPayloadOptions,
 	UpdateTaxonomyPayloadOptions,
-	UpdateTaxonomyTermPayloadOptions,
 } from './taxonomies.types';
 import {
 	TaxonomyTermDetailModel,
@@ -337,7 +336,7 @@ export class TaxonomiesFacade {
 	public createTaxonomyTerm(
 		taxonomyId: number,
 		payload: CreateTaxonomyTermPayload,
-		options: CreateTaxonomyTermPayloadOptions = {
+		options: TaxonomyTermPayloadOptions = {
 			successAlertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.create,
 			errorAlertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.create,
 		}
@@ -383,8 +382,9 @@ export class TaxonomiesFacade {
 	public updateTaxonomyTerm(
 		taxonomyId: number,
 		payload: UpdateTaxonomyTermPayload,
-		options: UpdateTaxonomyTermPayloadOptions = {
-			alertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.create,
+		options: TaxonomyTermPayloadOptions = {
+			successAlertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.update,
+			errorAlertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.update,
 		}
 	): Promise<TaxonomyTerm | void> {
 		this.detailTermsStore.setIsUpdatingEntity(true, payload.id);
@@ -404,11 +404,20 @@ export class TaxonomiesFacade {
 				});
 				this.detailTermsStore.upsert(taxonomyTerm.id, taxonomyTerm);
 
-				showAlert(options.alertContainerId, 'success', alertMessages.update.success);
+				// Timeout because the alert is visible on the edit page
+				// and not on the create page
+				setTimeout(() => {
+					showAlert(
+						options.successAlertContainerId,
+						'success',
+						alertMessages.update.success
+					);
+				}, 300);
+
 				return taxonomyTerm;
 			})
 			.catch(error => {
-				showAlert(options.alertContainerId, 'error', alertMessages.update.error);
+				showAlert(options.errorAlertContainerId, 'error', alertMessages.update.error);
 				this.detailTermsStore.ui.update(payload.id, {
 					isUpdating: false,
 					error,
