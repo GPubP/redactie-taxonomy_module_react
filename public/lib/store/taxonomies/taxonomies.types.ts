@@ -47,11 +47,7 @@ export interface GetTaxonomyTermPayloadOptions {
 	alertContainerId?: string;
 }
 
-export interface CreateTaxonomyTermPayloadOptions {
+export interface TaxonomyTermPayloadOptions {
 	successAlertContainerId: string;
 	errorAlertContainerId: string;
-}
-
-export interface UpdateTaxonomyTermPayloadOptions {
-	alertContainerId: string;
 }
