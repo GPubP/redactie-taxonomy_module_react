@@ -23,7 +23,7 @@ export interface TaxonomySettings {
  */
 
 export interface TaxonomiesResponse {
-	_embedded: { resourceList: Taxonomy[] };
+	_embedded: Taxonomy[];
 	_page: {
 		number: number;
 		size: number;

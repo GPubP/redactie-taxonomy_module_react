@@ -6,7 +6,13 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import { DataLoader, RenderChildRoutes, useNavigate, useTenantContext } from '@redactie/utils';
+import {
+	DataLoader,
+	RenderChildRoutes,
+	useNavigate,
+	useRoutes,
+	useTenantContext,
+} from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, matchPath } from 'react-router-dom';
 
@@ -45,7 +51,8 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 	);
 
 	const activeTabs = useActiveTabs(DETAIL_TABS, location.pathname);
-	const breadcrumbs = useBreadcrumbs(route.routes as ModuleRouteConfig[], {
+	const routes = useRoutes();
+	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS(generatePath),
 		extraBreadcrumbs: [
 			...(BREADCRUMB_OPTIONS(generatePath).extraBreadcrumbs || []),
