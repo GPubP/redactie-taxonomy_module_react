@@ -139,7 +139,7 @@ export class TaxonomiesFacade {
 						currentPage: taxonomiesListPaginator.currentPage,
 						lastPage: paging.totalPages,
 						total: paging.totalElements,
-						data: response?._embedded.resourceList,
+						data: response?._embedded,
 					};
 				})
 				.catch(error => {
@@ -172,8 +172,8 @@ export class TaxonomiesFacade {
 		this.service
 			.getTaxonomies(searchParams)
 			.then(response => {
-				if (response?._embedded.resourceList) {
-					this.listStore.set(response._embedded.resourceList);
+				if (response?._embedded) {
+					this.listStore.set(response._embedded);
 					this.listStore.update({
 						error: false,
 						isFetching: false,

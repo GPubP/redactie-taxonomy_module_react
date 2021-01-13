@@ -11,10 +11,7 @@ export interface TaxonomyTerm {
 	propertyValues: [];
 	parentTermId: number;
 }
-export type TaxonomyTermsResponse = TaxonomyTerm[];
-// export interface TaxonomyTermsResponse {
-// 	_embedded: { resourceList: TaxonomyTerm[] };
-// }
+export type TaxonomyTermsResponse = { _embedded: TaxonomyTerm[] };
 
 export interface CreateTaxonomyTermPayload {
 	label: string;
