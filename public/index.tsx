@@ -26,8 +26,8 @@ const TaxonomyRoot: FC<TaxonomyModuleRouteProps> = ({ route, tenantId }) => {
 
 Core.routes.register({
 	path: MODULE_PATHS.root,
+	breadcrumb: false,
 	component: TaxonomyRoot,
-	breadcrumb: null,
 	redirect: MODULE_PATHS.overview,
 	navigation: {
 		label: 'Taxonomie',
@@ -51,10 +51,12 @@ Core.routes.register({
 	routes: [
 		{
 			path: MODULE_PATHS.overview,
+			breadcrumb: false,
 			component: TaxonomyOverview,
 		},
 		{
 			path: MODULE_PATHS.create,
+			breadcrumb: false,
 			component: TaxonomyCreate,
 			redirect: MODULE_PATHS.createSettings,
 			guardOptions: {
@@ -68,32 +70,35 @@ Core.routes.register({
 			routes: [
 				{
 					path: MODULE_PATHS.createSettings,
+					breadcrumb: false,
 					component: TaxonomyDetailSettings,
 				},
 			],
 		},
 		{
 			path: MODULE_PATHS.terms.create,
-			breadcrumb: null,
+			breadcrumb: false,
 			component: TaxonomyTermDetail,
 		},
 		{
 			path: MODULE_PATHS.terms.detail,
-			breadcrumb: null,
+			breadcrumb: false,
 			component: TaxonomyTermDetail,
 		},
 		{
 			path: MODULE_PATHS.detail,
-			breadcrumb: null,
+			breadcrumb: false,
 			component: TaxonomyUpdate,
 			redirect: MODULE_PATHS.detailSettings,
 			routes: [
 				{
 					path: MODULE_PATHS.detailSettings,
+					breadcrumb: false,
 					component: TaxonomyDetailSettings,
 				},
 				{
 					path: MODULE_PATHS.detailTerms,
+					breadcrumb: false,
 					component: TaxonomyDetailTerms,
 				},
 			],
