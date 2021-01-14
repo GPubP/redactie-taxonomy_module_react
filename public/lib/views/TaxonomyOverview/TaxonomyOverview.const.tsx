@@ -23,6 +23,10 @@ export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
 		defaultValue: '',
 		type: 'string',
 	},
+	sparse: {
+		defaultValue: true,
+		type: 'boolean',
+	},
 };
 
 export const DEFAULT_FILTER_FORM: FilterFormState = {
