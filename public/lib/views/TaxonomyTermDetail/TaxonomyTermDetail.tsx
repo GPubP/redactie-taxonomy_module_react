@@ -54,6 +54,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	});
 	const [listState, detailState] = useTaxonomyTermsUIStates(termId);
 	const [formValue, setFormValue] = useState<TaxonomyTermDetailModel | null>(null);
+	const [hasSubmit, setHasSubmit] = useState(false);
 	const [isInitialLoading, setInitialLoading] = useState(isUpdate);
 	const isLoading = useMemo(
 		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
@@ -72,6 +73,14 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		}
 	}, [detailState, isUpdate]);
 
+	// Redirect to terms overview after successful submit (update only)
+	useEffect(() => {
+		if (hasSubmit && !hasChanges) {
+			navigate(MODULE_PATHS.detailTerms, { taxonomyId });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [hasChanges, taxonomyId]);
+
 	/**
 	 * METHODS
 	 */
@@ -83,10 +92,12 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 
 		await taxonomiesFacade
 			.updateTaxonomyTerm(taxonomyId, taxonomyTerm, {
-				alertContainerId: ALERT_CONTAINER_IDS.termDetail,
+				errorAlertContainerId: ALERT_CONTAINER_IDS.termDetail,
+				successAlertContainerId: ALERT_CONTAINER_IDS.detailTerms,
 			})
 			.then(() => {
 				resetChangeDetection();
+				setHasSubmit(true);
 			});
 	};
 

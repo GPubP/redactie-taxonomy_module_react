@@ -18,7 +18,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	const { setValue } = form.getFieldHelpers(field.name);
 
 	const [filteredTermOptions, hasChildren] = useMemo(() => {
-		const { mappedTermOptions, hasMultipleLevels } = allTerms.reduce(
+		const { mappedTermOptions, hasMultipleLevels } = (allTerms || []).reduce(
 			(acc, term) => {
 				acc.mappedTermOptions.push({
 					value: term.id,
