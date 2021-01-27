@@ -12,7 +12,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	field,
 	label,
 	description,
-	taxonomyTerm,
+	value,
 	allTerms,
 }) => {
 	const { setValue } = form.getFieldHelpers(field.name);
@@ -44,7 +44,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 					idKey: 'value',
 					parentKey: 'parentTermId',
 					childrenKey: 'children',
-					skipTrees: taxonomyTerm?.id ? [taxonomyTerm.id] : [],
+					skipTrees: value ? [value] : [],
 			  })
 			: [
 					{
@@ -56,7 +56,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 			  ];
 
 		return [filteredTerms, hasMultipleLevels];
-	}, [allTerms, taxonomyTerm]);
+	}, [allTerms, value]);
 
 	const getPositionInputValue = (terms: TaxonomyTerm[], inputValue: number): string => {
 		const activeTerm = terms.find(term => term.id === inputValue);
@@ -86,7 +86,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 				</label>
 				<Cascader
 					changeOnSelect
-					value={taxonomyTerm?.id}
+					value={value}
 					options={filteredTermOptions}
 					onChange={(value: string[]) => setValue(parseInt(value[value.length - 1]))}
 				>

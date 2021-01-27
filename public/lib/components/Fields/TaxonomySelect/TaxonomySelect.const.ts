@@ -2,7 +2,7 @@ import { SelectOption } from '../../../taxonomy.types';
 
 import { TaxonomySelectMethods, TaxonomySelectValue } from './TaxonomySelect.types';
 
-export const INITIAL_VALUE: TaxonomySelectValue = {
+export const INITIAL_TAXONOMY_VALUE: TaxonomySelectValue = {
 	taxonomyId: '',
 	selectionMethod: '',
 };

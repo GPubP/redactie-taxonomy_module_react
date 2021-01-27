@@ -9,7 +9,7 @@ import { taxonomyTermsApiService } from '../../../services/taxonomyTerms';
 import { SelectOption } from '../../../taxonomy.types';
 
 import {
-	INITIAL_VALUE,
+	INITIAL_TAXONOMY_VALUE,
 	SELECTION_METHOD_OPTIONS,
 	TAXONOMY_DEFAULT_OPTION,
 } from './TaxonomySelect.const';
@@ -48,7 +48,7 @@ const TaxonomySelect: FC<InputFieldProps> = ({ fieldHelperProps, fieldProps }) =
 	// Fetch taxonomies and set initial value
 	useEffect(() => {
 		if (!value) {
-			fieldHelperProps.setValue(INITIAL_VALUE);
+			fieldHelperProps.setValue(INITIAL_TAXONOMY_VALUE);
 		}
 
 		taxonomiesApiService

@@ -5,7 +5,7 @@ import { TaxonomyTerm } from '../../services/taxonomyTerms';
 export interface TaxonomyTermSelectProps extends FieldProps {
 	label: string;
 	description: string;
-	taxonomyTerm?: TaxonomyTerm;
+	value?: number;
 	allTerms: TaxonomyTerm[];
 }
 
