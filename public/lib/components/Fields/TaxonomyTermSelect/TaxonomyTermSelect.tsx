@@ -44,6 +44,8 @@ const TaxonomyTermSelect: FC<InputFieldProps> = ({ fieldProps, fieldSchema }) =>
 				allTerms={terms}
 				description={description}
 				label={label}
+				placeholder="Selecteer een term"
+				selectionMethod={taxonomyConfig?.selectionMethod}
 				value={parseInt(field.value)}
 			/>
 		);
