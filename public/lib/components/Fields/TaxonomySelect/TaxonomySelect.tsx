@@ -80,7 +80,10 @@ const TaxonomySelect: FC<InputFieldProps> = ({ fieldHelperProps, fieldProps }) =
 				.then(response => response?._embedded || [])
 				.finally(() => setIsLoadingTerms(false));
 
-			const hasNestedTerms = (terms || []).some(term => term.parentTermId);
+			const hasNestedTerms = (terms || []).some(
+				// TODO: check why parentTermId is equal to term id after create
+				term => term.parentTermId && term.parentTermId !== term.id
+			);
 
 			if (hasNestedTerms) {
 				// Always use cascader when terms are nested
