@@ -20,7 +20,7 @@ export const listToTree = <T>(
 	let parentId: number;
 
 	for (let i = 0, length = data.length; i < length; i++) {
-		item = data[i];
+		item = { ...data[i] };
 		id = item[ID_KEY];
 		parentId = item[PARENT_KEY] && item[PARENT_KEY] !== id ? item[PARENT_KEY] : 0;
 		// every item may have children
