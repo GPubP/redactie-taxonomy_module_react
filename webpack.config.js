@@ -8,6 +8,7 @@ module.exports = env => {
 		styleIncludes: [/public/, /node_modules\/@a-ui\/core/],
 		sassIncludes: [/public/, /node_modules\/@a-ui\/core/],
 		externals: {
+			'@redactie/form-renderer-module': '@redactie/form-renderer-module',
 			'@redactie/translations-module': '@redactie/translations-module',
 		},
 	})(env);

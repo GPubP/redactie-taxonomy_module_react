@@ -2,7 +2,8 @@ import Core from '@redactie/redactie-core';
 import { RenderChildRoutes, TenantContext } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
 
-import { rolesRightsConnector } from './lib/connectors';
+import { InputTaxonomyTermSelect, TaxonomySelect, TaxonomyTermView } from './lib/components';
+import { formRendererConnector, rolesRightsConnector } from './lib/connectors';
 import { MODULE_PATHS } from './lib/taxonomy.const';
 import { TaxonomyModuleRouteProps } from './lib/taxonomy.types';
 import {
@@ -105,3 +106,17 @@ Core.routes.register({
 		},
 	],
 });
+
+formRendererConnector.api.fieldRegistry.add([
+	{
+		name: 'taxonomyFieldSettings',
+		module: 'taxonomy',
+		component: TaxonomySelect,
+	},
+	{
+		name: 'taxonomySelect',
+		module: 'taxonomy',
+		component: InputTaxonomyTermSelect,
+		viewComponent: TaxonomyTermView,
+	},
+]);
