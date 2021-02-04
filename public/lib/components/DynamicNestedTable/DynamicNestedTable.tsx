@@ -56,7 +56,7 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 		rowIndex: number,
 		level = 1
 	): ReactElement => {
-		const indentStyle = { borderLeft: `${level * 0.75}rem solid white` };
+		const indentStyle = { borderLeft: `${(level - 1) * 1.5}rem solid white` };
 
 		return (
 			<Cell
