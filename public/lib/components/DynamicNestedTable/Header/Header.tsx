@@ -16,7 +16,7 @@ const Header: FC<HeaderProps> = ({
 }) => {
 	const renderTableHeader = (): ReactNode => {
 		if (component) {
-			return component(value);
+			return component(label);
 		}
 		if (disableSorting) {
 			return label;
