@@ -1,4 +1,5 @@
 import { Button } from '@acpaas-ui/react-components';
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import React from 'react';
 
@@ -13,13 +14,16 @@ export const DETAIL_TERMS_COLUMNS = (t: TranslateFunc): TableColumn<DetailTermTa
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		disableSorting: true,
+		width: '80%',
 		component(label: string, { description }: DetailTermTableRow) {
 			return (
 				<>
-					{label}
+					<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
 					{description && (
 						<p>
-							<small>{description}</small>
+							<small>
+								<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
+							</small>
 						</p>
 					)}
 				</>
@@ -30,6 +34,7 @@ export const DETAIL_TERMS_COLUMNS = (t: TranslateFunc): TableColumn<DetailTermTa
 		label: '',
 		classList: ['u-text-right'],
 		disableSorting: true,
+		width: '20%',
 		component(value: unknown, { navigate, id, taxonomyId }: DetailTermTableRow) {
 			return (
 				<Button

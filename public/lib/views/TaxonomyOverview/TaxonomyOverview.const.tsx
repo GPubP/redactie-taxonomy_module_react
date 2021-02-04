@@ -1,4 +1,5 @@
 import { Button } from '@acpaas-ui/react-components';
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { APIQueryParamsConfig } from '@redactie/utils';
 import React from 'react';
@@ -38,13 +39,16 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
+		width: '60%',
 		component(label: string, { description }: OverviewTableRow) {
 			return (
 				<>
-					{label}
+					<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
 					{description && (
 						<p>
-							<small>{description}</small>
+							<small>
+								<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
+							</small>
 						</p>
 					)}
 				</>
@@ -54,6 +58,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'publishStatus',
+		width: '20%',
 		component(publishStatus: string) {
 			return publishStatus;
 		},
@@ -62,6 +67,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 		label: '',
 		classList: ['u-text-right'],
 		disableSorting: true,
+		width: '20%',
 		component(value: unknown, { navigate, id }: OverviewTableRow) {
 			return (
 				<Button
