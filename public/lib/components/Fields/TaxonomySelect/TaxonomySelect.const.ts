@@ -4,7 +4,7 @@ import { TaxonomySelectMethods, TaxonomySelectValue } from './TaxonomySelect.typ
 
 export const INITIAL_TAXONOMY_VALUE: TaxonomySelectValue = {
 	taxonomyId: '',
-	selectionMethod: '',
+	selectionMethod: TaxonomySelectMethods.Dropdown,
 };
 
 export const TAXONOMY_DEFAULT_OPTION: SelectOption = {
