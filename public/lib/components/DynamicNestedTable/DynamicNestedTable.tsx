@@ -26,6 +26,7 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 	columns = [],
 	dataKey,
 	draggable = true,
+	fixed = false,
 	loadDataMessage = DEFAULT_MESSAGES.loading,
 	loading = false,
 	moveRow = () => null,
@@ -34,6 +35,7 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 	orderBy,
 	responsive = true,
 	rows = [],
+	tableClassName,
 }) => {
 	const hasCols = !loading && columns.length > 0;
 	const hasData = !loading && rows.length > 0;
@@ -156,7 +158,11 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 	return (
 		<DndContainer draggable={draggable}>
 			<div className={cx(className, { 'o-dynamic-nested-table-responsive': responsive })}>
-				<div className={cx('o-dynamic-nested-table')}>
+				<div
+					className={cx('o-dynamic-nested-table', tableClassName, {
+						'o-dynamic-nested-table--fixed': fixed,
+					})}
+				>
 					{showPlaceholder ? (
 						renderPlaceholder()
 					) : (

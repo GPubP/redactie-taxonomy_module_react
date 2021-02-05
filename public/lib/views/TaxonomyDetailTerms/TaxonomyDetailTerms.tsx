@@ -181,7 +181,6 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		}
 	};
 
-
 	const onTermsSave = (): void => {
 		if (taxonomy) {
 			const payload = {
@@ -275,8 +274,10 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 				columns={DETAIL_TERMS_COLUMNS(t, onMoveRow) as any}
 				dataKey="id"
 				draggable
+				fixed
 				moveRow={() => null}
 				rows={termRows}
+				tableClassName="a-table--fixed--xs"
 			/>
 		);
 	};

@@ -1,4 +1,5 @@
 import { Button, ButtonGroup } from '@acpaas-ui/react-components';
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -20,6 +21,7 @@ export const DETAIL_TERMS_COLUMNS = (
 		headerComponent(label: string) {
 			return <span className="u-padding-left-xx">{label}</span>;
 		},
+		width: '60%',
 		component(label: string, rowData) {
 			const defaultButtonProps = {
 				htmlType: 'button',
@@ -62,10 +64,16 @@ export const DETAIL_TERMS_COLUMNS = (
 							disabled={!rowData.canMoveRight}
 						/>
 					</div>
-					<div className="u-margin-left u-text-truncate">
-						{rowData.path ? <Link to={rowData.path}>{label}</Link> : label}
-						<p>
-							<small>{rowData.description || <i>Geen beschrijving.</i>}</small>
+					<div className="u-margin-left">
+						<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
+						<p className="small">
+							{rowData.description ? (
+								<EllipsisWithTooltip>{rowData.description}</EllipsisWithTooltip>
+							) : (
+								<span className="u-text-italic">
+									{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
+								</span>
+							)}
 						</p>
 					</div>
 				</div>
@@ -76,11 +84,13 @@ export const DETAIL_TERMS_COLUMNS = (
 		label: 'Status',
 		value: 'publishStatus',
 		disableSorting: true,
+		width: '20%',
 	},
 	{
 		label: '',
 		classList: ['u-text-right'],
 		disableSorting: true,
+		width: '20%',
 		component(value: unknown, { navigate }) {
 			return <Button ariaLabel="Edit" icon="edit" onClick={() => navigate()} transparent />;
 		},

@@ -8,6 +8,7 @@ export interface CellProps {
 	style?: CSSProperties;
 	classList?: string[];
 	component?: TableColumn<RowData>['component'];
+	ellipsis?: boolean;
 	rowData: RowData;
 	rowIndex: number;
 	value?: number | string | null;

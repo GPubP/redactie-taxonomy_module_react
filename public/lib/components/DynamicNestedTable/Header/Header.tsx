@@ -13,6 +13,7 @@ const Header: FC<HeaderProps> = ({
 	label,
 	onSortClick = () => null,
 	value = '',
+	width,
 }) => {
 	const renderTableHeader = (): ReactNode => {
 		if (component) {
@@ -38,7 +39,11 @@ const Header: FC<HeaderProps> = ({
 		);
 	};
 
-	return <div className={classnames(className, classList)}>{renderTableHeader()}</div>;
+	return (
+		<div className={classnames(className, classList)} style={{ width }}>
+			{renderTableHeader()}
+		</div>
+	);
 };
 
 export default Header;

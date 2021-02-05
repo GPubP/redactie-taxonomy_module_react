@@ -12,4 +12,5 @@ export interface HeaderProps {
 	disableSorting?: boolean;
 	activeSorting?: OrderBy;
 	onSortClick?: OrderByFn;
+	width?: string;
 }

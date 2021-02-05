@@ -12,6 +12,7 @@ export interface DynamicNestedTableProps<R = RowData> {
 	columns?: TableColumn<R>[];
 	dataKey?: string;
 	draggable?: boolean;
+	fixed?: boolean;
 	loadDataMessage?: string;
 	loading?: boolean;
 	moveRow?: (source: any, target: any) => void;
@@ -20,6 +21,7 @@ export interface DynamicNestedTableProps<R = RowData> {
 	orderBy?: OrderByFn;
 	responsive?: boolean;
 	rows?: R[];
+	tableClassName?: string;
 }
 
 export interface DndDragDroppableChildFnParams {

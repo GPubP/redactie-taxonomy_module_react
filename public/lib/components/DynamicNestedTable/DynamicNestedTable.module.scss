@@ -7,6 +7,10 @@
 	border: 1px solid $table-border;
 }
 
+/**
+ * Elements
+ */
+
 .o-dynamic-nested-table__cell {
 	position: relative;
 	display: table-cell;
@@ -74,6 +78,14 @@
 			}
 		}
 	}
+}
+
+/**
+ * Modifiers
+ */
+
+.o-dynamic-nested-table--fixed {
+	table-layout: fixed;
 }
 
 .o-dynamic-nested-table-responsive {

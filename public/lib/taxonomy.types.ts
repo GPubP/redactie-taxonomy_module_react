@@ -53,6 +53,8 @@ export interface TableColumn<RowData = unknown> {
 	disableSorting?: boolean;
 	classList?: string[];
 	fallback?: string;
+	width?: string;
+	ellipsis?: boolean;
 }
 
 export interface FilterItem {

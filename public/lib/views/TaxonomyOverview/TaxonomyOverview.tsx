@@ -142,7 +142,9 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 					/>
 				</div>
 				<PaginatedTable
+					fixed
 					className="u-margin-top"
+					tableClassName="a-table--fixed--xs"
 					columns={OVERVIEW_COLUMNS(t)}
 					rows={customTaxonomyRows}
 					currentPage={pagination?.currentPage || 1}
