@@ -12,6 +12,7 @@ export interface TaxonomyTerm {
 	updatedAt: string;
 	propertyValues: [];
 	parentTermId: number;
+	position: number;
 }
 
 /**
@@ -48,3 +49,9 @@ export interface UpdateTaxonomyTermPayload {
 	updatedBy: string;
 	updatedAt: string;
 }
+
+export type UpdateTaxonomyTermsPayload = {
+	id: number;
+	label: string;
+	body: TaxonomyTerm[];
+};

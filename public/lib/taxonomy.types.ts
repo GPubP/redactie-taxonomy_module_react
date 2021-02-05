@@ -4,6 +4,7 @@ import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 
 import { CreateTaxonomyPayload } from './services/taxonomies';
+import { TaxonomyTerm } from './services/taxonomyTerms';
 import { TaxonomyDetailModel } from './store/taxonomies';
 
 export interface TaxonomyModuleRouteProps<Params extends { [K in keyof Params]?: string } = {}>
@@ -27,6 +28,11 @@ export interface TaxonomyDetailRouteProps<Params = TaxonomyRouteParams>
 	readonly taxonomy: TaxonomyDetailModel;
 	onCancel: () => void;
 	onSubmit: (data: CreateTaxonomyPayload | TaxonomyDetailModel, tab: Tab) => void;
+}
+
+export interface NestedTaxonomyTerm extends TaxonomyTerm {
+	position: number;
+	children?: NestedTaxonomyTerm[];
 }
 
 // TODO: move to utils types

@@ -16,6 +16,7 @@ import {
 	taxonomyTermsApiService,
 	TaxonomyTermsApiService,
 	UpdateTaxonomyTermPayload,
+	UpdateTaxonomyTermsPayload,
 } from '../../services/taxonomyTerms';
 
 import {
@@ -306,6 +307,36 @@ export class TaxonomiesFacade {
 				this.detailStore.ui.upsert(taxonomyId, {
 					error,
 					isFetching: false,
+				});
+			});
+	}
+
+	public updateTaxonomyTerms(
+		payload: UpdateTaxonomyTermsPayload,
+		options: UpdateTaxonomyPayloadOptions
+	): Promise<TaxonomyTerm[] | void> {
+		this.detailStore.setIsUpdatingEntity(true, payload.id);
+		const alertMessages = getAlertMessages(payload.label);
+
+		return this.termsService
+			.updateTerms(payload.id, payload.body)
+			.then(response => {
+				const terms = response._embedded;
+
+				this.detailStore.ui.update(payload.id, {
+					isUpdating: false,
+					error: null,
+				});
+				this.detailStore.upsert(payload.id, { terms });
+
+				showAlert(options.alertContainerId, 'success', alertMessages.update.success);
+				return terms;
+			})
+			.catch(error => {
+				showAlert(options.alertContainerId, 'error', alertMessages.update.error);
+				this.detailStore.ui.update(payload.id, {
+					isUpdating: false,
+					error,
 				});
 			});
 	}
