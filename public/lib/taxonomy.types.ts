@@ -47,6 +47,8 @@ export interface TableColumn<RowData = unknown> {
 	disableSorting?: boolean;
 	classList?: string[];
 	fallback?: string;
+	width?: string;
+	ellipsis?: number;
 }
 
 export interface FilterItem {

@@ -41,7 +41,14 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 			navigate,
 		}));
 
-		return <Table columns={DETAIL_TERMS_COLUMNS(t)} rows={customTaxonomyTermRows} />;
+		return (
+			<Table
+				fixed
+				tableClassName="a-table--fixed--xs"
+				columns={DETAIL_TERMS_COLUMNS(t)}
+				rows={customTaxonomyTermRows}
+			/>
+		);
 	};
 
 	return (
