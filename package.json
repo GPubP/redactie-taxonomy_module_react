@@ -51,7 +51,7 @@
     "@redactie/react-router-guards": "1.0.2",
     "@redactie/redactie-core": "2.0.0",
     "@redactie/roles-rights-module": "0.8.1",
-    "@redactie/translations-module": "0.6.3",
+    "@redactie/translations-module": "0.8.0",
     "@redactie/utils": "1.0.0",
     "@testing-library/jest-dom": "5.0.2",
     "@testing-library/react": "9.4.0",

@@ -19,13 +19,15 @@ export const DETAIL_TERMS_COLUMNS = (t: TranslateFunc): TableColumn<DetailTermTa
 			return (
 				<>
 					<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
-					{description && (
-						<p>
-							<small>
-								<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
-							</small>
-						</p>
-					)}
+					<p className="small">
+						{description ? (
+							<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
+						) : (
+							<span className="u-text-italic">
+								{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
+							</span>
+						)}
+					</p>
 				</>
 			);
 		},
