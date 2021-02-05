@@ -85,7 +85,8 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 		row: RowData,
 		rowIndex: number,
 		level: number,
-		collapse = false
+		collapse = false,
+		parentIsDragging = false
 	): ReactElement => {
 		const id = path([dataKey as string])(row);
 
@@ -118,7 +119,8 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 										subRow,
 										subRowIndex,
 										level + 1,
-										level > 1 && isDragging
+										level >= 1 && (isDragging || parentIsDragging),
+										isDragging
 									)
 							  )
 							: null}

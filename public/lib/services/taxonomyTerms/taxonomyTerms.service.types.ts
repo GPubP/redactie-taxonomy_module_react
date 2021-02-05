@@ -53,5 +53,6 @@ export interface UpdateTaxonomyTermPayload {
 export type UpdateTaxonomyTermsPayload = {
 	id: number;
 	label: string;
-	body: TaxonomyTerm[];
+	// TODO: allow position once available from backend
+	body: Omit<TaxonomyTerm, 'position'>[];
 };
