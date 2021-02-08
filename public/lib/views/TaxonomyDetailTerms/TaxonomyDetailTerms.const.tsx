@@ -65,7 +65,9 @@ export const DETAIL_TERMS_COLUMNS = (
 						/>
 					</div>
 					<div className="u-margin-left">
-						<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
+						<EllipsisWithTooltip>
+							{<Link to={rowData.path}>{label}</Link>}
+						</EllipsisWithTooltip>
 						<p className="small">
 							{rowData.description ? (
 								<EllipsisWithTooltip>{rowData.description}</EllipsisWithTooltip>
