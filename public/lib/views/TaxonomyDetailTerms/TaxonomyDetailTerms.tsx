@@ -237,6 +237,10 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		if (!sourceTerm || !targetTerm) {
 			return;
 		}
+		// Check if target is child
+		if (targetTerm.parentTermId === sourceTerm.id) {
+			return;
+		}
 		const targetIsTopLevel = termIsTopLevel(targetTerm);
 		const movedInSameTree =
 			(termIsTopLevel(sourceTerm) && targetIsTopLevel) ||
@@ -258,7 +262,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 			? termsTree
 			: findNestedTerm(termsTree, targetId)?.children || [];
 		const newList = movedInSameTree
-			? move(sourceTerm.position, targetTerm.position, targetList)
+			? move(updatedTerm.position, targetTerm.position, targetList)
 			: insert(targetTerm.position, updatedTerm, targetList);
 		const reorderedNewList = repositionTerms(newList);
 		// Update terms
