@@ -231,43 +231,38 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 
 
 	const onDragRow = (source: DndItem, target: DndItem): void => {
-		let updatedTerms: TaxonomyTerm[] = [];
+		const sourceTerm = terms.find(term => term.id === source.id);
+		const targetTerm = terms.find(term => term.id === target.id);
 
-		if (targetIsTopLevel) {
-			const updatedTerm = set(PARENT_TERM_ID_LENS, source.id, sourceTerm);
-			// Reposition old list
-			const oldList = movedInSameTree
-				? []
-				: findNestedTerm(termsTree, sourceTerm.parentTermId)?.children || [];
-			const reorderedOldList = repositionTerms(
-				oldList.filter(old => old.id !== sourceTerm.id)
-			);
-			// Reposition new list
-			const targetList = termsTree;
-			const newList = movedInSameTree
-				? move(sourceTerm.position, targetTerm.position, targetList)
-				: insert(targetTerm.position, updatedTerm, targetList);
-			const reorderedNewList = repositionTerms(newList);
-			updatedTerms = updateTerms(reorderedOldList.concat(reorderedNewList));
-		} else {
-			const updatedTerm = set(PARENT_TERM_ID_LENS, targetTerm.parentTermId, sourceTerm);
-			// Reposition old list
-			const oldList = movedInSameTree
-				? []
-				: findNestedTerm(termsTree, sourceTerm.parentTermId)?.children || [];
-			const reorderedOldList = repositionTerms(
-				oldList.filter(old => old.id !== sourceTerm.id)
-			);
-			// Reposition new list
-			const targetId = movedInSameTree ? sourceTerm.parentTermId : targetTerm.parentTermId;
-			const targetList = findNestedTerm(termsTree, targetId)?.children || [];
-
-			const newList = movedInSameTree
-				? move(sourceTerm.position, targetTerm.position, targetList)
-				: insert(targetTerm.position, updatedTerm, targetList);
-			const reorderedNewList = repositionTerms(newList);
-			updatedTerms = updateTerms(reorderedOldList.concat(reorderedNewList));
+		if (!sourceTerm || !targetTerm) {
+			return;
 		}
+		const targetIsTopLevel = termIsTopLevel(targetTerm);
+		const movedInSameTree =
+			(termIsTopLevel(sourceTerm) && targetIsTopLevel) ||
+			(sourceTerm.parentTermId === targetTerm.parentTermId &&
+				targetTerm.parentTermId !== targetTerm.id &&
+				sourceTerm.parentTermId !== sourceTerm.id);
+		// Update parentTermId
+		const newParentTermId = targetIsTopLevel ? source.id : targetTerm.parentTermId;
+		const updatedTerm = set(PARENT_TERM_ID_LENS, newParentTermId, sourceTerm);
+		// Reposition old list
+		const oldList = movedInSameTree
+			? []
+			: findNestedTerm(termsTree, sourceTerm.parentTermId)?.children || [];
+		const reorderedOldList = repositionTerms(oldList.filter(old => old.id !== sourceTerm.id));
+		// Reposition new list
+		// targetId is only needed when target is not top level
+		const targetId = movedInSameTree ? sourceTerm.parentTermId : targetTerm.parentTermId;
+		const targetList = targetIsTopLevel
+			? termsTree
+			: findNestedTerm(termsTree, targetId)?.children || [];
+		const newList = movedInSameTree
+			? move(sourceTerm.position, targetTerm.position, targetList)
+			: insert(targetTerm.position, updatedTerm, targetList);
+		const reorderedNewList = repositionTerms(newList);
+		// Update terms
+		const updatedTerms = updateTerms(reorderedOldList.concat(reorderedNewList));
 		// Don't cause any unnecessary renders
 		if (updatedTerms.length) {
 			setTerms(updatedTerms);
