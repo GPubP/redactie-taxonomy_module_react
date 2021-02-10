@@ -1,3 +1,5 @@
+import { PaginatedResponse } from '../api/api.service.types';
+
 export interface TaxonomyTerm {
 	id: number;
 	label: string;
@@ -10,8 +12,24 @@ export interface TaxonomyTerm {
 	updatedAt: string;
 	propertyValues: [];
 	parentTermId: number;
+	position: number;
 }
-export type TaxonomyTermsResponse = { _embedded: TaxonomyTerm[] };
+
+/**
+ * =========================
+ * Response types
+ * - Define all response interfaces coming from the server
+ * =========================
+ */
+
+export type TaxonomyTermsResponse = PaginatedResponse<TaxonomyTerm[]>;
+
+/**
+ * =========================
+ * Payload types
+ * - Define all payload interfaces
+ * =========================
+ */
 
 export interface CreateTaxonomyTermPayload {
 	label: string;
@@ -31,3 +49,10 @@ export interface UpdateTaxonomyTermPayload {
 	updatedBy: string;
 	updatedAt: string;
 }
+
+export type UpdateTaxonomyTermsPayload = {
+	id: number;
+	label: string;
+	// TODO: allow position once available from backend
+	body: Omit<TaxonomyTerm, 'position'>[];
+};

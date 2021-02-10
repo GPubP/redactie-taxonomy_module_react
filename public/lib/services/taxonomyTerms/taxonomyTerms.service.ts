@@ -36,6 +36,17 @@ export class TaxonomyTermsApiService {
 			})
 			.json();
 	}
+
+	public async updateTerms(
+		taxonomyId: number,
+		taxonomyTerms: UpdateTaxonomyTermPayload[]
+	): Promise<TaxonomyTermsResponse> {
+		return await api
+			.put(`${TAXONOMIES_PREFIX_URL}/${taxonomyId}/terms`, {
+				json: taxonomyTerms,
+			})
+			.json();
+	}
 }
 
 export const taxonomyTermsApiService = new TaxonomyTermsApiService();

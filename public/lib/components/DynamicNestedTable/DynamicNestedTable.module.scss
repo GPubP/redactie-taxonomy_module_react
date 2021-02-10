@@ -1,0 +1,102 @@
+@import '~@a-ui/core/dist/assets/styles/_quarks';
+
+.o-dynamic-nested-table {
+	display: table;
+	width: 100%;
+	background-color: $table-bg;
+	border: 1px solid $table-border;
+}
+
+/**
+ * Elements
+ */
+
+.o-dynamic-nested-table__cell {
+	position: relative;
+	display: table-cell;
+	padding: $table-padding;
+	vertical-align: middle;
+
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		width: 100%;
+		height: 1px;
+		background: $table-border;
+	}
+
+	&::before {
+		top: -1px;
+	}
+
+	&::after {
+		bottom: 0;
+	}
+
+	&:global(.is-small) {
+		width: 1%;
+		white-space: nowrap;
+	}
+}
+
+.o-dynamic-nested-table__row {
+	display: table-row;
+	height: $spacer-lg;
+	transition: background-color $animation-duration $animation-easing;
+
+	&:nth-child(even) {
+		background-color: $table-striped-bg;
+	}
+
+	&:global(.is-collapsed) {
+		display: none;
+	}
+
+	&:global(.is-hovered) {
+		// display: none;
+		visibility: hidden;
+		// opacity: 0;
+	}
+}
+
+.o-dynamic-nested-table__head {
+	display: table-row-group;
+	background: $background-color-light;
+}
+
+.o-dynamic-nested-table__body {
+	display: table-row-group;
+
+	.o-dynamic-nested-table__row {
+		&:last-child {
+			.o-dynamic-nested-table__cell {
+				&::after {
+					content: none;
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Modifiers
+ */
+
+.o-dynamic-nested-table--fixed {
+	table-layout: fixed;
+}
+
+.o-dynamic-nested-table-responsive {
+	background-color: $table-bg;
+	border: 1px solid $table-border;
+	overflow-x: auto;
+	overflow-y: hidden;
+	width: 100%;
+
+	.o-dynamic-nested-table {
+		border: none;
+		margin-bottom: -1px;
+	}
+}

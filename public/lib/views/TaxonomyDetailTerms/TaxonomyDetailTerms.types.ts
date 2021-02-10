@@ -1,9 +1,21 @@
-import { NavigateFn } from '@redactie/utils';
-
 export interface DetailTermTableRow {
-	id: number;
-	taxonomyId: number;
-	label: string;
+	canMoveDown: boolean;
+	canMoveLeft: boolean;
+	canMoveRight: boolean;
+	canMoveUp: boolean;
 	description: string;
-	navigate: NavigateFn;
+	id: number;
+	label: string;
+	navigate: () => void;
+	path: string;
+	publishStatus: string;
+	rows: DetailTermTableRow[];
+	taxonomyId: number;
+}
+
+export enum MoveDirection {
+	Up,
+	Down,
+	Left,
+	Right,
 }

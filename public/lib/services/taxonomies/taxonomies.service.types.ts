@@ -1,3 +1,4 @@
+import { PaginatedResponse } from '../api/api.service.types';
 import { TaxonomyTerm } from '../taxonomyTerms';
 
 export interface Taxonomy extends TaxonomySettings {
@@ -22,16 +23,7 @@ export interface TaxonomySettings {
  * =========================
  */
 
-export interface TaxonomiesResponse {
-	_embedded: Taxonomy[];
-	_page: {
-		number: number;
-		size: number;
-		totalElements: number;
-		totalPages: number;
-	};
-}
-
+export type TaxonomiesResponse = PaginatedResponse<Taxonomy[]>;
 export type TaxonomyDetailResponse = Taxonomy;
 
 /**
