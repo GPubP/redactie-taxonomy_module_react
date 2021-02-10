@@ -54,7 +54,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 			: [];
 	}, [terms]);
 
-	const [hasChanges] = useDetectValueChangesWorker(
+	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
 		!isLoading && terms.length > 0,
 		terms,
 		BFF_MODULE_PUBLIC_PATH
@@ -282,9 +282,11 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 				// TODO: allow position once available from backend
 				body: terms.map(term => omit(['position'], term)),
 			};
-			taxonomiesFacade.updateTaxonomyTerms(payload, {
-				alertContainerId: ALERT_CONTAINER_IDS.detailTerms,
-			});
+			taxonomiesFacade
+				.updateTaxonomyTerms(payload, {
+					alertContainerId: ALERT_CONTAINER_IDS.detailTerms,
+				})
+				.then(() => resetChangeDetection());
 		}
 	};
 
