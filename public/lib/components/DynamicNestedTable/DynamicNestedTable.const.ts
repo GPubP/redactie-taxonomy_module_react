@@ -5,3 +5,5 @@ export const DEFAULT_MESSAGES = {
 };
 
 export const DND_ITEM_TYPE = 'row';
+
+export const INDENT_SIZE = 24;

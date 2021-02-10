@@ -8,9 +8,9 @@ import {
 	useNavigate,
 } from '@redactie/utils';
 import { insert, move, omit, pipe, set } from 'ramda';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
-import { DynamicNestedTable } from '../../components';
+import { DynamicNestedTable, INDENT_SIZE, XYCoord } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { listToTree, sortNestedTerms } from '../../helpers';
 import { useActiveTaxonomy, useTaxonomiesUIStates } from '../../hooks';
@@ -38,6 +38,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 	const [taxonomy] = useActiveTaxonomy(taxonomyId);
 	const [, detailState] = useTaxonomiesUIStates();
 	const [terms, setTerms] = useState<TaxonomyTerm[]>([]);
+	const hasMoved = useRef<{ id: number; dir: MoveDirection } | null>();
 
 	const { generatePath, navigate } = useNavigate();
 	const [initialLoading, setInitialLoading] = useState(true);
@@ -229,7 +230,6 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		}
 	};
 
-
 	const onDragRow = (source: DndItem, target: DndItem): void => {
 		const sourceTerm = terms.find(term => term.id === source.id);
 		const targetTerm = terms.find(term => term.id === target.id);
@@ -241,6 +241,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		if (targetTerm.parentTermId === sourceTerm.id) {
 			return;
 		}
+
 		const targetIsTopLevel = termIsTopLevel(targetTerm);
 		const movedInSameTree =
 			(termIsTopLevel(sourceTerm) && targetIsTopLevel) ||
@@ -330,6 +331,48 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 					parent.children.some(child => child.children?.length || 0 > 1);
 	};
 
+	const onOffsetRow = (
+		source: DndItem,
+		rect: DOMRect | null,
+		offsetDiff: XYCoord | null,
+		dragEnded = false
+	): void => {
+		if (dragEnded && source.id === hasMoved.current?.id) {
+			hasMoved.current = null;
+			return;
+		}
+		if (!offsetDiff || !rect) {
+			return;
+		}
+
+		const hoverMiddleY = (rect.bottom - rect.top) / 2;
+		// Don't perform any actions when moving up or down
+		const canPerformLeftOrRight = offsetDiff.y < hoverMiddleY && offsetDiff.y > -hoverMiddleY;
+
+		if (canPerformLeftOrRight) {
+			const sourceTerm = terms.find(term => term.id === source.id);
+
+			if (!sourceTerm) {
+				return;
+			}
+
+			const xTreshhold = INDENT_SIZE; // Size of level indent in px
+			const movingLeft = offsetDiff.x < 0 && offsetDiff.x < -xTreshhold;
+			const movingRight = offsetDiff.x > 0 && offsetDiff.x > xTreshhold;
+			const hasMovedLeft = hasMoved.current?.dir === MoveDirection.Left;
+			const hasMovedRight = hasMoved.current?.dir === MoveDirection.Right;
+
+			// Only allow to move left or right with one level at a time
+			if (movingLeft && canMoveLeft(sourceTerm) && !hasMovedLeft) {
+				hasMoved.current = { id: source.id, dir: MoveDirection.Left };
+				onMoveRow(source.id, MoveDirection.Left);
+			} else if (movingRight && canMoveRight(sourceTerm) && !hasMovedRight) {
+				hasMoved.current = { id: source.id, dir: MoveDirection.Right };
+				onMoveRow(source.id, MoveDirection.Right);
+			}
+		}
+	};
+
 	const parseTermRows = (terms: NestedTaxonomyTerm[] = []): DetailTermTableRow[] => {
 		return terms.map(term => {
 			const pathParams = [
@@ -368,6 +411,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 				draggable
 				fixed
 				moveRow={onDragRow}
+				offsetRow={onOffsetRow}
 				rows={termRows}
 				tableClassName="a-table--fixed--xs"
 			/>

@@ -68,7 +68,7 @@ export const DETAIL_TERMS_COLUMNS = (
 							disabled={!rowData.canMoveRight}
 						/>
 					</div>
-					<div className="u-margin-left">
+					<div className="u-margin-left u-min-w-0">
 						<EllipsisWithTooltip>
 							{<Link to={rowData.path}>{label}</Link>}
 						</EllipsisWithTooltip>
