@@ -6,5 +6,4 @@ export interface RowProps {
 	innerRef?: Ref<HTMLDivElement>;
 	isDragging?: boolean;
 	level?: number;
-	// isLast?: boolean;
 }

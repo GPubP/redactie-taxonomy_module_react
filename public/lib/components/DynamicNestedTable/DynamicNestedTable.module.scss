@@ -51,7 +51,7 @@
 	}
 
 	&:global(.is-collapsed) {
-		display: none;
+		opacity: 0.6;
 	}
 
 	&:global(.is-hovered) {

@@ -1,6 +1,7 @@
 import { Button, ButtonGroup } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
+import { lensProp } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,6 +10,9 @@ import { MODULE_PATHS, TENANT_ROOT } from '../../taxonomy.const';
 import { TableColumn } from '../../taxonomy.types';
 
 import { DetailTermTableRow, MoveDirection } from './TaxonomyDetailTerms.types';
+
+export const PARENT_TERM_ID_LENS = lensProp('parentTermId');
+export const POSITION_LENS = lensProp('position');
 
 export const DETAIL_TERMS_COLUMNS = (
 	t: TranslateFunc,
@@ -65,7 +69,9 @@ export const DETAIL_TERMS_COLUMNS = (
 						/>
 					</div>
 					<div className="u-margin-left">
-						<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
+						<EllipsisWithTooltip>
+							{<Link to={rowData.path}>{label}</Link>}
+						</EllipsisWithTooltip>
 						<p className="small">
 							{rowData.description ? (
 								<EllipsisWithTooltip>{rowData.description}</EllipsisWithTooltip>

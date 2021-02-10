@@ -19,3 +19,9 @@ export enum MoveDirection {
 	Left,
 	Right,
 }
+
+export interface DndItem {
+	id: number;
+	index: number;
+	type: string;
+}

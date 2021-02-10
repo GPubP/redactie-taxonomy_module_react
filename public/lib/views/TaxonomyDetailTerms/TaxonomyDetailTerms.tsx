@@ -7,7 +7,7 @@ import {
 	useDetectValueChangesWorker,
 	useNavigate,
 } from '@redactie/utils';
-import { lensProp, move, omit, set, update } from 'ramda';
+import { insert, move, omit, pipe, set } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { DynamicNestedTable } from '../../components';
@@ -19,8 +19,13 @@ import { taxonomiesFacade } from '../../store/taxonomies';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../taxonomy.const';
 import { NestedTaxonomyTerm, TaxonomyRouteProps } from '../../taxonomy.types';
 
-import { DETAIL_TERMS_ALLOWED_PATHS, DETAIL_TERMS_COLUMNS } from './TaxonomyDetailTerms.const';
-import { DetailTermTableRow, MoveDirection } from './TaxonomyDetailTerms.types';
+import {
+	DETAIL_TERMS_ALLOWED_PATHS,
+	DETAIL_TERMS_COLUMNS,
+	PARENT_TERM_ID_LENS,
+	POSITION_LENS,
+} from './TaxonomyDetailTerms.const';
+import { DetailTermTableRow, DndItem, MoveDirection } from './TaxonomyDetailTerms.types';
 
 const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 	const taxonomyId = parseInt(match.params.taxonomyId);
@@ -41,7 +46,6 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		return terms.length
 			? sortNestedTerms(
 					listToTree(terms, {
-						addPosition: true,
 						parentKey: 'parentTermId',
 						skipTrees: [],
 					})
@@ -65,22 +69,28 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 	// Set working copy for taxonomy terms
 	useEffect(() => {
 		if (taxonomy?.terms.length) {
-			setTerms(taxonomy.terms);
+			// Set initial position on terms
+			const recursiveFlatten = (tree: NestedTaxonomyTerm[]): TaxonomyTerm[] => {
+				const nestedLevels = tree
+					.map(nested => recursiveFlatten(nested.children || []))
+					.flat();
+				return tree.concat(nestedLevels);
+			};
+			const termsWithPosition = recursiveFlatten(
+				listToTree(taxonomy.terms, {
+					addPosition: true,
+					parentKey: 'parentTermId',
+					skipTrees: [],
+				})
+			).map(term => omit(['children'], term));
+
+			setTerms(termsWithPosition);
 		}
 	}, [taxonomy]);
 
 	/**
 	 * Methods
 	 */
-
-	// const convertToList = (treeArray: NestedTaxonomyTerm[]): TaxonomyTerm[] => {
-	// 	const recursiveFlatten = (tree: NestedTaxonomyTerm[]): TaxonomyTerm[] => {
-	// 		const nestedLevels = tree.map(nested => recursiveFlatten(nested.children || [])).flat();
-	// 		return tree.concat(nestedLevels);
-	// 	};
-	// 	const flatList = recursiveFlatten(treeArray);
-	// 	return flatList.map(term => omit(['children'], term));
-	// };
 
 	const findNestedTerm = (
 		treeArray: NestedTaxonomyTerm[] | undefined,
@@ -99,7 +109,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		);
 	};
 
-	const repositionTerms = (
+	const moveTerms = (
 		from: NestedTaxonomyTerm,
 		to: NestedTaxonomyTerm | undefined
 	): TaxonomyTerm[] => {
@@ -111,6 +121,23 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 				return { ...term, position: to.position };
 			}
 			return term;
+		});
+	};
+
+	const repositionTerms = (nestedTerms: NestedTaxonomyTerm[]): TaxonomyTerm[] => {
+		return nestedTerms.map((nested, position) => ({
+			...nested,
+			position,
+		}));
+	};
+
+	const updateTerms = (movedTerms: NestedTaxonomyTerm[]): TaxonomyTerm[] => {
+		return terms.map(term => {
+			const termToUpdate = movedTerms.find(moved => moved.id === term.id);
+			if (termToUpdate) {
+				return omit(['children'], termToUpdate);
+			}
+			return omit(['children'], term);
 		});
 	};
 
@@ -130,54 +157,119 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 
 		const source = terms[sourceIndex];
 		const parent = findNestedTerm(termsTree, source.parentTermId || termId);
-		const parentTermIdLens = lensProp('parentTermId');
-		const positionLens = lensProp('position');
 
 		if (!parent) {
 			return;
 		}
 
-		// Change position up or down
-		if (direction === MoveDirection.Up || direction === MoveDirection.Down) {
-			const updatedPosition = direction === MoveDirection.Up ? -1 : 1;
-			const list = termIsTopLevel(source) ? termsTree : parent.children || [];
-			if (list.length) {
-				const fromIndex = list.findIndex(child => child.id === termId);
-				const toIndex = fromIndex + updatedPosition;
-				const updatedFrom = set(positionLens, toIndex, source);
-				const to = list.find(child => child.position === toIndex);
-				const updatedTo = set(positionLens, fromIndex, to);
-				setTerms(repositionTerms(updatedFrom, updatedTo));
-				return;
+		let updatedTerms: TaxonomyTerm[] = [];
+
+		switch (direction) {
+			case MoveDirection.Up:
+			case MoveDirection.Down: {
+				const updatedPosition = direction === MoveDirection.Up ? -1 : 1;
+				const list = termIsTopLevel(source) ? termsTree : parent.children || [];
+
+				if (list.length) {
+					const fromIndex = list.findIndex(child => child.id === termId);
+					const toIndex = fromIndex + updatedPosition;
+					const updatedFrom = set(POSITION_LENS, toIndex, source);
+					const to = list.find(child => child.position === toIndex);
+					const updatedTo = set(POSITION_LENS, fromIndex, to);
+					updatedTerms = moveTerms(updatedFrom, updatedTo);
+				}
+				break;
+			}
+			case MoveDirection.Left: {
+				const oldParentTerm = source.parentTermId;
+				const newParentTerm = termIsTopLevel(parent) ? termId : parent.parentTermId;
+				const updatedTerm = set(PARENT_TERM_ID_LENS, newParentTerm, source);
+				// Reposition old list
+				const oldList = repositionTerms(
+					(parent.children || []).filter(child => child.id !== termId)
+				);
+				// Reposition new list
+				const newList =
+					newParentTerm === termId
+						? termsTree
+						: findNestedTerm(termsTree, newParentTerm)?.children || [];
+				// Always place below previous parent
+				const newPosition = newList.findIndex(term => term.id === oldParentTerm) + 1;
+				// Insert updated term in higher level
+				const reorderedNewList = pipe(
+					insert(newPosition, updatedTerm),
+					repositionTerms
+				)(newList);
+				updatedTerms = updateTerms(oldList.concat(reorderedNewList));
+				break;
+			}
+			case MoveDirection.Right: {
+				const list = termIsTopLevel(source) ? termsTree : parent.children || [];
+				const termIndex = list.findIndex(child => child.id === termId);
+				// Get previous item in the list
+				const prevIndex = termIndex - 1;
+				const prevTerm = list[prevIndex];
+				// Set new parentTermId
+				const updatedTerm = set(PARENT_TERM_ID_LENS, prevTerm.id, source);
+				// Reposition old list
+				const oldList = repositionTerms(list.filter(child => child.id !== termId));
+				// Reposition new list
+				const newList = prevTerm.children || [];
+				const reorderedNewList = pipe(
+					insert(newList.length, updatedTerm),
+					repositionTerms
+				)(newList);
+				updatedTerms = updateTerms(oldList.concat(reorderedNewList));
+				break;
 			}
 		}
-
-		// Change hierarchy
-		if (direction === MoveDirection.Left) {
-			if (termIsTopLevel(parent)) {
-				// Top level
-				const updatedTerm = set(parentTermIdLens, termId, source);
-				const updatedTerms = update(sourceIndex, updatedTerm, terms);
-				setTerms(updatedTerms);
-				return;
-			}
-
-			const updatedTerm = set(parentTermIdLens, parent.parentTermId, source);
-			const updatedTerms = update(sourceIndex, updatedTerm, terms);
+		// Don't cause any unnecessary renders
+		if (updatedTerms.length) {
 			setTerms(updatedTerms);
+		}
+	};
+
+
+	const onDragRow = (source: DndItem, target: DndItem): void => {
+		const sourceTerm = terms.find(term => term.id === source.id);
+		const targetTerm = terms.find(term => term.id === target.id);
+
+		if (!sourceTerm || !targetTerm) {
 			return;
 		}
-		if (direction === MoveDirection.Right) {
-			if (parent.children?.length) {
-				const termIndex = parent.children.findIndex(child => child.id === termId);
-
-				const prevIndex = termIndex - 1;
-				const prevTermId = parent.children[prevIndex].id;
-
-				const updatedTerm = set(parentTermIdLens, prevTermId, source);
-				const updatedTerms = update(sourceIndex, updatedTerm, terms);
-				setTerms(updatedTerms);
-			}
+		// Check if target is child
+		if (targetTerm.parentTermId === sourceTerm.id) {
+			return;
+		}
+		const targetIsTopLevel = termIsTopLevel(targetTerm);
+		const movedInSameTree =
+			(termIsTopLevel(sourceTerm) && targetIsTopLevel) ||
+			(sourceTerm.parentTermId === targetTerm.parentTermId &&
+				targetTerm.parentTermId !== targetTerm.id &&
+				sourceTerm.parentTermId !== sourceTerm.id);
+		// Update parentTermId
+		const newParentTermId = targetIsTopLevel ? source.id : targetTerm.parentTermId;
+		const updatedTerm = set(PARENT_TERM_ID_LENS, newParentTermId, sourceTerm);
+		// Reposition old list
+		const oldList = movedInSameTree
+			? []
+			: findNestedTerm(termsTree, sourceTerm.parentTermId)?.children || [];
+		const reorderedOldList = repositionTerms(oldList.filter(old => old.id !== sourceTerm.id));
+		// Reposition new list
+		// targetId is only needed when target is not top level
+		const targetId = movedInSameTree ? sourceTerm.parentTermId : targetTerm.parentTermId;
+		const targetList = targetIsTopLevel
+			? termsTree
+			: findNestedTerm(termsTree, targetId)?.children || [];
+		const newList = movedInSameTree
+			? move(updatedTerm.position, targetTerm.position, targetList)
+			: insert(targetTerm.position, updatedTerm, targetList);
+		const reorderedNewList = repositionTerms(newList);
+		// Update terms
+		const updatedTerms = updateTerms(reorderedOldList.concat(reorderedNewList));
+		// Don't cause any unnecessary renders
+		if (updatedTerms.length) {
+			setTerms(updatedTerms);
 		}
 	};
 
@@ -223,19 +315,19 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		return false;
 	};
 	const canMoveRight = (term: TaxonomyTerm): boolean => {
+		if (termIsTopLevel(term)) {
+			const termIndex = termsTree.findIndex(tree => tree.id === term.id);
+			return termIndex > 0;
+		}
 		const parent = findNestedTerm(termsTree, term.parentTermId);
 		if (!parent?.children) {
 			return false;
 		}
 		const termIndex = parent.children.findIndex(child => child.id === term.id);
-		if (termIndex < 1) {
-			return false;
-		}
-
-		return (
-			parent.children.length > 1 ||
-			parent.children.some(child => child.children?.length || 0 > 1)
-		);
+		return termIndex < 1
+			? false
+			: parent.children.length > 1 ||
+					parent.children.some(child => child.children?.length || 0 > 1);
 	};
 
 	const parseTermRows = (terms: NestedTaxonomyTerm[] = []): DetailTermTableRow[] => {
@@ -275,7 +367,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 				dataKey="id"
 				draggable
 				fixed
-				moveRow={() => null}
+				moveRow={onDragRow}
 				rows={termRows}
 				tableClassName="a-table--fixed--xs"
 			/>
