@@ -7,7 +7,7 @@ import React, { FC, Fragment, ReactElement } from 'react';
 import { TableColumn } from '../../taxonomy.types';
 
 import { Cell } from './Cell';
-import { DEFAULT_MESSAGES, DND_ITEM_TYPE } from './DynamicNestedTable.const';
+import { DEFAULT_MESSAGES, DND_ITEM_TYPE, INDENT_SIZE } from './DynamicNestedTable.const';
 import styles from './DynamicNestedTable.module.scss';
 import {
 	DndDragDroppableChildFnParams,
@@ -30,6 +30,7 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 	loadDataMessage = DEFAULT_MESSAGES.loading,
 	loading = false,
 	moveRow = () => null,
+	offsetRow = () => null,
 	noColumnsMessage = DEFAULT_MESSAGES.noCols,
 	noDataMessage = DEFAULT_MESSAGES.noData,
 	orderBy,
@@ -58,7 +59,7 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 		rowIndex: number,
 		level = 1
 	): ReactElement => {
-		const indentStyle = { borderLeft: `${(level - 1) * 1.5}rem solid white` };
+		const indentStyle = { borderLeft: `${(level - 1) * (INDENT_SIZE / 16)}rem solid white` };
 
 		return (
 			<Cell
@@ -96,9 +97,10 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 			<DndDragDroppable
 				// Key can NOT be based on index because this will cause issues with react-dnd's
 				// ability to set the current item which is being dragged over/hovered
-				key={`table-row-${level}-${id}`}
+				key={`table-row-${id}`}
 				id={id}
 				moveRow={moveRow}
+				offsetRow={offsetRow}
 				index={rowIndex}
 				accept={[DND_ITEM_TYPE]}
 			>

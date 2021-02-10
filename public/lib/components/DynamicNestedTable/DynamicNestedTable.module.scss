@@ -55,9 +55,7 @@
 	}
 
 	&:global(.is-hovered) {
-		// display: none;
-		visibility: hidden;
-		// opacity: 0;
+		opacity: 0;
 	}
 }
 
