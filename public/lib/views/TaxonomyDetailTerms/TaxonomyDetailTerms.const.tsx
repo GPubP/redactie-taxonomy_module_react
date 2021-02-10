@@ -68,9 +68,7 @@ export const DETAIL_TERMS_COLUMNS = (
 							disabled={!rowData.canMoveRight}
 						/>
 					</div>
-					{/* We need to specify a width for the ellipsis overflow to work in a flex
-					context: 4.5rem(width of arrow buttons) + 1.5rem (margin) = 6rem */}
-					<div className="u-margin-left" style={{ width: 'calc(100% - 6rem)' }}>
+					<div className="u-margin-left u-min-w-0">
 						<EllipsisWithTooltip>
 							{<Link to={rowData.path}>{label}</Link>}
 						</EllipsisWithTooltip>
