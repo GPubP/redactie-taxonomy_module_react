@@ -5,7 +5,7 @@ import { taxonomiesFacade } from '../../store/taxonomies';
 
 import { UseActiveTaxonomy } from './useActiveTaxonomy.types';
 
-const useActiveTaxonomy: UseActiveTaxonomy = (taxonomyId?: number) => {
+const useActiveTaxonomy: UseActiveTaxonomy = taxonomyId => {
 	useEffect(() => {
 		if (taxonomyId) {
 			const hasTaxonomy = taxonomiesFacade.hasTaxonomy(taxonomyId);

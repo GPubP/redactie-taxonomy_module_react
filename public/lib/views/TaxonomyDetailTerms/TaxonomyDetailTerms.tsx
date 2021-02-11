@@ -36,7 +36,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 
 	const [t] = useCoreTranslation();
 	const [taxonomy] = useActiveTaxonomy(taxonomyId);
-	const [, detailState] = useTaxonomiesUIStates();
+	const [, detailState] = useTaxonomiesUIStates(taxonomyId);
 	const [terms, setTerms] = useState<TaxonomyTerm[]>([]);
 	const hasMoved = useRef<{ id: number; dir: MoveDirection } | null>();
 
