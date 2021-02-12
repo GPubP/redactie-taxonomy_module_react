@@ -51,11 +51,24 @@
 	}
 
 	&:global(.is-collapsed) {
-		opacity: 0.6;
+		display: none;
 	}
 
 	&:global(.is-hovered) {
-		opacity: 0;
+		.o-dynamic-nested-table__cell {
+			background: transparent;
+			color: transparent;
+
+			&::before,
+			&::after {
+				background: $brand-primary;
+				height: 4px;
+			}
+
+			> * {
+				opacity: 0;
+			}
+		}
 	}
 }
 
@@ -81,6 +94,16 @@
 /**
  * Modifiers
  */
+
+.o-dynamic-nested-table--draggable {
+	.o-dynamic-nested-table__body {
+		display: table-row-group;
+
+		.o-dynamic-nested-table__row {
+			cursor: move;
+		}
+	}
+}
 
 .o-dynamic-nested-table--fixed {
 	table-layout: fixed;

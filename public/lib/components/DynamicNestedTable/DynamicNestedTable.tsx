@@ -161,6 +161,7 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 			<div className={cx(className, { 'o-dynamic-nested-table-responsive': responsive })}>
 				<div
 					className={cx('o-dynamic-nested-table', tableClassName, {
+						'o-dynamic-nested-table--draggable': draggable,
 						'o-dynamic-nested-table--fixed': fixed,
 					})}
 				>

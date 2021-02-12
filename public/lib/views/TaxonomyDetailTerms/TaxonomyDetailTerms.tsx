@@ -348,6 +348,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 
 		return (
 			<DynamicNestedTable
+				className="u-margin-bottom"
 				columns={DETAIL_TERMS_COLUMNS(t, onMoveRow) as any}
 				dataKey="id"
 				draggable
