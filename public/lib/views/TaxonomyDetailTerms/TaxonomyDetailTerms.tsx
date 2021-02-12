@@ -213,13 +213,55 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		}
 	};
 
-	const onDragRow = (source: DndItem, target: DndItem): void => {
+	const onDragRow = (
+		source: DndItem,
+		target: DndItem,
+		boundingRect: DOMRect | null,
+		clientOffset: XYCoord | null,
+		offsetDiff?: XYCoord | null
+	): void => {
 		const sourceTerm = terms.find(term => term.id === source.id);
 		const targetTerm = terms.find(term => term.id === target.id);
 
 		if (!sourceTerm || !targetTerm) {
 			return;
 		}
+		// Don't perform drag action when item is the only one in top level
+		if (termIsTopLevel(sourceTerm) && termsTree.length === 1) {
+			return;
+		}
+
+		// Handle horizontal movement
+		if (sourceTerm.id === targetTerm.id) {
+			if (!offsetDiff || !boundingRect) {
+				return;
+			}
+
+			if (sourceTerm.id !== hasMoved.current?.id) {
+				hasMoved.current = null;
+			}
+
+			const xTreshhold = INDENT_SIZE; // Size of level indent in px
+			const movingLeft = offsetDiff.x < 0 && offsetDiff.x < -xTreshhold;
+			const movingRight = offsetDiff.x > 0 && offsetDiff.x > xTreshhold;
+
+			// TODO: Moving to the left or right always goes to the max. possible depth
+
+			if (movingLeft && canMoveLeft(sourceTerm)) {
+				const list = findNestedTerm(termsTree, sourceTerm.parentTermId)?.children || [];
+				const sourceIndex = list.findIndex(term => term.id === source.id);
+				// Only allow last item in level to move left to avoid jumping from current index
+				if (sourceIndex !== -1 && sourceIndex === list.length - 1) {
+					hasMoved.current = { id: source.id, dir: MoveDirection.Left };
+					onMoveRow(source.id, MoveDirection.Left);
+				}
+			} else if (movingRight && canMoveRight(termsTree, sourceTerm)) {
+				hasMoved.current = { id: source.id, dir: MoveDirection.Right };
+				onMoveRow(source.id, MoveDirection.Right);
+			}
+			return;
+		}
+
 		// Check if target is child
 		if (targetTerm.parentTermId === sourceTerm.id) {
 			return;
@@ -311,7 +353,6 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 				draggable
 				fixed
 				moveRow={onDragRow}
-				offsetRow={onOffsetRow}
 				rows={termRows}
 				tableClassName="a-table--fixed--xs"
 			/>
