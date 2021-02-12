@@ -22,10 +22,16 @@ import { NestedTaxonomyTerm, TaxonomyRouteProps } from '../../taxonomy.types';
 import {
 	DETAIL_TERMS_ALLOWED_PATHS,
 	DETAIL_TERMS_COLUMNS,
+	INITIAL_HAS_MOVED,
 	PARENT_TERM_ID_LENS,
 	POSITION_LENS,
 } from './TaxonomyDetailTerms.const';
-import { DetailTermTableRow, DndItem, MoveDirection } from './TaxonomyDetailTerms.types';
+import {
+	DetailTermTableRow,
+	DndItem,
+	HasMovedRef,
+	MoveDirection,
+} from './TaxonomyDetailTerms.types';
 import {
 	canMoveDown,
 	canMoveLeft,
@@ -47,7 +53,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 	const [taxonomy] = useActiveTaxonomy(taxonomyId);
 	const [, detailState] = useTaxonomiesUIStates(taxonomyId);
 	const [terms, setTerms] = useState<TaxonomyTerm[]>([]);
-	const hasMoved = useRef<{ id: number; dir: MoveDirection } | null>();
+	const hasMoved = useRef<HasMovedRef>(INITIAL_HAS_MOVED);
 
 	const { generatePath, navigate } = useNavigate();
 	const [initialLoading, setInitialLoading] = useState(true);
@@ -237,26 +243,37 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 				return;
 			}
 
-			if (sourceTerm.id !== hasMoved.current?.id) {
-				hasMoved.current = null;
+			if (hasMoved.current?.id && sourceTerm.id !== hasMoved.current?.id) {
+				hasMoved.current = INITIAL_HAS_MOVED;
 			}
 
-			const xTreshhold = INDENT_SIZE; // Size of level indent in px
-			const movingLeft = offsetDiff.x < 0 && offsetDiff.x < -xTreshhold;
-			const movingRight = offsetDiff.x > 0 && offsetDiff.x > xTreshhold;
-
-			// TODO: Moving to the left or right always goes to the max. possible depth
+			const { zeroPoint, leftXThreshold, rightXThreshold } = hasMoved.current;
+			const movingLeft = offsetDiff.x < zeroPoint && offsetDiff.x < leftXThreshold;
+			const movingRight = offsetDiff.x > zeroPoint && offsetDiff.x > rightXThreshold;
 
 			if (movingLeft && canMoveLeft(sourceTerm)) {
 				const list = findNestedTerm(termsTree, sourceTerm.parentTermId)?.children || [];
 				const sourceIndex = list.findIndex(term => term.id === source.id);
-				// Only allow last item in level to move left to avoid jumping from current index
-				if (sourceIndex !== -1 && sourceIndex === list.length - 1) {
-					hasMoved.current = { id: source.id, dir: MoveDirection.Left };
+				// // Only allow last item in level to move left to avoid jumping from current index
+				const isLastTermInTree = sourceIndex !== -1 && sourceIndex === list.length - 1;
+				if (isLastTermInTree) {
+					// Keep ref of previous to check whether we can increment going a level higher
+					hasMoved.current = {
+						id: source.id,
+						leftXThreshold: leftXThreshold - INDENT_SIZE,
+						rightXThreshold: rightXThreshold - INDENT_SIZE,
+						zeroPoint: offsetDiff.x - INDENT_SIZE,
+					};
 					onMoveRow(source.id, MoveDirection.Left);
 				}
 			} else if (movingRight && canMoveRight(termsTree, sourceTerm)) {
-				hasMoved.current = { id: source.id, dir: MoveDirection.Right };
+				// Keep ref of previous to check whether we can increment going a level deeper
+				hasMoved.current = {
+					id: source.id,
+					leftXThreshold: leftXThreshold + INDENT_SIZE,
+					rightXThreshold: rightXThreshold + INDENT_SIZE,
+					zeroPoint: offsetDiff.x + INDENT_SIZE,
+				};
 				onMoveRow(source.id, MoveDirection.Right);
 			}
 			return;
@@ -267,6 +284,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 			return;
 		}
 
+		// Handle vertical movement
 		const targetIsTopLevel = termIsTopLevel(targetTerm);
 		const movedInSameTree =
 			(termIsTopLevel(sourceTerm) && targetIsTopLevel) ||
