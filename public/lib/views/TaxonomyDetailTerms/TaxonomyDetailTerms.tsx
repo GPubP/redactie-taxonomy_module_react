@@ -215,7 +215,9 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		}
 		// Don't cause any unnecessary renders
 		if (updatedTerms.length) {
-			setTerms(updatedTerms);
+			// Update on next tick to avoid issues with react-dnd caused by internal id's being
+			// overwritten when dragging horizontally
+			setTimeout(() => setTerms(updatedTerms), 0);
 		}
 	};
 
