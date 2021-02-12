@@ -26,6 +26,15 @@ import {
 	POSITION_LENS,
 } from './TaxonomyDetailTerms.const';
 import { DetailTermTableRow, DndItem, MoveDirection } from './TaxonomyDetailTerms.types';
+import {
+	canMoveDown,
+	canMoveLeft,
+	canMoveRight,
+	canMoveUp,
+	findNestedTerm,
+	recursiveFlatten,
+	termIsTopLevel,
+} from './TaxonomyDetailTerms.utils';
 
 const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 	const taxonomyId = parseInt(match.params.taxonomyId);
@@ -71,12 +80,6 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 	useEffect(() => {
 		if (taxonomy?.terms.length) {
 			// Set initial position on terms
-			const recursiveFlatten = (tree: NestedTaxonomyTerm[]): TaxonomyTerm[] => {
-				const nestedLevels = tree
-					.map(nested => recursiveFlatten(nested.children || []))
-					.flat();
-				return tree.concat(nestedLevels);
-			};
 			const termsWithPosition = recursiveFlatten(
 				listToTree(taxonomy.terms, {
 					addPosition: true,
@@ -92,23 +95,6 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 	/**
 	 * Methods
 	 */
-
-	const findNestedTerm = (
-		treeArray: NestedTaxonomyTerm[] | undefined,
-		termId: number
-	): NestedTaxonomyTerm | undefined => {
-		if (!treeArray?.length) {
-			return;
-		}
-
-		return (
-			treeArray.find(tree => tree.id === termId) ||
-			findNestedTerm(
-				treeArray.flatMap(tree => tree.children || []),
-				termId
-			)
-		);
-	};
 
 	const moveTerms = (
 		from: NestedTaxonomyTerm,
@@ -141,9 +127,6 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 			return omit(['children'], term);
 		});
 	};
-
-	const termIsTopLevel = (term: NestedTaxonomyTerm): boolean =>
-		!term.parentTermId || term.parentTermId === term.id;
 
 	const onCancel = (): void => {
 		navigate(MODULE_PATHS.overview);
@@ -290,91 +273,6 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		}
 	};
 
-	const canMoveLeft = (term: TaxonomyTerm): boolean => {
-		return !termIsTopLevel(term);
-	};
-	const canMoveUp = (term: TaxonomyTerm): boolean => {
-		if (termIsTopLevel(term)) {
-			const termIndex = termsTree.findIndex(tree => tree.id === term.id);
-			return termIndex > 0;
-		}
-		const parent = findNestedTerm(termsTree, term.parentTermId);
-		if (parent?.children?.length) {
-			const termIndex = parent.children.findIndex(child => child.id === term.id);
-			return termIndex > 0;
-		}
-		return false;
-	};
-	const canMoveDown = (term: TaxonomyTerm): boolean => {
-		if (termIsTopLevel(term)) {
-			const termIndex = termsTree.findIndex(tree => tree.id === term.id);
-			return termIndex < termsTree.length - 1;
-		}
-		const parent = findNestedTerm(termsTree, term.parentTermId);
-		if (parent?.children?.length) {
-			const termIndex = parent.children.findIndex(child => child.id === term.id);
-			return termIndex < parent.children.length - 1;
-		}
-		return false;
-	};
-	const canMoveRight = (term: TaxonomyTerm): boolean => {
-		if (termIsTopLevel(term)) {
-			const termIndex = termsTree.findIndex(tree => tree.id === term.id);
-			return termIndex > 0;
-		}
-		const parent = findNestedTerm(termsTree, term.parentTermId);
-		if (!parent?.children) {
-			return false;
-		}
-		const termIndex = parent.children.findIndex(child => child.id === term.id);
-		return termIndex < 1
-			? false
-			: parent.children.length > 1 ||
-					parent.children.some(child => child.children?.length || 0 > 1);
-	};
-
-	const onOffsetRow = (
-		source: DndItem,
-		rect: DOMRect | null,
-		offsetDiff: XYCoord | null,
-		dragEnded = false
-	): void => {
-		if (dragEnded && source.id === hasMoved.current?.id) {
-			hasMoved.current = null;
-			return;
-		}
-		if (!offsetDiff || !rect) {
-			return;
-		}
-
-		const hoverMiddleY = (rect.bottom - rect.top) / 2;
-		// Don't perform any actions when moving up or down
-		const canPerformLeftOrRight = offsetDiff.y < hoverMiddleY && offsetDiff.y > -hoverMiddleY;
-
-		if (canPerformLeftOrRight) {
-			const sourceTerm = terms.find(term => term.id === source.id);
-
-			if (!sourceTerm) {
-				return;
-			}
-
-			const xTreshhold = INDENT_SIZE; // Size of level indent in px
-			const movingLeft = offsetDiff.x < 0 && offsetDiff.x < -xTreshhold;
-			const movingRight = offsetDiff.x > 0 && offsetDiff.x > xTreshhold;
-			const hasMovedLeft = hasMoved.current?.dir === MoveDirection.Left;
-			const hasMovedRight = hasMoved.current?.dir === MoveDirection.Right;
-
-			// Only allow to move left or right with one level at a time
-			if (movingLeft && canMoveLeft(sourceTerm) && !hasMovedLeft) {
-				hasMoved.current = { id: source.id, dir: MoveDirection.Left };
-				onMoveRow(source.id, MoveDirection.Left);
-			} else if (movingRight && canMoveRight(sourceTerm) && !hasMovedRight) {
-				hasMoved.current = { id: source.id, dir: MoveDirection.Right };
-				onMoveRow(source.id, MoveDirection.Right);
-			}
-		}
-	};
-
 	const parseTermRows = (terms: NestedTaxonomyTerm[] = []): DetailTermTableRow[] => {
 		return terms.map(term => {
 			const pathParams = [
@@ -388,9 +286,9 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 				label: term.label,
 				description: term.description,
 				canMoveLeft: canMoveLeft(term),
-				canMoveUp: canMoveUp(term),
-				canMoveDown: canMoveDown(term),
-				canMoveRight: canMoveRight(term),
+				canMoveUp: canMoveUp(termsTree, term),
+				canMoveDown: canMoveDown(termsTree, term),
+				canMoveRight: canMoveRight(termsTree, term),
 				navigate: () => navigate(...pathParams),
 				path: generatePath(...pathParams),
 				publishStatus: term.publishStatus,
