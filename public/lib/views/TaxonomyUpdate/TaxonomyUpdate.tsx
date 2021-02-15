@@ -7,6 +7,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
+	ContextHeaderTab,
 	DataLoader,
 	RenderChildRoutes,
 	useNavigate,
@@ -27,7 +28,9 @@ import {
 	DETAIL_TABS,
 	MODULE_PATHS,
 } from '../../taxonomy.const';
-import { Tab, TaxonomyRouteProps } from '../../taxonomy.types';
+import { TaxonomyRouteProps } from '../../taxonomy.types';
+
+import { DEFAULT_HEADER_BADGES } from './TaxonomyUpdate.const';
 
 const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 	const taxonomyId = parseInt(match.params.taxonomyId);
@@ -78,7 +81,10 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 		navigate(MODULE_PATHS.overview);
 	};
 
-	const updateTaxonomy = (body: UpdateTaxonomySettingsPayload['body'], tab: Tab): void => {
+	const updateTaxonomy = (
+		body: UpdateTaxonomySettingsPayload['body'],
+		tab: ContextHeaderTab
+	): void => {
 		switch (tab.name) {
 			case DETAIL_TAB_MAP.settings.name: {
 				const payload = { id: taxonomyId, body };
@@ -92,7 +98,11 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 		}
 	};
 
-	const pageTitle = activeTaxonomy ? `${activeTaxonomy?.label} bewerken` : 'Taxonomie bewerken';
+	const pageTitle = (
+		<>
+			<i>{activeTaxonomy?.label ?? 'Taxonomie'}</i> {t(CORE_TRANSLATIONS.ROUTING_UPDATE)}
+		</>
+	);
 
 	/**
 	 * Render
@@ -126,6 +136,7 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 				})}
 				tabs={activeTabs}
 				title={pageTitle}
+				badges={DEFAULT_HEADER_BADGES}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				{isTermsOverview && (

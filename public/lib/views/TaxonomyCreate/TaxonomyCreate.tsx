@@ -15,6 +15,7 @@ import {
 import React, { FC, ReactElement, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { useActiveTabs } from '../../hooks';
 import { CreateTaxonomyPayload } from '../../services/taxonomies';
 import { taxonomiesFacade } from '../../store/taxonomies';
@@ -36,7 +37,7 @@ const TaxonomyCreate: FC<TaxonomyRouteProps> = ({ location, route }) => {
 	const { tenantId } = useTenantContext();
 
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
-
+	const [t] = useCoreTranslation();
 	const activeTabs = useActiveTabs(DETAIL_TABS.slice(0, 1), location.pathname);
 	const { generatePath, navigate } = useNavigate();
 	const routes = useRoutes();
@@ -71,6 +72,8 @@ const TaxonomyCreate: FC<TaxonomyRouteProps> = ({ location, route }) => {
 			});
 	};
 
+	const pageTitle = `Taxonomie ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`;
+
 	/**
 	 * Render
 	 */
@@ -100,7 +103,7 @@ const TaxonomyCreate: FC<TaxonomyRouteProps> = ({ location, route }) => {
 					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),
 					component: Link,
 				})}
-				title="Taxonomie aanmaken"
+				title={pageTitle}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
