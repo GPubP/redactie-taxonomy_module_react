@@ -98,15 +98,15 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 		}
 	};
 
+	/**
+	 * Render
+	 */
+
 	const pageTitle = (
 		<>
 			<i>{activeTaxonomy?.label ?? 'Taxonomie'}</i> {t(CORE_TRANSLATIONS.ROUTING_UPDATE)}
 		</>
 	);
-
-	/**
-	 * Render
-	 */
 
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {

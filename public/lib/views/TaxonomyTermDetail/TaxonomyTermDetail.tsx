@@ -137,14 +137,6 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		taxonomyId && navigate(MODULE_PATHS.detailTerms, { taxonomyId });
 	};
 
-	const pageTitle = isUpdate ? (
-		<>
-			<i>{taxonomyTerm?.label ?? 'Term'}</i> {t(CORE_TRANSLATIONS.ROUTING_UPDATE)}
-		</>
-	) : (
-		`Term ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`
-	);
-
 	const headerBadges: ContextHeaderBadge[] = isUpdate
 		? [
 				{
@@ -157,6 +149,13 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	/**
 	 * RENDER
 	 */
+	const pageTitle = isUpdate ? (
+		<>
+			<i>{taxonomyTerm?.label ?? 'Term'}</i> {t(CORE_TRANSLATIONS.ROUTING_UPDATE)}
+		</>
+	) : (
+		`Term ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`
+	);
 
 	const renderForm = (): ReactElement => (
 		<TermForm

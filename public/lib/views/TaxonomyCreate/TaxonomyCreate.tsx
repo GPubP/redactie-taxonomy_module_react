@@ -72,11 +72,11 @@ const TaxonomyCreate: FC<TaxonomyRouteProps> = ({ location, route }) => {
 			});
 	};
 
-	const pageTitle = `Taxonomie ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`;
-
 	/**
 	 * Render
 	 */
+	const pageTitle = `Taxonomie ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`;
+
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			allowedPaths: TAXONOMY_CREATE_ALLOWED_PATHS,
