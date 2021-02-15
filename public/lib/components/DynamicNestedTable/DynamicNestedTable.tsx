@@ -30,7 +30,6 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 	loadDataMessage = DEFAULT_MESSAGES.loading,
 	loading = false,
 	moveRow = () => null,
-	offsetRow = () => null,
 	noColumnsMessage = DEFAULT_MESSAGES.noCols,
 	noDataMessage = DEFAULT_MESSAGES.noData,
 	orderBy,
@@ -98,9 +97,9 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 				// Key can NOT be based on index because this will cause issues with react-dnd's
 				// ability to set the current item which is being dragged over/hovered
 				key={`table-row-${id}`}
+				allowHorizontalDrag
 				id={id}
 				moveRow={moveRow}
-				offsetRow={offsetRow}
 				index={rowIndex}
 				accept={[DND_ITEM_TYPE]}
 			>
@@ -124,7 +123,7 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 										subRowIndex,
 										level + 1,
 										level >= 1 && (isDragging || parentIsDragging),
-										isDragging
+										isDragging || parentIsDragging
 									)
 							  )
 							: null}
@@ -162,6 +161,7 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 			<div className={cx(className, { 'o-dynamic-nested-table-responsive': responsive })}>
 				<div
 					className={cx('o-dynamic-nested-table', tableClassName, {
+						'o-dynamic-nested-table--draggable': draggable,
 						'o-dynamic-nested-table--fixed': fixed,
 					})}
 				>

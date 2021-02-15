@@ -25,3 +25,10 @@ export interface DndItem {
 	index: number;
 	type: string;
 }
+
+export interface HasMovedRef {
+	id?: number;
+	leftXThreshold: number;
+	rightXThreshold: number;
+	zeroPoint: number;
+}
