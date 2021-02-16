@@ -2,6 +2,6 @@ export interface DeleteCardProps {
 	className?: string;
 	description?: string;
 	isDeleting: boolean;
-	onDelete: () => void;
+	onDelete: (setShowModal: (show: boolean) => void) => void;
 	title?: string;
 }

@@ -311,6 +311,41 @@ export class TaxonomiesFacade {
 			});
 	}
 
+	public deleteTaxonomy(
+		payload: TaxonomyDetailModel,
+		options: CreateTaxonomyPayloadOptions = {
+			successAlertContainerId: TAXONOMIES_ALERT_CONTAINER_IDS.delete,
+			errorAlertContainerId: TAXONOMIES_ALERT_CONTAINER_IDS.delete,
+		}
+	): Promise<void> {
+		this.detailStore.setIsDeletingEntity(true, payload.id);
+		const alertMessages = getAlertMessages(payload.label);
+
+		return this.service
+			.deleteTaxonomy(payload.id)
+			.then(() => {
+				this.detailStore.remove(payload.id);
+				this.listPaginator.clearCache();
+
+				// Timeout because the alert is visible on the overview page
+				// and not on the edit page
+				setTimeout(() => {
+					showAlert(
+						options.successAlertContainerId,
+						'success',
+						alertMessages.delete.success
+					);
+				}, 300);
+			})
+			.catch(error => {
+				showAlert(options.errorAlertContainerId, 'error', alertMessages.delete.error);
+				this.detailStore.ui.upsert(payload.id, {
+					error,
+					isDeleting: false,
+				});
+			});
+	}
+
 	public updateTaxonomyTerms(
 		payload: UpdateTaxonomyTermsPayload,
 		options: UpdateTaxonomyPayloadOptions

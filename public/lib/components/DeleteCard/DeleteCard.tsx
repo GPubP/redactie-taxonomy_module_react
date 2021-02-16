@@ -36,6 +36,7 @@ const DeleteCard: FC<DeleteCardProps> = ({
 				>
 					{t(CORE_TRANSLATIONS.BUTTON_REMOVE)}
 				</Button>
+				{/* TODO: replace with delete prompt from utils */}
 				<ControlledModal onClose={closeModal} show={showModal} size="large">
 					<ControlledModalHeader>
 						<h5>
@@ -55,7 +56,7 @@ const DeleteCard: FC<DeleteCardProps> = ({
 							<Button
 								iconLeft={isDeleting ? 'circle-o-notch fa-spin' : 'trash'}
 								disabled={isDeleting}
-								onClick={onDelete}
+								onClick={() => onDelete(setShowModal)}
 								type="danger"
 							>
 								Ja, verwijder

@@ -37,6 +37,10 @@ export class TaxonomiesApiService {
 			.put(`${TAXONOMIES_PREFIX_URL}/${taxonomy.id}/settings`, { json: taxonomy.body })
 			.json();
 	}
+
+	public async deleteTaxonomy(taxonomyId: number): Promise<void> {
+		return await api.delete(`${TAXONOMIES_PREFIX_URL}/${taxonomyId}`).json();
+	}
 }
 
 export const taxonomiesApiService = new TaxonomiesApiService();
