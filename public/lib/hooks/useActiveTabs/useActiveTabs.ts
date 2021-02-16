@@ -1,8 +1,7 @@
+import { ContextHeaderTab } from '@redactie/utils';
 import { useMemo } from 'react';
 
-import { Tab } from '../../taxonomy.types';
-
-const useActiveTabs = (tabs: Tab[], pathname: string): Tab[] => {
+const useActiveTabs = (tabs: ContextHeaderTab[], pathname: string): ContextHeaderTab[] => {
 	const activeTabs = useMemo(() => {
 		return tabs.map(tab => ({
 			...tab,

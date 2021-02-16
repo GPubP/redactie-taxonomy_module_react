@@ -9,6 +9,7 @@ import {
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	AlertContainer,
+	ContextHeaderBadge,
 	DataLoader,
 	LeavePrompt,
 	useDetectValueChangesWorker,
@@ -136,9 +137,25 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		taxonomyId && navigate(MODULE_PATHS.detailTerms, { taxonomyId });
 	};
 
+	const headerBadges: ContextHeaderBadge[] = isUpdate
+		? [
+				{
+					name: 'Term',
+					type: 'primary',
+				},
+		  ]
+		: [];
+
 	/**
 	 * RENDER
 	 */
+	const pageTitle = isUpdate ? (
+		<>
+			<i>{taxonomyTerm?.label ?? 'Term'}</i> {t(CORE_TRANSLATIONS.ROUTING_UPDATE)}
+		</>
+	) : (
+		`Term ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`
+	);
 
 	const renderForm = (): ReactElement => (
 		<TermForm
@@ -188,7 +205,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 
 	return (
 		<>
-			<ContextHeader title={isUpdate ? `${taxonomyTerm?.label} bewerken` : 'Term aanmaken'}>
+			<ContextHeader title={pageTitle} badges={headerBadges}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
