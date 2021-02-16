@@ -23,12 +23,10 @@ const DeleteCard: FC<DeleteCardProps> = ({
 
 	const closeModal = (): void => setShowModal(false);
 
-	const removeTitle = title || t(CORE_TRANSLATIONS.REMOVE_TITLE);
-
 	return (
 		<Card className={className}>
 			<CardBody>
-				<h6 className="u-margin-bottom-xs">{removeTitle}</h6>
+				<h6 className="u-margin-bottom-xs">{title || t(CORE_TRANSLATIONS.REMOVE_TITLE)}</h6>
 				<CardDescription>{description}</CardDescription>
 				<Button
 					className="u-margin-top"
@@ -40,17 +38,17 @@ const DeleteCard: FC<DeleteCardProps> = ({
 				</Button>
 				<ControlledModal onClose={closeModal} show={showModal} size="large">
 					<ControlledModalHeader>
-						<h6>
+						<h5>
 							Verwijderen?
 							{/* TODO: replace with {t(CORE_TRANSLATIONS['MODAL_TITLE-REMOVE'])} */}
-						</h6>
+						</h5>
 					</ControlledModalHeader>
 					<ControlledModalBody>
 						Ben je zeker dat je dit item wil verwijderen? Dit kan niet ongedaan gemaakt
 						worden.
 					</ControlledModalBody>
 					<ControlledModalFooter>
-						<div className="u-flex u-flex-align-end">
+						<div className="u-flex-item u-flex u-flex-justify-end">
 							<Button onClick={closeModal} negative>
 								{t(CORE_TRANSLATIONS.MODAL_CANCEL)}
 							</Button>

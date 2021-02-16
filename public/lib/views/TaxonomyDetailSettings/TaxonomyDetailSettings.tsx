@@ -9,11 +9,11 @@ import {
 import { FormikProps, FormikValues } from 'formik';
 import React, { FC, useMemo, useRef, useState } from 'react';
 
-import TaxonomySettingsForm from '../../components/Forms/TaxonomySettingsForm/TaxonomySettingsForm';
+import { DeleteCard, TaxonomySettingsForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { useTaxonomiesUIStates } from '../../hooks';
-import { TaxonomyDetailModel } from '../../store/taxonomies';
 import { ALERT_CONTAINER_IDS, DETAIL_TAB_MAP } from '../../taxonomy.const';
+import { taxonomiesFacade, TaxonomyDetailModel } from '../../store/taxonomies';
 import { TaxonomyDetailRouteProps } from '../../taxonomy.types';
 
 const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
@@ -70,6 +70,9 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 		resetChangeDetection();
 	};
 
+	const deleteTaxonomy = async (): Promise<void> => {
+	};
+
 	/**
 	 * Render
 	 */
@@ -122,6 +125,14 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 					);
 				}}
 			</TaxonomySettingsForm>
+			{isUpdate && (
+				<DeleteCard
+					className="u-margin-bottom-lg"
+					description="Opgelet, indien u deze taxonomie verwijdert kan hij niet meer gebruikt worden in de content types."
+					isDeleting={!!detailState?.isDeleting}
+					onDelete={deleteTaxonomy}
+				/>
+			)}
 		</>
 	);
 };
