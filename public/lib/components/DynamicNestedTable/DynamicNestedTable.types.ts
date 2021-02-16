@@ -16,14 +16,15 @@ export interface DynamicNestedTableProps<R = RowData> {
 	fixed?: boolean;
 	loadDataMessage?: string;
 	loading?: boolean;
-	moveRow?: (source: DndItem, target: DndItem) => void;
+	moveRow?: (
+		source: DndItem,
+		target: DndItem,
+		boundingRect: DOMRect | null,
+		clientOffset: XYCoord | null,
+		offsetDiff?: XYCoord | null
+	) => void;
 	noColumnsMessage?: string;
 	noDataMessage?: string;
-	offsetRow?: (
-		dragged: DndItem,
-		refBoundingRect: DOMRect | null,
-		offsetDiff: XYCoord | null
-	) => void;
 	orderBy?: OrderByFn;
 	responsive?: boolean;
 	rows?: R[];

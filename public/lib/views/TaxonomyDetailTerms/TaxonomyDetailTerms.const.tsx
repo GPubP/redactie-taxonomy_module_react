@@ -5,14 +5,21 @@ import { lensProp } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { INDENT_SIZE } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
 import { MODULE_PATHS, TENANT_ROOT } from '../../taxonomy.const';
 import { TableColumn } from '../../taxonomy.types';
 
-import { DetailTermTableRow, MoveDirection } from './TaxonomyDetailTerms.types';
+import { DetailTermTableRow, HasMovedRef, MoveDirection } from './TaxonomyDetailTerms.types';
 
 export const PARENT_TERM_ID_LENS = lensProp('parentTermId');
 export const POSITION_LENS = lensProp('position');
+
+export const INITIAL_HAS_MOVED: HasMovedRef = {
+	leftXThreshold: -INDENT_SIZE,
+	rightXThreshold: INDENT_SIZE,
+	zeroPoint: 0,
+};
 
 export const DETAIL_TERMS_COLUMNS = (
 	t: TranslateFunc,

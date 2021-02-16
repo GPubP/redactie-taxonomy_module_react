@@ -28,7 +28,7 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
-	const [listState, detailState] = useTaxonomiesUIStates();
+	const [listState, detailState] = useTaxonomiesUIStates(taxonomy.id);
 
 	const formikRef = useRef<FormikProps<FormikValues>>();
 	const isLoading = useMemo(
