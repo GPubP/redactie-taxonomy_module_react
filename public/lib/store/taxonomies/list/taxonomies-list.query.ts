@@ -4,12 +4,14 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { taxonomiesDetailQuery, TaxonomiesDetailQuery } from '../detail';
-import { TaxonomyUIModel } from '../taxonomies.types';
 
-import { TaxonomiesListState } from './taxonomies-list.model';
+import { TaxonomiesListState, TaxonomyListUIModel } from './taxonomies-list.model';
 import { taxonomiesListStore, TaxonomiesListStore } from './taxonomies-list.store';
 
-export class TaxonomiesListQuery extends CacheEntityQuery<any, TaxonomiesListState> {
+export class TaxonomiesListQuery extends CacheEntityQuery<
+	TaxonomyListUIModel,
+	TaxonomiesListState
+> {
 	constructor(
 		protected store: TaxonomiesListStore,
 		protected detailQuery: TaxonomiesDetailQuery
@@ -23,7 +25,7 @@ export class TaxonomiesListQuery extends CacheEntityQuery<any, TaxonomiesListSta
 		return this.getValue().isFetching;
 	}
 
-	public selectUIState(): Observable<TaxonomyUIModel> {
+	public selectUIState(): Observable<TaxonomyListUIModel> {
 		return combineQueries([
 			this.select(['error', 'isFetching']),
 			this.detailQuery.select(['error', 'isCreating']),
