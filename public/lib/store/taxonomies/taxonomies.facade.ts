@@ -97,12 +97,13 @@ export class TaxonomiesFacade {
 
 	// DETAIL TERMS STATES
 	public readonly isTermCreating$ = this.detailTermsQuery.isCreating$;
-	public readonly activeTaxonomyTerm$ = this.detailTermsQuery.selectActive<
-		TaxonomyTermDetailModel
-	>() as Observable<TaxonomyTermDetailModel>;
-	public readonly activeTaxonomyTermUI$ = this.detailTermsQuery.ui.selectActive<
-		TaxonomyTermDetailUIModel
-	>() as Observable<TaxonomyTermDetailUIModel>;
+
+	public selectTaxonomyTerm(termId: number): Observable<TaxonomyTermDetailModel> {
+		return this.detailTermsQuery.selectEntity(termId);
+	}
+	public selectTaxonomyTermUIState(termId?: number): Observable<TaxonomyTermDetailUIModel> {
+		return this.detailTermsQuery.ui.selectEntity(termId);
+	}
 
 	// LIST FUNCTIONS
 	public getTaxonomiesPaginated(
@@ -361,24 +362,6 @@ export class TaxonomiesFacade {
 	}
 
 	// DETAIL TERMS FUNCTIONS
-	public selectTaxonomyTermUIState(termId: number): Observable<TaxonomyTermDetailUIModel> {
-		return this.detailTermsQuery.ui.selectEntity(termId);
-	}
-
-	public setActiveTaxonomyTerm(termId: number): void {
-		this.detailTermsStore.setActive(termId);
-		this.detailTermsStore.ui.setActive(termId);
-	}
-
-	public removeActiveTaxonomyTerm(): void {
-		this.detailTermsStore.setActive(null);
-		this.detailTermsStore.ui.setActive(null);
-	}
-
-	public hasActiveTaxonomyTerm(termId: number): boolean {
-		return this.detailTermsQuery.hasActive(termId);
-	}
-
 	public hasTaxonomyTerm(termId: number): boolean {
 		return this.detailTermsQuery.hasEntity(termId);
 	}

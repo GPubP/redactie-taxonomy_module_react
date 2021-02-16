@@ -20,8 +20,7 @@ import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'r
 
 import { TermForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
-import { useActiveTaxonomy, useTaxonomyTermsUIStates } from '../../hooks';
-import useActiveTaxonomyTerm from '../../hooks/useActiveTaxonomyTerm/useActiveTaxonomyTerm';
+import { useTaxonomy, useTaxonomyTerm, useTaxonomyTermsUIStates } from '../../hooks';
 import { TaxonomyTerm } from '../../services/taxonomyTerms';
 import { taxonomiesFacade, TaxonomyTermDetailModel } from '../../store/taxonomies';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
@@ -42,8 +41,8 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	const routes = useRoutes();
 	const formikRef = useRef<FormikProps<FormikValues>>();
 
-	const [taxonomy] = useActiveTaxonomy(taxonomyId);
-	const [taxonomyTerm] = useActiveTaxonomyTerm(taxonomyId, termId);
+	const [taxonomy] = useTaxonomy(taxonomyId);
+	const [taxonomyTerm] = useTaxonomyTerm(taxonomyId, termId);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS(generatePath),
 		extraBreadcrumbs: [
