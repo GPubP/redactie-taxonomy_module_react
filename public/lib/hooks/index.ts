@@ -1,5 +1,5 @@
 export * from './useActiveTabs';
-export * from './useActiveTaxonomy';
+export * from './useTaxonomy';
 export * from './useActiveTaxonomyTerm';
 export * from './usePaginatedTaxonomies';
 export * from './useTaxonomiesUIStates';

@@ -13,7 +13,7 @@ import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'r
 import { DynamicNestedTable, INDENT_SIZE, XYCoord } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { listToTree, sortNestedTerms } from '../../helpers';
-import { useActiveTaxonomy, useTaxonomiesUIStates } from '../../hooks';
+import { useTaxonomiesUIStates, useTaxonomy } from '../../hooks';
 import { TaxonomyTerm } from '../../services/taxonomyTerms';
 import { taxonomiesFacade } from '../../store/taxonomies';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../taxonomy.const';
@@ -50,7 +50,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 	 */
 
 	const [t] = useCoreTranslation();
-	const [taxonomy] = useActiveTaxonomy(taxonomyId);
+	const [taxonomy] = useTaxonomy(taxonomyId);
 	const [, detailState] = useTaxonomiesUIStates(taxonomyId);
 	const [terms, setTerms] = useState<TaxonomyTerm[]>([]);
 	const hasMoved = useRef<HasMovedRef>(INITIAL_HAS_MOVED);

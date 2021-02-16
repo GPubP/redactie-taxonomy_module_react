@@ -17,7 +17,7 @@ import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, matchPath } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
-import { useActiveTabs, useActiveTaxonomy, useTaxonomiesUIStates } from '../../hooks';
+import { useActiveTabs, useTaxonomiesUIStates, useTaxonomy } from '../../hooks';
 import { UpdateTaxonomySettingsPayload } from '../../services/taxonomies';
 import { taxonomiesFacade } from '../../store/taxonomies';
 import {
@@ -60,15 +60,15 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 		],
 	});
 	const [t] = useCoreTranslation();
-	const [activeTaxonomy] = useActiveTaxonomy(taxonomyId);
+	const [taxonomy] = useTaxonomy(taxonomyId);
 	const [, detailState] = useTaxonomiesUIStates(taxonomyId);
 
 	// Set initial loading
 	useEffect(() => {
-		if (initialLoading && detailState && !detailState.isFetching && activeTaxonomy) {
+		if (initialLoading && detailState && !detailState.isFetching && taxonomy) {
 			return setInitialLoading(false);
 		}
-	}, [initialLoading, detailState, activeTaxonomy]);
+	}, [initialLoading, detailState, taxonomy]);
 
 	/**
 	 * Methods
@@ -92,7 +92,7 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 		}
 	};
 
-	const pageTitle = activeTaxonomy ? `${activeTaxonomy?.label} bewerken` : 'Taxonomie bewerken';
+	const pageTitle = taxonomy ? `${taxonomy?.label} bewerken` : 'Taxonomie bewerken';
 
 	/**
 	 * Render
@@ -100,7 +100,7 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
-			taxonomy: activeTaxonomy,
+			taxonomy,
 			onCancel,
 			onSubmit: updateTaxonomy,
 		};

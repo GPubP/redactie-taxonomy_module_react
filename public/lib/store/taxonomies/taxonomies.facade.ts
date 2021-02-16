@@ -77,6 +77,7 @@ export class TaxonomiesFacade {
 	public readonly listError$ = this.listQuery.error$;
 	public readonly isFetching$ = this.listQuery.isFetching$;
 	public readonly UIState$ = this.listQuery.selectUIState();
+
 	public setIsFetching(isFetching = false): void {
 		this.listStore.setIsFetching(isFetching);
 	}
@@ -86,13 +87,10 @@ export class TaxonomiesFacade {
 
 	// DETAIL STATES
 	public readonly isCreating$ = this.detailQuery.isCreating$;
-	public readonly activeTaxonomy$ = this.detailQuery.selectActive<
-		TaxonomyDetailModel
-	>() as Observable<TaxonomyDetailModel>;
-	public readonly activeTaxonomyUI$ = this.detailQuery.ui.selectActive<
-		TaxonomyDetailUIModel
-	>() as Observable<TaxonomyDetailUIModel>;
 
+	public selectTaxonomy(taxonomyId: number): Observable<TaxonomyDetailModel> {
+		return this.detailQuery.selectEntity(taxonomyId);
+	}
 	public selectTaxonomyUIState(taxonomyId?: number): Observable<TaxonomyDetailUIModel> {
 		return this.detailQuery.ui.selectEntity(taxonomyId);
 	}
@@ -191,20 +189,6 @@ export class TaxonomiesFacade {
 	}
 
 	// DETAIL FUNCTIONS
-	public setActiveTaxonomy(taxonomyId: number): void {
-		this.detailStore.setActive(taxonomyId);
-		this.detailStore.ui.setActive(taxonomyId);
-	}
-
-	public removeActiveTaxonomy(): void {
-		this.detailStore.setActive(null);
-		this.detailStore.ui.setActive(null);
-	}
-
-	public hasActiveTaxonomy(taxonomyId: number): boolean {
-		return this.detailQuery.hasActive(taxonomyId);
-	}
-
 	public hasTaxonomy(taxonomyId: number): boolean {
 		return this.detailQuery.hasEntity(taxonomyId);
 	}
