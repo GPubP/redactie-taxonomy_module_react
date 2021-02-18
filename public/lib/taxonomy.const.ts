@@ -1,7 +1,5 @@
 import { BreadcrumbOptions } from '@redactie/redactie-core';
-import { NavigateGenerateFn } from '@redactie/utils';
-
-import { Tab } from './taxonomy.types';
+import { ContextHeaderTab, NavigateGenerateFn } from '@redactie/utils';
 
 export const TENANT_ROOT = '/:tenantId';
 export const root = '/taxonomie';
@@ -42,20 +40,22 @@ export const BREADCRUMB_OPTIONS = (generatePath: NavigateGenerateFn): Breadcrumb
 	],
 });
 
-export const DETAIL_TAB_MAP = {
+export const DETAIL_TAB_MAP: Record<string, ContextHeaderTab> = {
 	settings: {
 		name: 'Instellingen',
 		target: 'instellingen',
 		active: true,
+		disabled: false,
 	},
 	terms: {
 		name: 'Termen',
 		target: 'termen',
 		active: false,
+		disabled: false,
 	},
 };
 
-export const DETAIL_TABS: Tab[] = [DETAIL_TAB_MAP.settings, DETAIL_TAB_MAP.terms];
+export const DETAIL_TABS: ContextHeaderTab[] = [DETAIL_TAB_MAP.settings, DETAIL_TAB_MAP.terms];
 
 export const PUBLISH_STATUS_OPTIONS = [
 	{

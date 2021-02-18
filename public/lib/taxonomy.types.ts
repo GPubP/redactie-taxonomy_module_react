@@ -1,5 +1,5 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
-import { AlertProps } from '@redactie/utils';
+import { AlertProps, ContextHeaderTab } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 
@@ -27,7 +27,7 @@ export interface TaxonomyDetailRouteProps<Params = TaxonomyRouteParams>
 	readonly allowedPaths?: string[];
 	readonly taxonomy: TaxonomyDetailModel;
 	onCancel: () => void;
-	onSubmit: (data: CreateTaxonomyPayload | TaxonomyDetailModel, tab: Tab) => void;
+	onSubmit: (data: CreateTaxonomyPayload | TaxonomyDetailModel, tab: ContextHeaderTab) => void;
 }
 
 export interface NestedTaxonomyTerm extends TaxonomyTerm {
@@ -70,13 +70,5 @@ export type FormikChildrenFn<Values = FormikValues> = (
 export interface SelectOption {
 	label: string;
 	value: string;
-	disabled?: boolean;
-}
-
-export interface Tab {
-	id?: string;
-	name: string;
-	target: string;
-	active: boolean;
 	disabled?: boolean;
 }
