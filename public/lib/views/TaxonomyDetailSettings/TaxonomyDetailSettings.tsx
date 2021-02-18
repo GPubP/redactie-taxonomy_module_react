@@ -37,6 +37,7 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 		[detailState, isUpdate, listState]
 	);
 	const [formValue, setFormValue] = useState<TaxonomyDetailModel | null>(null);
+	const [showModal, setShowModal] = useState(false);
 
 	const { navigate } = useNavigate();
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
@@ -73,18 +74,14 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 		resetChangeDetection();
 	};
 
-	const deleteTaxonomy = async (setShowModal: (show: boolean) => void): Promise<void> => {
+	const deleteTaxonomy = async (): Promise<void> => {
 		await taxonomiesFacade
 			.deleteTaxonomy(taxonomy, {
 				successAlertContainerId: ALERT_CONTAINER_IDS.overview,
 				errorAlertContainerId: ALERT_CONTAINER_IDS.detailSettings,
 			})
-			.then(() => {
-				navigate(MODULE_PATHS.overview);
-			})
-			.catch(() => {
-				setShowModal(false);
-			});
+			.then(() => navigate(MODULE_PATHS.overview))
+			.catch(() => setShowModal(false));
 	};
 
 	/**
@@ -145,6 +142,8 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 					description="Opgelet, indien u deze taxonomie verwijdert kan hij niet meer gebruikt worden in de content types."
 					isDeleting={!!detailState?.isDeleting}
 					onDelete={deleteTaxonomy}
+					showModal={showModal}
+					setShowModal={setShowModal}
 				/>
 			)}
 		</>

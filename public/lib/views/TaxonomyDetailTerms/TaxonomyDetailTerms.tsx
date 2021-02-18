@@ -84,7 +84,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 
 	// Set working copy for taxonomy terms
 	useEffect(() => {
-		if (taxonomy?.terms.length) {
+		if (taxonomy?.terms?.length) {
 			// Set initial position on terms
 			const termsWithPosition = recursiveFlatten(
 				listToTree(taxonomy.terms, {
