@@ -8,6 +8,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
+	AlertContainer,
 	DataLoader,
 	OrderBy,
 	parseOrderByToString,
@@ -21,7 +22,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { FilterForm, FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { usePaginatedTaxonomies } from '../../hooks';
-import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
+import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
 import { FilterItem, TaxonomyRouteProps } from '../../taxonomy.types';
 
 import {
@@ -170,6 +171,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>
+				<AlertContainer containerId={ALERT_CONTAINER_IDS.overview} />
 				<DataLoader loadingState={initialLoading} render={renderOverview} />
 			</Container>
 		</>

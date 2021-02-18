@@ -19,7 +19,7 @@ import {
 import { FormikProps, FormikValues } from 'formik';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
-import { TermForm } from '../../components';
+import { DeleteCard, TermForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { useActiveTaxonomy, useTaxonomyTermsUIStates } from '../../hooks';
 import useActiveTaxonomyTerm from '../../hooks/useActiveTaxonomyTerm/useActiveTaxonomyTerm';
@@ -57,6 +57,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	const [formValue, setFormValue] = useState<TaxonomyTermDetailModel | null>(null);
 	const [hasSubmit, setHasSubmit] = useState(false);
 	const [isInitialLoading, setInitialLoading] = useState(isUpdate);
+	const [showModal, setShowModal] = useState(false);
 	const isLoading = useMemo(
 		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
 		[detailState, isUpdate, listState]
@@ -86,13 +87,13 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	 * METHODS
 	 */
 
-	const updateTerm = async (taxonomyTerm: TaxonomyTerm): Promise<void> => {
+	const updateTerm = async (updatedTerm: TaxonomyTerm): Promise<void> => {
 		if (!taxonomyId) {
 			return;
 		}
 
 		await taxonomiesFacade
-			.updateTaxonomyTerm(taxonomyId, taxonomyTerm, {
+			.updateTaxonomyTerm(taxonomyId, updatedTerm, {
 				errorAlertContainerId: ALERT_CONTAINER_IDS.termDetail,
 				successAlertContainerId: ALERT_CONTAINER_IDS.detailTerms,
 			})
@@ -102,7 +103,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			});
 	};
 
-	const createTerm = async (taxonomyTerm: TaxonomyTerm): Promise<void> => {
+	const createTerm = async (newTerm: TaxonomyTerm): Promise<void> => {
 		if (!taxonomyId) {
 			return;
 		}
@@ -110,7 +111,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		const newTaxonomyTerm = await taxonomiesFacade.createTaxonomyTerm(
 			taxonomyId,
 			{
-				...taxonomyTerm,
+				...newTerm,
 				// Should always be published on create
 				publishStatus: 'PUBLISHED',
 			},
@@ -127,6 +128,20 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 				termId: (newTaxonomyTerm as TaxonomyTerm)?.id,
 			});
 		}
+	};
+
+	const deleteTerm = async (): Promise<void> => {
+		if (!taxonomyId || !taxonomyTerm) {
+			return;
+		}
+
+		await taxonomiesFacade
+			.deleteTaxonomyTerm(taxonomyId, taxonomyTerm, {
+				errorAlertContainerId: ALERT_CONTAINER_IDS.termDetail,
+				successAlertContainerId: ALERT_CONTAINER_IDS.detailTerms,
+			})
+			.then(() => navigate(MODULE_PATHS.detailTerms, { taxonomyId }))
+			.catch(() => setShowModal(false));
 	};
 
 	const onFormSubmit = (values: TaxonomyTerm): void => {
@@ -158,49 +173,61 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	);
 
 	const renderForm = (): ReactElement => (
-		<TermForm
-			formikRef={instance => (formikRef.current = instance || undefined)}
-			onSubmit={onFormSubmit}
-			allTerms={taxonomy?.terms || []}
-			taxonomyTerm={taxonomyTerm}
-		>
-			{({ submitForm, values }) => {
-				setFormValue(values);
+		<>
+			<TermForm
+				formikRef={instance => (formikRef.current = instance || undefined)}
+				onSubmit={onFormSubmit}
+				allTerms={taxonomy?.terms || []}
+				taxonomyTerm={taxonomyTerm}
+			>
+				{({ submitForm, values }) => {
+					setFormValue(values);
 
-				return (
-					<>
-						<ActionBar className="o-action-bar--fixed" isOpen>
-							<ActionBarContentSection>
-								<div className="u-wrapper u-text-right">
-									<Button onClick={onCancel} negative>
-										{isUpdate
-											? t(CORE_TRANSLATIONS.BUTTON_CANCEL)
-											: t(CORE_TRANSLATIONS.BUTTON_BACK)}
-									</Button>
-									<Button
-										iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
-										disabled={isLoading || !hasChanges}
-										className="u-margin-left-xs"
-										onClick={submitForm}
-										type="success"
-									>
-										{isUpdate
-											? t(CORE_TRANSLATIONS.BUTTON_SAVE)
-											: t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
-									</Button>
-								</div>
-							</ActionBarContentSection>
-						</ActionBar>
-						<LeavePrompt
-							allowedPaths={TERM_DETAIL_ALLOWED_PATHS}
-							when={hasChanges}
-							shouldBlockNavigationOnConfirm
-							onConfirm={submitForm}
-						/>
-					</>
-				);
-			}}
-		</TermForm>
+					return (
+						<>
+							<ActionBar className="o-action-bar--fixed" isOpen>
+								<ActionBarContentSection>
+									<div className="u-wrapper u-text-right">
+										<Button onClick={onCancel} negative>
+											{isUpdate
+												? t(CORE_TRANSLATIONS.BUTTON_CANCEL)
+												: t(CORE_TRANSLATIONS.BUTTON_BACK)}
+										</Button>
+										<Button
+											iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
+											disabled={isLoading || !hasChanges}
+											className="u-margin-left-xs"
+											onClick={submitForm}
+											type="success"
+										>
+											{isUpdate
+												? t(CORE_TRANSLATIONS.BUTTON_SAVE)
+												: t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
+										</Button>
+									</div>
+								</ActionBarContentSection>
+							</ActionBar>
+							<LeavePrompt
+								allowedPaths={TERM_DETAIL_ALLOWED_PATHS}
+								when={hasChanges}
+								shouldBlockNavigationOnConfirm
+								onConfirm={submitForm}
+							/>
+						</>
+					);
+				}}
+			</TermForm>
+			{isUpdate && (
+				<DeleteCard
+					className="u-margin-bottom-lg"
+					description="Opgelet, indien u deze taxonomie term verwijdert kan hij niet meer gebruikt worden in de content types."
+					isDeleting={!!detailState?.isDeleting}
+					onDelete={deleteTerm}
+					setShowModal={setShowModal}
+					showModal={showModal}
+				/>
+			)}
+		</>
 	);
 
 	return (

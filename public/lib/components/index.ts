@@ -1,3 +1,4 @@
+export * from './DeleteCard';
 export * from './DynamicNestedTable';
 export * from './Fields';
 export * from './Forms';

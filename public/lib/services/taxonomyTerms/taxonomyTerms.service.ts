@@ -47,6 +47,10 @@ export class TaxonomyTermsApiService {
 			})
 			.json();
 	}
+
+	public async deleteTerm(taxonomyId: number, termId: number): Promise<void> {
+		return await api.delete(`${TAXONOMIES_PREFIX_URL}/${taxonomyId}/terms/${termId}`).json();
+	}
 }
 
 export const taxonomyTermsApiService = new TaxonomyTermsApiService();
