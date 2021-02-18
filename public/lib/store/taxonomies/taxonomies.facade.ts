@@ -348,12 +348,14 @@ export class TaxonomiesFacade {
 			.updateTerms(payload.id, payload.body)
 			.then(response => {
 				const terms = response._embedded;
-
+				// Update terms overview
 				this.detailStore.ui.update(payload.id, {
 					isUpdating: false,
 					error: null,
 				});
 				this.detailStore.upsert(payload.id, { terms });
+				// Insert and update term details
+				this.detailTermsStore.upsertMany(terms);
 
 				showAlert(options.alertContainerId, 'success', alertMessages.update.success);
 				return terms;
