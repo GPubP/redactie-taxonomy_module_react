@@ -7,7 +7,6 @@ export interface TaxonomyTermSelectProps extends FieldProps {
 	label: string;
 	description: string;
 	placeholder?: string;
-	value?: number;
 	allTerms: TaxonomyTerm[];
 	selectionMethod?: TaxonomySelectMethods;
 }

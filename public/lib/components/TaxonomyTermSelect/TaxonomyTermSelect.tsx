@@ -14,7 +14,6 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	field,
 	label,
 	description,
-	value,
 	allTerms,
 	placeholder = TERM_SELECT_DEFAULT_PLACEHOLDER,
 	selectionMethod = TaxonomySelectMethods.Dropdown,
@@ -53,14 +52,13 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 					idKey: 'value',
 					parentKey: 'parentTermId',
 					childrenKey: 'children',
-					skipTrees: value ? [value] : [],
 			  })
 			: selectionMethod === TaxonomySelectMethods.Dropdown
 			? [defaultOption].concat(mappedTermOptions)
 			: mappedTermOptions;
 
 		return [filteredTerms, hasMultipleLevels];
-	}, [allTerms, placeholder, selectionMethod, value]);
+	}, [allTerms, placeholder, selectionMethod]);
 
 	/**
 	 * Methods

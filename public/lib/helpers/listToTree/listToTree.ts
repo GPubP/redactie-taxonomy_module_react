@@ -4,7 +4,6 @@ export const listToTree = <T>(
 		idKey?: number | string;
 		parentKey?: string;
 		childrenKey?: string;
-		skipTrees: (number | string)[];
 		addPosition?: boolean;
 	}
 ): (T & { children?: T[] })[] => {

@@ -8,7 +8,6 @@ import { TaxonomyTermSelect as TermSelect } from '../../TaxonomyTermSelect';
 const TaxonomyTermSelect: FC<InputFieldProps> = ({ fieldProps, fieldSchema }) => {
 	const { config = { description: '' }, label = '' } = fieldSchema;
 	const { description, taxonomyConfig } = config;
-	const { field } = fieldProps;
 
 	/**
 	 * Hooks
@@ -46,7 +45,6 @@ const TaxonomyTermSelect: FC<InputFieldProps> = ({ fieldProps, fieldSchema }) =>
 				label={label}
 				placeholder="Selecteer een term"
 				selectionMethod={taxonomyConfig?.selectionMethod}
-				value={parseInt(field.value)}
 			/>
 		);
 	};
