@@ -11,6 +11,7 @@ import {
 	AlertContainer,
 	ContextHeaderBadge,
 	DataLoader,
+	FormikOnChangeHandler,
 	LeavePrompt,
 	useDetectValueChangesWorker,
 	useNavigate,
@@ -73,6 +74,13 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			setInitialLoading(detailState.isFetching);
 		}
 	}, [detailState, isUpdate]);
+
+	// Set initial form value
+	useEffect(() => {
+		if (isUpdate && !isInitialLoading && taxonomyTerm) {
+			setFormValue(taxonomyTerm);
+		}
+	}, [isInitialLoading, isUpdate, taxonomyTerm]);
 
 	// Redirect to terms overview after successful submit (update only)
 	useEffect(() => {
@@ -179,11 +187,12 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 				allTerms={taxonomy?.terms || []}
 				taxonomyTerm={taxonomyTerm}
 			>
-				{({ submitForm, values }) => {
-					setFormValue(values);
-
+				{({ submitForm }) => {
 					return (
 						<>
+							<FormikOnChangeHandler
+								onChange={values => setFormValue(values as TaxonomyTermDetailModel)}
+							/>
 							<ActionBar className="o-action-bar--fixed" isOpen>
 								<ActionBarContentSection>
 									<div className="u-wrapper u-text-right">
