@@ -3,6 +3,7 @@ import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { APIQueryParamsConfig } from '@redactie/utils';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
@@ -40,10 +41,12 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		width: '60%',
-		component(label: string, { description }: OverviewTableRow) {
+		component(label: string, { description, settingsPath }: OverviewTableRow) {
 			return (
 				<>
-					<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
+					<EllipsisWithTooltip>
+						<Link to={settingsPath}>{label}</Link>
+					</EllipsisWithTooltip>
 					<p className="small">
 						{description ? (
 							<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
@@ -70,15 +73,8 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 		classList: ['u-text-right'],
 		disableSorting: true,
 		width: '20%',
-		component(value: unknown, { navigate, id }: OverviewTableRow) {
-			return (
-				<Button
-					ariaLabel="Edit"
-					icon="edit"
-					onClick={() => navigate(MODULE_PATHS.detail, { taxonomyId: id })}
-					transparent
-				/>
-			);
+		component(value: unknown, { editTerms }: OverviewTableRow) {
+			return <Button ariaLabel="Edit" icon="edit" onClick={editTerms} transparent />;
 		},
 	},
 ];

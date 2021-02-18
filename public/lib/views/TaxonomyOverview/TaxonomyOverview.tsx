@@ -123,13 +123,16 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 			return null;
 		}
 
-		const customTaxonomyRows: OverviewTableRow[] = pagination.data.map(taxonomy => ({
-			id: taxonomy.id,
-			label: taxonomy.label,
-			description: taxonomy.description,
-			publishStatus: taxonomy.publishStatus,
-			navigate,
-		}));
+		const customTaxonomyRows: OverviewTableRow[] = pagination.data.map(taxonomy => {
+			const detailParams = { taxonomyId: taxonomy.id };
+			return {
+				label: taxonomy.label,
+				description: taxonomy.description,
+				publishStatus: taxonomy.publishStatus,
+				settingsPath: generatePath(MODULE_PATHS.detailSettings, detailParams),
+				editTerms: () => navigate(MODULE_PATHS.detailTerms, detailParams),
+			};
+		});
 
 		return (
 			<>
