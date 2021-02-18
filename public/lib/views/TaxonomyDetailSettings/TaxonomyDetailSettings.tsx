@@ -5,15 +5,16 @@ import {
 	alertService,
 	LeavePrompt,
 	useDetectValueChangesWorker,
+	useNavigate,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import React, { FC, useMemo, useRef, useState } from 'react';
 
-import TaxonomySettingsForm from '../../components/Forms/TaxonomySettingsForm/TaxonomySettingsForm';
+import { DeleteCard, TaxonomySettingsForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { useTaxonomiesUIStates } from '../../hooks';
-import { TaxonomyDetailModel } from '../../store/taxonomies';
-import { ALERT_CONTAINER_IDS, DETAIL_TAB_MAP } from '../../taxonomy.const';
+import { taxonomiesFacade, TaxonomyDetailModel } from '../../store/taxonomies';
+import { ALERT_CONTAINER_IDS, DETAIL_TAB_MAP, MODULE_PATHS } from '../../taxonomy.const';
 import { TaxonomyDetailRouteProps } from '../../taxonomy.types';
 
 const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
@@ -22,13 +23,13 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 	onSubmit,
 	taxonomy,
 }) => {
-	const isUpdate = !!taxonomy.id;
+	const isUpdate = !!taxonomy?.id;
 
 	/**
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
-	const [listState, detailState] = useTaxonomiesUIStates(taxonomy.id);
+	const [listState, detailState] = useTaxonomiesUIStates(taxonomy?.id);
 
 	const formikRef = useRef<FormikProps<FormikValues>>();
 	const isLoading = useMemo(
@@ -36,6 +37,9 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 		[detailState, isUpdate, listState]
 	);
 	const [formValue, setFormValue] = useState<TaxonomyDetailModel | null>(null);
+	const [showModal, setShowModal] = useState(false);
+
+	const { navigate } = useNavigate();
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
 		!isLoading,
 		formValue,
@@ -68,6 +72,16 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 
 		onSubmit({ ...taxonomy, ...value }, DETAIL_TAB_MAP.settings);
 		resetChangeDetection();
+	};
+
+	const deleteTaxonomy = async (): Promise<void> => {
+		await taxonomiesFacade
+			.deleteTaxonomy(taxonomy, {
+				successAlertContainerId: ALERT_CONTAINER_IDS.overview,
+				errorAlertContainerId: ALERT_CONTAINER_IDS.detailSettings,
+			})
+			.then(() => navigate(MODULE_PATHS.overview))
+			.catch(() => setShowModal(false));
 	};
 
 	/**
@@ -122,6 +136,16 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 					);
 				}}
 			</TaxonomySettingsForm>
+			{isUpdate && (
+				<DeleteCard
+					className="u-margin-bottom-lg"
+					description="Opgelet, indien u deze taxonomie verwijdert kan hij niet meer gebruikt worden in de content types."
+					isDeleting={!!detailState?.isDeleting}
+					onDelete={deleteTaxonomy}
+					showModal={showModal}
+					setShowModal={setShowModal}
+				/>
+			)}
 		</>
 	);
 };

@@ -1,5 +1,6 @@
 import { Select, Textarea, TextField } from '@acpaas-ui/react-components';
 import { ErrorMessage } from '@redactie/utils';
+import classnames from 'classnames';
 import { Field, Formik, isFunction } from 'formik';
 import React, { FC } from 'react';
 
@@ -62,7 +63,12 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 							</div>
 						</div>
 
-						<div className="row u-margin-bottom-lg">
+						<div
+							className={classnames(
+								'row',
+								isUpdate ? 'u-margin-bottom' : 'u-margin-bottom-lg'
+							)}
+						>
 							<div className="col-xs-12 col-md-6">
 								<Field
 									as={Select}
@@ -79,8 +85,6 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 								<ErrorMessage component="p" name="publishStatus" />
 							</div>
 						</div>
-
-						{isUpdate && <div className="row">{/* TODO: add delete */}</div>}
 
 						{typeof children === 'function'
 							? (children as FormikChildrenFn<TaxonomyDetailModel>)(formikProps)

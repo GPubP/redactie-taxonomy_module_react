@@ -69,6 +69,7 @@ export const PUBLISH_STATUS_OPTIONS = [
 ];
 
 export const ALERT_CONTAINER_IDS = {
+	overview: 'taxonomy-overview',
 	create: 'taxonomy-create',
 	detailSettings: 'taxonomy-detail-settings',
 	detailTerms: 'taxonomy-detail-terms',

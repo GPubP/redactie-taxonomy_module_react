@@ -1,9 +1,3 @@
-export interface TaxonomyUIModel {
-	isFetching: boolean;
-	isCreating: boolean;
-	error?: any;
-}
-
 export interface GetTaxonomiesPayloadOptions {
 	alertContainerId: string;
 }

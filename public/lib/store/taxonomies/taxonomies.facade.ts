@@ -1,4 +1,10 @@
-import { arrayAdd, arrayUpdate, PaginationResponse, PaginatorPlugin } from '@datorama/akita';
+import {
+	arrayAdd,
+	arrayRemove,
+	arrayUpdate,
+	PaginationResponse,
+	PaginatorPlugin,
+} from '@datorama/akita';
 import { SearchParams } from '@redactie/utils';
 import { from, Observable } from 'rxjs';
 
@@ -77,6 +83,7 @@ export class TaxonomiesFacade {
 	public readonly listError$ = this.listQuery.error$;
 	public readonly isFetching$ = this.listQuery.isFetching$;
 	public readonly UIState$ = this.listQuery.selectUIState();
+
 	public setIsFetching(isFetching = false): void {
 		this.listStore.setIsFetching(isFetching);
 	}
@@ -86,25 +93,23 @@ export class TaxonomiesFacade {
 
 	// DETAIL STATES
 	public readonly isCreating$ = this.detailQuery.isCreating$;
-	public readonly activeTaxonomy$ = this.detailQuery.selectActive<
-		TaxonomyDetailModel
-	>() as Observable<TaxonomyDetailModel>;
-	public readonly activeTaxonomyUI$ = this.detailQuery.ui.selectActive<
-		TaxonomyDetailUIModel
-	>() as Observable<TaxonomyDetailUIModel>;
 
+	public selectTaxonomy(taxonomyId: number): Observable<TaxonomyDetailModel> {
+		return this.detailQuery.selectEntity(taxonomyId);
+	}
 	public selectTaxonomyUIState(taxonomyId?: number): Observable<TaxonomyDetailUIModel> {
 		return this.detailQuery.ui.selectEntity(taxonomyId);
 	}
 
 	// DETAIL TERMS STATES
 	public readonly isTermCreating$ = this.detailTermsQuery.isCreating$;
-	public readonly activeTaxonomyTerm$ = this.detailTermsQuery.selectActive<
-		TaxonomyTermDetailModel
-	>() as Observable<TaxonomyTermDetailModel>;
-	public readonly activeTaxonomyTermUI$ = this.detailTermsQuery.ui.selectActive<
-		TaxonomyTermDetailUIModel
-	>() as Observable<TaxonomyTermDetailUIModel>;
+
+	public selectTaxonomyTerm(termId: number): Observable<TaxonomyTermDetailModel> {
+		return this.detailTermsQuery.selectEntity(termId);
+	}
+	public selectTaxonomyTermUIState(termId?: number): Observable<TaxonomyTermDetailUIModel> {
+		return this.detailTermsQuery.ui.selectEntity(termId);
+	}
 
 	// LIST FUNCTIONS
 	public getTaxonomiesPaginated(
@@ -191,20 +196,6 @@ export class TaxonomiesFacade {
 	}
 
 	// DETAIL FUNCTIONS
-	public setActiveTaxonomy(taxonomyId: number): void {
-		this.detailStore.setActive(taxonomyId);
-		this.detailStore.ui.setActive(taxonomyId);
-	}
-
-	public removeActiveTaxonomy(): void {
-		this.detailStore.setActive(null);
-		this.detailStore.ui.setActive(null);
-	}
-
-	public hasActiveTaxonomy(taxonomyId: number): boolean {
-		return this.detailQuery.hasActive(taxonomyId);
-	}
-
 	public hasTaxonomy(taxonomyId: number): boolean {
 		return this.detailQuery.hasEntity(taxonomyId);
 	}
@@ -311,6 +302,41 @@ export class TaxonomiesFacade {
 			});
 	}
 
+	public deleteTaxonomy(
+		payload: TaxonomyDetailModel,
+		options: CreateTaxonomyPayloadOptions = {
+			successAlertContainerId: TAXONOMIES_ALERT_CONTAINER_IDS.delete,
+			errorAlertContainerId: TAXONOMIES_ALERT_CONTAINER_IDS.delete,
+		}
+	): Promise<void> {
+		this.detailStore.setIsDeletingEntity(true, payload.id);
+		const alertMessages = getAlertMessages(payload.label);
+
+		return this.service
+			.deleteTaxonomy(payload.id)
+			.then(() => {
+				this.detailStore.remove(payload.id);
+				this.listPaginator.clearCache();
+
+				// Timeout because the alert is visible on the overview page
+				// and not on the edit page
+				setTimeout(() => {
+					showAlert(
+						options.successAlertContainerId,
+						'success',
+						alertMessages.delete.success
+					);
+				}, 300);
+			})
+			.catch(error => {
+				showAlert(options.errorAlertContainerId, 'error', alertMessages.delete.error);
+				this.detailStore.ui.upsert(payload.id, {
+					error,
+					isDeleting: false,
+				});
+			});
+	}
+
 	public updateTaxonomyTerms(
 		payload: UpdateTaxonomyTermsPayload,
 		options: UpdateTaxonomyPayloadOptions
@@ -342,24 +368,6 @@ export class TaxonomiesFacade {
 	}
 
 	// DETAIL TERMS FUNCTIONS
-	public selectTaxonomyTermUIState(termId: number): Observable<TaxonomyTermDetailUIModel> {
-		return this.detailTermsQuery.ui.selectEntity(termId);
-	}
-
-	public setActiveTaxonomyTerm(termId: number): void {
-		this.detailTermsStore.setActive(termId);
-		this.detailTermsStore.ui.setActive(termId);
-	}
-
-	public removeActiveTaxonomyTerm(): void {
-		this.detailTermsStore.setActive(null);
-		this.detailTermsStore.ui.setActive(null);
-	}
-
-	public hasActiveTaxonomyTerm(termId: number): boolean {
-		return this.detailTermsQuery.hasActive(termId);
-	}
-
 	public hasTaxonomyTerm(termId: number): boolean {
 		return this.detailTermsQuery.hasEntity(termId);
 	}
@@ -485,6 +493,46 @@ export class TaxonomiesFacade {
 				this.detailTermsStore.ui.upsert(termId, {
 					error,
 					isFetching: false,
+				});
+			});
+	}
+
+	public deleteTaxonomyTerm(
+		taxonomyId: number,
+		payload: TaxonomyTermDetailModel,
+		options: TaxonomyTermPayloadOptions = {
+			successAlertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.delete,
+			errorAlertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.delete,
+		}
+	): Promise<void> {
+		const alertMessages = getTermsAlertMessages(payload.label);
+		this.detailTermsStore.setIsDeletingEntity(true, payload.id);
+
+		return this.termsService
+			.deleteTerm(taxonomyId, payload.id)
+			.then(() => {
+				// Update terms overview
+				this.detailStore.update(taxonomyId, ({ terms }) => ({
+					terms: arrayRemove(terms, payload.id),
+				}));
+				// Remove term
+				this.detailTermsStore.remove(payload.id);
+
+				// Timeout because the alert is visible on the term overview page
+				// and not on the edit page
+				setTimeout(() => {
+					showAlert(
+						options.successAlertContainerId,
+						'success',
+						alertMessages.delete.success
+					);
+				}, 300);
+			})
+			.catch(error => {
+				showAlert(options.errorAlertContainerId, 'error', alertMessages.delete.error);
+				this.detailStore.ui.upsert(payload.id, {
+					error,
+					isDeleting: false,
 				});
 			});
 	}
