@@ -5,7 +5,7 @@ import {
 	ControlledModalFooter,
 	ControlledModalHeader,
 } from '@acpaas-ui/react-editorial-components';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 
@@ -16,9 +16,10 @@ const DeleteCard: FC<DeleteCardProps> = ({
 	description,
 	isDeleting,
 	onDelete,
+	setShowModal,
+	showModal,
 	title,
 }) => {
-	const [showModal, setShowModal] = useState(false);
 	const [t] = useCoreTranslation();
 
 	const closeModal = (): void => setShowModal(false);
@@ -56,7 +57,7 @@ const DeleteCard: FC<DeleteCardProps> = ({
 							<Button
 								iconLeft={isDeleting ? 'circle-o-notch fa-spin' : 'trash'}
 								disabled={isDeleting}
-								onClick={() => onDelete(setShowModal)}
+								onClick={onDelete}
 								type="danger"
 							>
 								Ja, verwijder

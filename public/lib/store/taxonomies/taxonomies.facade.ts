@@ -1,4 +1,10 @@
-import { arrayAdd, arrayUpdate, PaginationResponse, PaginatorPlugin } from '@datorama/akita';
+import {
+	arrayAdd,
+	arrayRemove,
+	arrayUpdate,
+	PaginationResponse,
+	PaginatorPlugin,
+} from '@datorama/akita';
 import { SearchParams } from '@redactie/utils';
 import { from, Observable } from 'rxjs';
 
@@ -520,6 +526,46 @@ export class TaxonomiesFacade {
 				this.detailTermsStore.ui.upsert(termId, {
 					error,
 					isFetching: false,
+				});
+			});
+	}
+
+	public deleteTaxonomyTerm(
+		taxonomyId: number,
+		payload: TaxonomyTermDetailModel,
+		options: TaxonomyTermPayloadOptions = {
+			successAlertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.delete,
+			errorAlertContainerId: TAXONOMY_TERMS_ALERT_CONTAINER_IDS.delete,
+		}
+	): Promise<void> {
+		const alertMessages = getTermsAlertMessages(payload.label);
+		this.detailTermsStore.setIsDeletingEntity(true, payload.id);
+
+		return this.termsService
+			.deleteTerm(taxonomyId, payload.id)
+			.then(() => {
+				// Update terms overview
+				this.detailStore.update(taxonomyId, ({ terms }) => ({
+					terms: arrayRemove(terms, payload.id),
+				}));
+				// Remove term
+				this.detailTermsStore.remove(payload.id);
+
+				// Timeout because the alert is visible on the term overview page
+				// and not on the edit page
+				setTimeout(() => {
+					showAlert(
+						options.successAlertContainerId,
+						'success',
+						alertMessages.delete.success
+					);
+				}, 300);
+			})
+			.catch(error => {
+				showAlert(options.errorAlertContainerId, 'error', alertMessages.delete.error);
+				this.detailStore.ui.upsert(payload.id, {
+					error,
+					isDeleting: false,
 				});
 			});
 	}
