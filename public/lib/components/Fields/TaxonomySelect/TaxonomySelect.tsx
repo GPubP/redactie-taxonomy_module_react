@@ -81,7 +81,6 @@ const TaxonomySelect: FC<InputFieldProps> = ({ fieldHelperProps, fieldProps }) =
 				.finally(() => setIsLoadingTerms(false));
 
 			const hasNestedTerms = (terms || []).some(
-				// TODO: check why parentTermId is equal to term id after create
 				term => term.parentTermId && term.parentTermId !== term.id
 			);
 
