@@ -3,6 +3,7 @@ import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-c
 import {
 	AlertContainer,
 	alertService,
+	FormikOnChangeHandler,
 	LeavePrompt,
 	useDetectValueChangesWorker,
 	useNavigate,
@@ -36,12 +37,12 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
 		[detailState, isUpdate, listState]
 	);
-	const [formValue, setFormValue] = useState<TaxonomyDetailModel | null>(null);
+	const [formValue, setFormValue] = useState<TaxonomyDetailModel | null>(taxonomy || null);
 	const [showModal, setShowModal] = useState(false);
 
 	const { navigate } = useNavigate();
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
-		!isLoading,
+		!isLoading && !!taxonomy,
 		formValue,
 		BFF_MODULE_PUBLIC_PATH
 	);
@@ -99,11 +100,14 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 				isUpdate={isUpdate}
 				onSubmit={onFormSubmit}
 			>
-				{({ submitForm, values }) => {
-					setFormValue(values);
-
+				{({ submitForm }) => {
 					return (
 						<>
+							<FormikOnChangeHandler
+								onChange={values => {
+									setFormValue(values as TaxonomyDetailModel);
+								}}
+							/>
 							<ActionBar className="o-action-bar--fixed" isOpen>
 								<ActionBarContentSection>
 									<div className="u-wrapper u-text-right">

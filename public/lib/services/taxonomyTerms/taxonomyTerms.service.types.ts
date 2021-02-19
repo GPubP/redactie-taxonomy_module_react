@@ -35,14 +35,14 @@ export interface CreateTaxonomyTermPayload {
 	label: string;
 	description: string;
 	publishStatus: string;
-	parentTermId: number;
+	parentTermId?: number;
 }
 
 export interface UpdateTaxonomyTermPayload {
 	label: string;
 	description: string;
 	publishStatus: string;
-	parentTermId: number;
+	parentTermId?: number;
 	id: number;
 	createdBy: string;
 	createdAt: string;

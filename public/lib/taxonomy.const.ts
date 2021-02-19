@@ -68,7 +68,6 @@ export const PUBLISH_STATUS_OPTIONS = [
 	},
 ];
 
-// TODO: use alert container id's from store
 export const ALERT_CONTAINER_IDS = {
 	overview: 'taxonomy-overview',
 	create: 'taxonomy-create',

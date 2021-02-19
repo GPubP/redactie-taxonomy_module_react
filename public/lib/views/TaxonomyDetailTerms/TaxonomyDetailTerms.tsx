@@ -60,12 +60,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 	const isLoading = useMemo(() => detailState?.isUpdating, [detailState]);
 	const termsTree = useMemo(() => {
 		return terms.length
-			? sortNestedTerms(
-					listToTree(terms, {
-						parentKey: 'parentTermId',
-						skipTrees: [],
-					})
-			  )
+			? sortNestedTerms(listToTree(terms, { parentKey: 'parentTermId' }))
 			: [];
 	}, [terms]);
 
@@ -90,7 +85,6 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 				listToTree(taxonomy.terms, {
 					addPosition: true,
 					parentKey: 'parentTermId',
-					skipTrees: [],
 				})
 			).map(term => omit(['children'], term));
 
