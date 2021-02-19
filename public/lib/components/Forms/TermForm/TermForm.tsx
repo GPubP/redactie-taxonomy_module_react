@@ -81,11 +81,12 @@ export const TermForm: FC<TaxonomyTermFormProps> = ({
 								<div className="col-xs-12 col-md-8">
 									<Field
 										id="parentTermId"
-										label="Bovenliggende term"
 										name="parentTermId"
+										label="Bovenliggende term"
 										component={TaxonomyTermSelect}
-										allTerms={allTerms}
+										allTerms={filteredTerms}
 										description="Bepaal de bovenliggende term (de 'parent') van deze term"
+										placeholderValue={taxonomyTerm?.id}
 									/>
 									<ErrorMessage name="parentTermId" />
 								</div>
