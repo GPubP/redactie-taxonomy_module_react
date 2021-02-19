@@ -42,7 +42,7 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 
 	const { navigate } = useNavigate();
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
-		!isLoading,
+		!isLoading && !!taxonomy,
 		formValue,
 		BFF_MODULE_PUBLIC_PATH
 	);
@@ -101,12 +101,15 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 				onSubmit={onFormSubmit}
 			>
 				{({ submitForm }) => {
-					<FormikOnChangeHandler
-						onChange={values => setFormValue(values as TaxonomyDetailModel)}
-					/>;
-
 					return (
 						<>
+							<FormikOnChangeHandler
+								onChange={values => {
+									console.log(values);
+
+									setFormValue(values as TaxonomyDetailModel);
+								}}
+							/>
 							<ActionBar className="o-action-bar--fixed" isOpen>
 								<ActionBarContentSection>
 									<div className="u-wrapper u-text-right">

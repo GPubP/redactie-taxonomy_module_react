@@ -1,29 +1,41 @@
 import { Textarea, TextField } from '@acpaas-ui/react-components';
 import { ErrorMessage } from '@redactie/utils';
-import { Field, Formik, isFunction } from 'formik';
-import React, { FC } from 'react';
+import { Field, FieldProps, Formik, isFunction } from 'formik';
+import React, { FC, useMemo } from 'react';
 
 import { getFieldState } from '../../../helpers';
 import { FormikChildrenFn } from '../../../taxonomy.types';
 import { TaxonomyTermSelect } from '../../TaxonomyTermSelect';
 
 import { TERM_FORM_VALIDATION_SCHEMA } from './TermForm.const';
-import { TaxonomyTermFormProps } from './TermForm.types';
+import { TaxonomyTermFormProps, TermFormValues } from './TermForm.types';
 
 export const TermForm: FC<TaxonomyTermFormProps> = ({
+	allTerms,
 	children,
 	formikRef,
-	isUpdate = false,
-	allTerms,
-	taxonomyTerm,
+	initialValues,
 	onSubmit,
+	taxonomyTerm,
 }) => {
-	return (
+	/**
+	 * Hooks
+	 */
+
+	// Don't show same term in list for parent terms
+	const filteredTerms = useMemo(() => {
+		return taxonomyTerm?.id ? allTerms.filter(term => term.id !== taxonomyTerm?.id) : allTerms;
+	}, [allTerms, taxonomyTerm]);
+
+	/**
+	 * Render
+	 */
+
+	return initialValues ? (
 		<Formik
 			innerRef={instance => isFunction(formikRef) && formikRef(instance)}
-			initialValues={taxonomyTerm || {}}
+			initialValues={initialValues}
 			onSubmit={onSubmit}
-			enableReinitialize={true}
 			validationSchema={TERM_FORM_VALIDATION_SCHEMA}
 		>
 			{formikProps => {
@@ -80,16 +92,12 @@ export const TermForm: FC<TaxonomyTermFormProps> = ({
 							</div>
 						</div>
 
-						{isUpdate && (
-							<div className="row u-margin-bottom-lg">{/* TODO: add delete */}</div>
-						)}
-
 						{typeof children === 'function'
-							? (children as FormikChildrenFn)(formikProps)
+							? (children as FormikChildrenFn<TermFormValues>)(formikProps)
 							: children}
 					</>
 				);
 			}}
 		</Formik>
-	);
+	) : null;
 };

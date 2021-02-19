@@ -17,17 +17,22 @@ import {
 	useNavigate,
 	useRoutes,
 } from '@redactie/utils';
-import { FormikProps, FormikValues } from 'formik';
+import { FormikProps } from 'formik';
+import { pick } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
-import { DeleteCard, TermForm } from '../../components';
+import { DeleteCard, TermForm, TermFormValues } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { useTaxonomy, useTaxonomyTerm, useTaxonomyTermsUIStates } from '../../hooks';
 import { TaxonomyTerm } from '../../services/taxonomyTerms';
-import { taxonomiesFacade, TaxonomyTermDetailModel } from '../../store/taxonomies';
+import { taxonomiesFacade } from '../../store/taxonomies';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
 
-import { TERM_DETAIL_ALLOWED_PATHS } from './TaxonomyTermDetail.const';
+import {
+	INITIAL_TERM_VALUE,
+	TERM_DETAIL_ALLOWED_PATHS,
+	TERM_VALUE_KEYS,
+} from './TaxonomyTermDetail.const';
 import { TaxonomyTermRouteProps } from './TaxonomyTermDetail.types';
 
 export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
@@ -41,7 +46,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	const [t] = useCoreTranslation();
 	const { generatePath, navigate } = useNavigate();
 	const routes = useRoutes();
-	const formikRef = useRef<FormikProps<FormikValues>>();
+	const formikRef = useRef<FormikProps<TermFormValues>>();
 
 	const [taxonomy] = useTaxonomy(taxonomyId);
 	const [taxonomyTerm] = useTaxonomyTerm(taxonomyId, termId);
@@ -54,7 +59,9 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		],
 	});
 	const [listState, detailState] = useTaxonomyTermsUIStates(termId);
-	const [formValue, setFormValue] = useState<TaxonomyTermDetailModel | null>(null);
+	const [formValue, setFormValue] = useState<TermFormValues | null>(
+		!isUpdate ? INITIAL_TERM_VALUE : null
+	);
 	const [hasSubmit, setHasSubmit] = useState(false);
 	const [isInitialLoading, setInitialLoading] = useState(isUpdate);
 	const [showModal, setShowModal] = useState(false);
@@ -63,7 +70,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		[detailState, isUpdate, listState]
 	);
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
-		!isInitialLoading && !isLoading,
+		isUpdate ? !isInitialLoading && !isLoading && !!formValue : true,
 		formValue,
 		BFF_MODULE_PUBLIC_PATH
 	);
@@ -78,7 +85,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	// Set initial form value
 	useEffect(() => {
 		if (isUpdate && !isInitialLoading && taxonomyTerm) {
-			setFormValue(taxonomyTerm);
+			setFormValue({ ...INITIAL_TERM_VALUE, ...pick(TERM_VALUE_KEYS, taxonomyTerm) });
 		}
 	}, [isInitialLoading, isUpdate, taxonomyTerm]);
 
@@ -94,13 +101,13 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	 * METHODS
 	 */
 
-	const updateTerm = async (updatedTerm: TaxonomyTerm): Promise<void> => {
+	const updateTerm = async (updatedTerm: TermFormValues): Promise<void> => {
 		if (!taxonomyId) {
 			return;
 		}
-
+		const payload = { ...(taxonomyTerm as TaxonomyTerm), ...updatedTerm };
 		await taxonomiesFacade
-			.updateTaxonomyTerm(taxonomyId, updatedTerm, {
+			.updateTaxonomyTerm(taxonomyId, payload, {
 				errorAlertContainerId: ALERT_CONTAINER_IDS.termDetail,
 				successAlertContainerId: ALERT_CONTAINER_IDS.detailTerms,
 			})
@@ -110,7 +117,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			});
 	};
 
-	const createTerm = async (newTerm: TaxonomyTerm): Promise<void> => {
+	const createTerm = async (newTerm: TermFormValues): Promise<void> => {
 		if (!taxonomyId) {
 			return;
 		}
@@ -151,7 +158,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			.catch(() => setShowModal(false));
 	};
 
-	const onFormSubmit = (values: TaxonomyTerm): void => {
+	const onFormSubmit = (values: TermFormValues): void => {
 		isUpdate ? updateTerm(values) : createTerm(values);
 	};
 
@@ -183,15 +190,16 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		<>
 			<TermForm
 				formikRef={instance => (formikRef.current = instance || undefined)}
-				onSubmit={onFormSubmit}
 				allTerms={taxonomy?.terms || []}
+				initialValues={formValue}
 				taxonomyTerm={taxonomyTerm}
+				onSubmit={onFormSubmit}
 			>
 				{({ submitForm }) => {
 					return (
 						<>
 							<FormikOnChangeHandler
-								onChange={values => setFormValue(values as TaxonomyTermDetailModel)}
+								onChange={values => setFormValue(values as TermFormValues)}
 							/>
 							<ActionBar className="o-action-bar--fixed" isOpen>
 								<ActionBarContentSection>
