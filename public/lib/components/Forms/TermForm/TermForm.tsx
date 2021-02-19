@@ -1,6 +1,6 @@
 import { Textarea, TextField } from '@acpaas-ui/react-components';
 import { ErrorMessage } from '@redactie/utils';
-import { Field, FieldProps, Formik, isFunction } from 'formik';
+import { Field, Formik, isFunction } from 'formik';
 import React, { FC, useMemo } from 'react';
 
 import { getFieldState } from '../../../helpers';

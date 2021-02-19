@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 
 import { FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
-import { MODULE_PATHS } from '../../taxonomy.const';
 import { TableColumn } from '../../taxonomy.types';
 
 import { OverviewTableRow } from './TaxonomyOverview.types';

@@ -18,7 +18,7 @@ import {
 	useRoutes,
 } from '@redactie/utils';
 import { FormikProps } from 'formik';
-import { pick } from 'ramda';
+import { omit, pick } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
 import { DeleteCard, TermForm, TermFormValues } from '../../components';
@@ -105,7 +105,9 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		if (!taxonomyId) {
 			return;
 		}
-		const payload = { ...(taxonomyTerm as TaxonomyTerm), ...updatedTerm };
+		// Omit keys from form to always ensure the last updated values
+		const payload = { ...omit(TERM_VALUE_KEYS, taxonomyTerm), ...updatedTerm } as TaxonomyTerm;
+
 		await taxonomiesFacade
 			.updateTaxonomyTerm(taxonomyId, payload, {
 				errorAlertContainerId: ALERT_CONTAINER_IDS.termDetail,

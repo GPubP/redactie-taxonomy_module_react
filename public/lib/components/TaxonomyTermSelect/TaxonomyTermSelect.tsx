@@ -48,6 +48,9 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 			}
 		);
 
+		// Items with no parent will have their own id used as parentTermId
+		// By setting the placeholderValue with that id it will show the placeholder as intended
+		// (this only applies to the Select component)
 		const defaultOption: SelectOption = { label: placeholder, value: String(placeholderValue) };
 		const filteredTerms = hasMultipleLevels
 			? listToTree(mappedTermOptions, {

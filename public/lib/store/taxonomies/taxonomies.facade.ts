@@ -436,10 +436,10 @@ export class TaxonomiesFacade {
 			.then(taxonomyTerm => {
 				// Update terms overview
 				this.detailStore.update(taxonomyId, ({ terms }) => ({
-					terms: arrayUpdate(terms, payload.id, payload as Partial<TaxonomyTerm>),
+					terms: arrayUpdate(terms, taxonomyTerm.id, taxonomyTerm),
 				}));
 				// Update detail entity and ui
-				this.detailTermsStore.ui.update(payload.id, {
+				this.detailTermsStore.ui.update(taxonomyTerm.id, {
 					isUpdating: false,
 					error: null,
 				});
