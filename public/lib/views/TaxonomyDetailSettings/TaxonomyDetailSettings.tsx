@@ -105,8 +105,6 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 						<>
 							<FormikOnChangeHandler
 								onChange={values => {
-									console.log(values);
-
 									setFormValue(values as TaxonomyDetailModel);
 								}}
 							/>

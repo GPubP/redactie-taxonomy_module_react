@@ -43,9 +43,9 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 		component(label: string, { description, settingsPath }: OverviewTableRow) {
 			return (
 				<>
-					<EllipsisWithTooltip>
-						<Link to={settingsPath}>{label}</Link>
-					</EllipsisWithTooltip>
+					<Link to={settingsPath}>
+						<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
+					</Link>
 					<p className="small">
 						{description ? (
 							<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
