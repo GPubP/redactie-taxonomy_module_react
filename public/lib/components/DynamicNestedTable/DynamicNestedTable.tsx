@@ -1,5 +1,8 @@
-import { Spinner } from '@acpaas-ui/react-components';
-import { DndContainer, DndDragDroppable } from '@acpaas-ui/react-editorial-components';
+import {
+	DndContainer,
+	DndDragDroppable,
+	TablePlaceholder,
+} from '@acpaas-ui/react-editorial-components';
 import classnames from 'classnames/bind';
 import { path } from 'ramda';
 import React, { FC, Fragment, ReactElement } from 'react';
@@ -16,6 +19,7 @@ import {
 } from './DynamicNestedTable.types';
 import { getCellProps, getHeaderProps } from './DynamicNestedTable.utils';
 import { Header } from './Header';
+import { Loader } from './Loader';
 import { Row } from './Row';
 
 const cx = classnames.bind(styles);
@@ -39,10 +43,10 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 }) => {
 	const hasCols = !loading && columns.length > 0;
 	const hasData = !loading && rows.length > 0;
-	const showPlaceholder = loading || !hasCols || !hasData;
+	const showPlaceholder = (!hasCols || !hasData) && !loading;
 
 	/**
-	 * Render
+	 * Methods
 	 */
 
 	const getCellKey = (prefix: string, col: TableColumn<RowData>, colIndex: number): string => {
@@ -50,6 +54,10 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 		const suffix = typeof col === 'string' && col ? col : col.label ? col.label : colIndex;
 		return `${prefix}-${suffix}`;
 	};
+
+	/**
+	 * Render
+	 */
 
 	const renderCell = (
 		col: TableColumn<RowData>,
@@ -69,19 +77,6 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 			/>
 		);
 	};
-
-	const renderPlaceholder = (): ReactElement => (
-		<p>
-			{loading && (
-				<>
-					{loadDataMessage}
-					<Spinner style={{ display: 'inline' }} />
-				</>
-			)}
-			{!loading && !hasCols && noColumnsMessage}
-			{!loading && !hasData && noDataMessage}
-		</p>
-	);
 
 	const renderDraggableRow = (
 		row: RowData,
@@ -156,38 +151,50 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 			: renderStaticRow(row, rowIndex, level);
 	};
 
-	return (
-		<DndContainer draggable={draggable}>
-			<div className={cx(className, { 'o-dynamic-nested-table-responsive': responsive })}>
-				<div
-					className={cx('o-dynamic-nested-table', tableClassName, {
-						'o-dynamic-nested-table--draggable': draggable,
-						'o-dynamic-nested-table--fixed': fixed,
-					})}
-				>
-					{showPlaceholder ? (
-						renderPlaceholder()
-					) : (
-						<>
-							<div className={cx('o-dynamic-nested-table__head')}>
-								<Row className={cx('o-dynamic-nested-table__row')}>
-									{columns.map((col, colIndex) => (
-										<Header
-											{...getHeaderProps(col, activeSorting, orderBy)}
-											key={getCellKey('header', col, colIndex)}
-											className={cx('o-dynamic-nested-table__cell')}
-										/>
-									))}
-								</Row>
-							</div>
-							<div className={cx('o-dynamic-nested-table__body')}>
-								{rows.map((row, index) => renderTableRow(row, index))}
-							</div>
-						</>
-					)}
+	const renderTable = (): ReactElement => {
+		return (
+			<DndContainer draggable={draggable}>
+				<div className={cx(className, { 'o-dynamic-nested-table-responsive': responsive })}>
+					<div
+						className={cx('o-dynamic-nested-table', tableClassName, {
+							'o-dynamic-nested-table--draggable': draggable,
+							'o-dynamic-nested-table--fixed': fixed,
+						})}
+					>
+						<div className={cx('o-dynamic-nested-table__head')}>
+							<Row className={cx('o-dynamic-nested-table__row')}>
+								{columns.map((col, colIndex) => (
+									<Header
+										{...getHeaderProps(col, activeSorting, orderBy)}
+										key={getCellKey('header', col, colIndex)}
+										className={cx('o-dynamic-nested-table__cell')}
+									/>
+								))}
+							</Row>
+						</div>
+						<div className={cx('o-dynamic-nested-table__body')}>
+							{loading ? (
+								<Loader loadDataMessage={loadDataMessage} />
+							) : (
+								rows.map((row, index) => renderTableRow(row, index))
+							)}
+						</div>
+					</div>
 				</div>
-			</div>
-		</DndContainer>
+			</DndContainer>
+		);
+	};
+
+	return showPlaceholder ? (
+		<TablePlaceholder
+			className={className}
+			hasCols={hasCols}
+			hasData={hasData}
+			noDataMessage={noDataMessage}
+			noColumnsMessage={noColumnsMessage}
+		/>
+	) : (
+		renderTable()
 	);
 };
 
