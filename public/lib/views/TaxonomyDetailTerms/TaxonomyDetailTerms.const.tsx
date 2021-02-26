@@ -1,6 +1,7 @@
 import { Button, ButtonGroup } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
+import { TableColumn } from '@redactie/utils';
 import { lensProp } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -8,7 +9,6 @@ import { Link } from 'react-router-dom';
 import { INDENT_SIZE } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
 import { MODULE_PATHS, TENANT_ROOT } from '../../taxonomy.const';
-import { TableColumn } from '../../taxonomy.types';
 
 import { DetailTermTableRow, HasMovedRef, MoveDirection } from './TaxonomyDetailTerms.types';
 

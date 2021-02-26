@@ -1,9 +1,9 @@
+import { FormikChildrenFn } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode, Ref } from 'react';
 
 import { TaxonomyDetailResponse } from '../../../services/taxonomies';
 import { TaxonomyDetailModel } from '../../../store/taxonomies';
-import { FormikChildrenFn } from '../../../taxonomy.types';
 
 export interface TaxonomySettingFormProps {
 	children?: FormikChildrenFn<TaxonomyDetailModel> | ReactNode;

@@ -1,12 +1,11 @@
 import { Select, Textarea, TextField } from '@acpaas-ui/react-components';
-import { ErrorMessage } from '@redactie/utils';
+import { ErrorMessage, FormikChildrenFn } from '@redactie/utils';
 import classnames from 'classnames';
 import { Field, Formik, isFunction } from 'formik';
 import React, { FC } from 'react';
 
 import { getFieldState } from '../../../helpers';
 import { TaxonomyDetailModel } from '../../../store/taxonomies';
-import { FormikChildrenFn } from '../../../taxonomy.types';
 
 import {
 	SETTINGS_PUBLISH_STATUS_OPTIONS,

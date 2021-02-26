@@ -1,7 +1,6 @@
-import { OrderBy } from '@redactie/utils';
+import { OrderBy, TableColumn } from '@redactie/utils';
 import { Ref } from 'react';
 
-import { TableColumn } from '../../taxonomy.types';
 import { DndItem } from '../../views/TaxonomyDetailTerms/TaxonomyDetailTerms.types';
 
 export type RowData = Record<string, any>;

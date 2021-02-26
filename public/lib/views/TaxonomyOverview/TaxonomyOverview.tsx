@@ -159,6 +159,8 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 					activeSorting={activeSorting}
 					totalValues={pagination?.total || 0}
 					loading={loading}
+					loadDataMessage="Taxonomieën ophalen"
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 				/>
 			</>
 		);
