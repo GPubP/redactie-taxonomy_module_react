@@ -3,7 +3,7 @@ import { Ref } from 'react';
 
 import { DndItem } from '../../views/TaxonomyDetailTerms/TaxonomyDetailTerms.types';
 
-export type RowData = Record<string, any>;
+export type RowData = any;
 export type OrderByFn = (key: OrderBy['key'], order: OrderBy['order']) => void;
 
 export interface DynamicNestedTableProps<R = RowData> {

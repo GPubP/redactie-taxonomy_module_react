@@ -156,7 +156,7 @@ export class TaxonomiesFacade {
 					});
 					throw error;
 				})
-		) as any;
+		);
 	}
 
 	public getTaxonomies(searchParams?: SearchParams, options?: GetTaxonomiesPayloadOptions): void {
