@@ -363,13 +363,14 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		return (
 			<DynamicNestedTable
 				className="u-margin-bottom"
-				columns={DETAIL_TERMS_COLUMNS(t, onMoveRow) as any}
+				tableClassName="a-table--fixed--xs"
+				columns={DETAIL_TERMS_COLUMNS(t, onMoveRow)}
 				dataKey="id"
 				draggable
 				fixed
 				moveRow={onDragRow}
 				rows={termRows}
-				tableClassName="a-table--fixed--xs"
+				noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 			/>
 		);
 	};

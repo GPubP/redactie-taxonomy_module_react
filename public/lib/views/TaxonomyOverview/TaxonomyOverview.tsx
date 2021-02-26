@@ -14,6 +14,7 @@ import {
 	OrderBy,
 	parseOrderByToString,
 	parseStringToOrderBy,
+	SearchParams,
 	useAPIQueryParams,
 	useNavigate,
 	useRoutes,
@@ -49,7 +50,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 		routes as ModuleRouteConfig[],
 		BREADCRUMB_OPTIONS(generatePath)
 	);
-	const { loading, pagination } = usePaginatedTaxonomies(query);
+	const { loading, pagination } = usePaginatedTaxonomies(query as SearchParams);
 
 	// Set initial loading
 	useEffect(() => {
@@ -60,11 +61,10 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 
 	// Set initial values with query params
 	useEffect(() => {
-		const { label = '', publishStatus = '' } = query;
-
-		if (label || publishStatus) {
-			setFilterFormState({ label, publishStatus });
-		}
+		setFilterFormState({
+			label: query.label ?? '',
+			publishStatus: query.publishStatus ?? '',
+		});
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/**
@@ -112,7 +112,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 		setQuery(values);
 	};
 
-	const activeSorting = parseStringToOrderBy(query.sort);
+	const activeSorting = parseStringToOrderBy(query.sort ?? '');
 	const activeFilters = createFilters(filterFormState);
 
 	/**
@@ -159,6 +159,8 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 					activeSorting={activeSorting}
 					totalValues={pagination?.total || 0}
 					loading={loading}
+					loadDataMessage="Taxonomieën ophalen"
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 				/>
 			</>
 		);

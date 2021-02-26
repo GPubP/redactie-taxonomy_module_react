@@ -1,7 +1,7 @@
 import { Button } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
-import { APIQueryParamsConfig, TableColumn } from '@redactie/utils';
+import { TableColumn } from '@redactie/utils';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ import { CORE_TRANSLATIONS } from '../../connectors';
 
 import { OverviewTableRow } from './TaxonomyOverview.types';
 
-export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
+export const DEFAULT_OVERVIEW_QUERY_PARAMS = {
 	pagesize: {
 		defaultValue: 10,
 		type: 'number',
@@ -27,7 +27,7 @@ export const DEFAULT_OVERVIEW_QUERY_PARAMS: APIQueryParamsConfig = {
 		defaultValue: true,
 		type: 'boolean',
 	},
-};
+} as const;
 
 export const DEFAULT_FILTER_FORM: FilterFormState = {
 	label: '',
