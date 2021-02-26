@@ -1,10 +1,9 @@
 import { Textarea, TextField } from '@acpaas-ui/react-components';
-import { ErrorMessage } from '@redactie/utils';
+import { ErrorMessage, FormikChildrenFn } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
 import React, { FC, useMemo } from 'react';
 
 import { getFieldState } from '../../../helpers';
-import { FormikChildrenFn } from '../../../taxonomy.types';
 import { TaxonomyTermSelect } from '../../TaxonomyTermSelect';
 
 import { TERM_FORM_VALIDATION_SCHEMA } from './TermForm.const';

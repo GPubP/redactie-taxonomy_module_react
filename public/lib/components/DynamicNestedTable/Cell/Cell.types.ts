@@ -1,6 +1,6 @@
+import { TableColumn } from '@redactie/utils';
 import { CSSProperties } from 'react';
 
-import { TableColumn } from '../../../taxonomy.types';
 import { RowData } from '../DynamicNestedTable.types';
 
 export interface CellProps {

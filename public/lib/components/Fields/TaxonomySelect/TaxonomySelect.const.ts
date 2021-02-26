@@ -1,4 +1,4 @@
-import { SelectOption } from '../../../taxonomy.types';
+import { SelectOption } from '@redactie/utils';
 
 import { TaxonomySelectMethods, TaxonomySelectValue } from './TaxonomySelect.types';
 

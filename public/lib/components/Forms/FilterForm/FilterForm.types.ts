@@ -1,4 +1,4 @@
-import { FilterItem } from '../../../taxonomy.types';
+import { FilterItem } from '@redactie/utils';
 
 export interface FilterFormProps {
 	activeFilters: FilterItem[];

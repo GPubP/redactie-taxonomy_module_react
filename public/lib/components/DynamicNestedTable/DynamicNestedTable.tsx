@@ -3,11 +3,10 @@ import {
 	DndDragDroppable,
 	TablePlaceholder,
 } from '@acpaas-ui/react-editorial-components';
+import { TableColumn } from '@redactie/utils';
 import classnames from 'classnames/bind';
 import { path } from 'ramda';
 import React, { FC, Fragment, ReactElement } from 'react';
-
-import { TableColumn } from '../../taxonomy.types';
 
 import { Cell } from './Cell';
 import { DEFAULT_MESSAGES, DND_ITEM_TYPE, INDENT_SIZE } from './DynamicNestedTable.const';

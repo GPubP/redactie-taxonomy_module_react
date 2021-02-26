@@ -1,12 +1,11 @@
 import { RadioGroup, Select } from '@acpaas-ui/react-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
-import { DataLoader } from '@redactie/utils';
+import { DataLoader, SelectOption } from '@redactie/utils';
 import { Field } from 'formik';
 import React, { ChangeEvent, FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { taxonomiesApiService, Taxonomy } from '../../../services/taxonomies';
 import { taxonomyTermsApiService } from '../../../services/taxonomyTerms';
-import { SelectOption } from '../../../taxonomy.types';
 
 import {
 	INITIAL_TAXONOMY_VALUE,

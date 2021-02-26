@@ -1,6 +1,5 @@
-import { OrderBy } from '@redactie/utils';
+import { OrderBy, TableColumn } from '@redactie/utils';
 
-import { TableColumn } from '../../../taxonomy.types';
 import { OrderByFn, RowData } from '../DynamicNestedTable.types';
 
 export interface HeaderProps {

@@ -1,9 +1,9 @@
 import { Autocomplete, Select } from '@acpaas-ui/react-components';
 import { Cascader } from '@acpaas-ui/react-editorial-components';
+import { SelectOption } from '@redactie/utils';
 import React, { ChangeEvent, FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { listToTree } from '../../helpers';
-import { SelectOption } from '../../taxonomy.types';
 import { TaxonomySelectMethods } from '../Fields/TaxonomySelect/TaxonomySelect.types';
 
 import { TERM_SELECT_DEFAULT_PLACEHOLDER } from './TaxonomyTermSelect.const';

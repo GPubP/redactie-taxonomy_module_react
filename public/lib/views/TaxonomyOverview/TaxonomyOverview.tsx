@@ -10,6 +10,7 @@ import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	AlertContainer,
 	DataLoader,
+	FilterItem,
 	OrderBy,
 	parseOrderByToString,
 	parseStringToOrderBy,
@@ -23,7 +24,7 @@ import { FilterForm, FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { usePaginatedTaxonomies } from '../../hooks';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
-import { FilterItem, TaxonomyRouteProps } from '../../taxonomy.types';
+import { TaxonomyRouteProps } from '../../taxonomy.types';
 
 import {
 	DEFAULT_FILTER_FORM,
@@ -91,10 +92,10 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 	};
 
 	const clearFilter = (item: FilterItem): void => {
-		setQuery({ [item.key]: '' });
+		setQuery({ [item.key as string]: '' });
 		setFilterFormState({
 			...filterFormState,
-			[item.key]: '',
+			[item.key as string]: '',
 		});
 	};
 

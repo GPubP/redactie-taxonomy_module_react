@@ -1,7 +1,5 @@
-import { OrderBy } from '@redactie/utils';
+import { OrderBy, TableColumn } from '@redactie/utils';
 import { is, isNil } from 'ramda';
-
-import { TableColumn } from '../../taxonomy.types';
 
 import { CellProps } from './Cell';
 import { RowData } from './DynamicNestedTable.types';

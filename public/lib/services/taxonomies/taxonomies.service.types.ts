@@ -1,4 +1,5 @@
-import { PaginatedResponse } from '../api/api.service.types';
+import { EmbeddedResponse } from '@redactie/utils';
+
 import { TaxonomyTerm } from '../taxonomyTerms';
 
 export interface Taxonomy extends TaxonomySettings {
@@ -23,7 +24,7 @@ export interface TaxonomySettings {
  * =========================
  */
 
-export type TaxonomiesResponse = PaginatedResponse<Taxonomy[]>;
+export type TaxonomiesResponse = EmbeddedResponse<Taxonomy>;
 export type TaxonomyDetailResponse = Taxonomy;
 
 /**
