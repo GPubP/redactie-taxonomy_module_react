@@ -1,13 +1,12 @@
 import { Button } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
-import { APIQueryParamsConfig } from '@redactie/utils';
+import { APIQueryParamsConfig, TableColumn } from '@redactie/utils';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
-import { TableColumn } from '../../taxonomy.types';
 
 import { OverviewTableRow } from './TaxonomyOverview.types';
 
@@ -40,7 +39,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		width: '60%',
-		component(label: string, { description, settingsPath }: OverviewTableRow) {
+		component(label: string, { description, settingsPath }) {
 			return (
 				<>
 					<Link to={settingsPath}>
@@ -72,7 +71,7 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 		classList: ['u-text-right'],
 		disableSorting: true,
 		width: '20%',
-		component(value: unknown, { editTerms }: OverviewTableRow) {
+		component(value, { editTerms }) {
 			return <Button ariaLabel="Edit" icon="edit" onClick={editTerms} transparent />;
 		},
 	},

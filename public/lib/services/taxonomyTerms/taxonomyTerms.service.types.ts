@@ -1,4 +1,4 @@
-import { PaginatedResponse } from '../api/api.service.types';
+import { EmbeddedResponse } from '@redactie/utils';
 
 export interface TaxonomyTerm {
 	id: number;
@@ -22,7 +22,7 @@ export interface TaxonomyTerm {
  * =========================
  */
 
-export type TaxonomyTermsResponse = PaginatedResponse<TaxonomyTerm[]>;
+export type TaxonomyTermsResponse = EmbeddedResponse<TaxonomyTerm>;
 
 /**
  * =========================

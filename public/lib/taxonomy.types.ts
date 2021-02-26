@@ -1,7 +1,5 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { AlertProps, ContextHeaderTab } from '@redactie/utils';
-import { FormikProps, FormikValues } from 'formik';
-import { ReactNode } from 'react';
 
 import { CreateTaxonomyPayload } from './services/taxonomies';
 import { TaxonomyTerm } from './services/taxonomyTerms';
@@ -35,40 +33,7 @@ export interface NestedTaxonomyTerm extends TaxonomyTerm {
 	children?: NestedTaxonomyTerm[];
 }
 
-// TODO: move to utils types
-
 export type AlertMessages<T extends string | number | symbol> = Record<
 	T,
 	{ [key in 'success' | 'error']?: AlertProps }
 >;
-
-export interface TableColumn<RowData = unknown> {
-	label: string;
-	value?: string;
-	component?: (value: any, rowData: RowData, rowIndex: number) => ReactNode;
-	headerComponent?: (value: any) => ReactNode;
-	format?: (value: any, col: TableColumn<RowData>, rowData: RowData, rowIndex: number) => string;
-	hidden?: boolean;
-	disabled?: boolean;
-	disableSorting?: boolean;
-	classList?: string[];
-	fallback?: string;
-	width?: string;
-	ellipsis?: boolean;
-}
-
-export interface FilterItem {
-	key: string;
-	valuePrefix: string;
-	value: string;
-}
-
-export type FormikChildrenFn<Values = FormikValues> = (
-	formikProps: FormikProps<Values>
-) => ReactNode;
-
-export interface SelectOption {
-	label: string;
-	value: string;
-	disabled?: boolean;
-}
