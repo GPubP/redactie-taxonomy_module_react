@@ -370,9 +370,6 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 				moveRow={onDragRow}
 				rows={termRows}
 				tableClassName="a-table--fixed--xs"
-				loading={isLoading}
-				loadDataMessage="Termen ophalen"
-				noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 			/>
 		);
 	};
