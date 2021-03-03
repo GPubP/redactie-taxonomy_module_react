@@ -26,9 +26,9 @@ const DeleteCard: FC<DeleteCardProps> = ({
 				<CardDescription>{description}</CardDescription>
 				<Button
 					className="u-margin-top"
-					iconLeft="trash"
+					iconLeft="trash-o"
 					onClick={() => setShowModal(true)}
-					type="secondary"
+					type="danger"
 				>
 					{t(CORE_TRANSLATIONS.BUTTON_REMOVE)}
 				</Button>
