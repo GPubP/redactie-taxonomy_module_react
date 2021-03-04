@@ -120,11 +120,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 	 */
 
 	const renderOverview = (): ReactElement | null => {
-		if (!pagination?.data.length) {
-			return null;
-		}
-
-		const customTaxonomyRows: OverviewTableRow[] = pagination.data.map(taxonomy => {
+		const customTaxonomyRows: OverviewTableRow[] = (pagination?.data || []).map(taxonomy => {
 			const detailParams = { taxonomyId: taxonomy.id };
 			return {
 				label: taxonomy.label,
