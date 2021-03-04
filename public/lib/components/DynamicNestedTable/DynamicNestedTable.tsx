@@ -1,6 +1,10 @@
 import {
 	DndContainer,
 	DndDragDroppable,
+	getCellProps,
+	getHeaderProps,
+	TableCell,
+	TableHeader,
 	TablePlaceholder,
 } from '@acpaas-ui/react-editorial-components';
 import { TableColumn } from '@redactie/utils';
@@ -8,7 +12,6 @@ import classnames from 'classnames/bind';
 import { path } from 'ramda';
 import React, { FC, Fragment, ReactElement } from 'react';
 
-import { Cell } from './Cell';
 import { DEFAULT_MESSAGES, DND_ITEM_TYPE, INDENT_SIZE } from './DynamicNestedTable.const';
 import styles from './DynamicNestedTable.module.scss';
 import {
@@ -16,8 +19,6 @@ import {
 	DynamicNestedTableProps,
 	RowData,
 } from './DynamicNestedTable.types';
-import { getCellProps, getHeaderProps } from './DynamicNestedTable.utils';
-import { Header } from './Header';
 import { Loader } from './Loader';
 import { Row } from './Row';
 
@@ -68,9 +69,10 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 		const indentStyle = { borderLeft: `${(level - 1) * (INDENT_SIZE / 16)}rem solid white` };
 
 		return (
-			<Cell
+			<TableCell
 				{...getCellProps(col, row, rowIndex)}
 				key={getCellKey('cell', col, colIndex)}
+				as="div"
 				className={cx('o-dynamic-nested-table__cell')}
 				style={colIndex === 0 && level > 1 ? indentStyle : {}}
 			/>
@@ -163,9 +165,10 @@ const DynamicNestedTable: FC<DynamicNestedTableProps> = ({
 						<div className={cx('o-dynamic-nested-table__head')}>
 							<Row className={cx('o-dynamic-nested-table__row')}>
 								{columns.map((col, colIndex) => (
-									<Header
+									<TableHeader
 										{...getHeaderProps(col, activeSorting, orderBy)}
 										key={getCellKey('header', col, colIndex)}
+										as="div"
 										className={cx('o-dynamic-nested-table__cell')}
 									/>
 								))}
