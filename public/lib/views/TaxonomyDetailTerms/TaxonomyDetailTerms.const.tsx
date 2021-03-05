@@ -29,7 +29,7 @@ export const DETAIL_TERMS_COLUMNS = (
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		disableSorting: true,
-		headerComponent(label: string) {
+		headerComponent(value, label: string) {
 			return <span className="u-padding-left-xx">{label}</span>;
 		},
 		width: '60%',
