@@ -12,7 +12,7 @@ import { OverviewTableRow } from './TaxonomyOverview.types';
 
 export const DEFAULT_OVERVIEW_QUERY_PARAMS = {
 	pagesize: {
-		defaultValue: 10,
+		defaultValue: 20,
 		type: 'number',
 	},
 	label: {
