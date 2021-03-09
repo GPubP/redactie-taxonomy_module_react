@@ -11,10 +11,6 @@ import { CORE_TRANSLATIONS } from '../../connectors';
 import { OverviewTableRow } from './TaxonomyOverview.types';
 
 export const DEFAULT_OVERVIEW_QUERY_PARAMS = {
-	pagesize: {
-		defaultValue: 10,
-		type: 'number',
-	},
 	label: {
 		defaultValue: '',
 		type: 'string',
