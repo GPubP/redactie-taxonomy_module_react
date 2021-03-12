@@ -36,16 +36,14 @@ Core.routes.register({
 		parentPath: MODULE_PATHS.contentTypes,
 		canShown: [
 			rolesRightsConnector.canShowns.securityRightsTenantCanShown([
-				// TODO: Uncomment this line when the securityright are set
-				// rolesRightsConnector.securityRights.read,
+				rolesRightsConnector.securityRights.read,
 			]),
 		],
 	},
 	guardOptions: {
 		guards: [
 			rolesRightsConnector.guards.securityRightsTenantGuard([
-				// TODO: Uncomment this line when the securityright are set
-				// rolesRightsConnector.securityRights.read,
+				rolesRightsConnector.securityRights.read,
 			]),
 		],
 	},
@@ -63,8 +61,7 @@ Core.routes.register({
 			guardOptions: {
 				guards: [
 					rolesRightsConnector.guards.securityRightsTenantGuard([
-						// TODO: Uncomment this line when the securityright are set
-						// rolesRightsConnector.securityRights.create,
+						rolesRightsConnector.securityRights.create,
 					]),
 				],
 			},
