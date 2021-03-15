@@ -5,9 +5,9 @@ class RolesRightsConnector {
 	public static apiName = 'roles-rights-module';
 	public api: RolesRightsModuleAPI;
 	public securityRights = {
-		create: 'taxonomy_create',
-		update: 'taxonomy_update',
-		read: 'taxonomy_read',
+		create: 'taxonomies_create',
+		update: 'taxonomies_update',
+		read: 'taxonomies_read',
 	};
 
 	public get guards(): RolesRightsModuleAPI['guards'] {
