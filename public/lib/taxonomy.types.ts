@@ -37,3 +37,8 @@ export type AlertMessages<T extends string | number | symbol> = Record<
 	T,
 	{ [key in 'success' | 'error']?: AlertProps }
 >;
+
+export enum PublishStatus {
+	Draft = 'draft',
+	Published = 'published',
+}
