@@ -27,6 +27,7 @@ import { useTaxonomy, useTaxonomyTerm, useTaxonomyTermsUIStates } from '../../ho
 import { TaxonomyTerm } from '../../services/taxonomyTerms';
 import { taxonomiesFacade } from '../../store/taxonomies';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
+import { PublishStatus } from '../../taxonomy.types';
 
 import {
 	INITIAL_TERM_VALUE,
@@ -129,7 +130,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			{
 				...newTerm,
 				// Should always be published on create
-				publishStatus: 'PUBLISHED',
+				publishStatus: PublishStatus.Published,
 			},
 			{
 				errorAlertContainerId: ALERT_CONTAINER_IDS.termDetail,
@@ -137,11 +138,11 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			}
 		);
 
-		if ((newTaxonomyTerm as TaxonomyTerm)?.id) {
+		if (newTaxonomyTerm && newTaxonomyTerm.id) {
 			resetChangeDetection();
 			navigate(MODULE_PATHS.terms.detail, {
 				taxonomyId,
-				termId: (newTaxonomyTerm as TaxonomyTerm)?.id,
+				termId: newTaxonomyTerm.id,
 			});
 		}
 	};
