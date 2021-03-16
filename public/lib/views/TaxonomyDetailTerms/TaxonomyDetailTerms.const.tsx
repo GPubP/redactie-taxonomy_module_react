@@ -8,7 +8,8 @@ import { Link } from 'react-router-dom';
 
 import { INDENT_SIZE } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
-import { MODULE_PATHS, TENANT_ROOT } from '../../taxonomy.const';
+import { MODULE_PATHS, PUBLISH_STATUS_LABEL_MAP, TENANT_ROOT } from '../../taxonomy.const';
+import { PublishStatus } from '../../taxonomy.types';
 
 import { DetailTermTableRow, HasMovedRef, MoveDirection } from './TaxonomyDetailTerms.types';
 
@@ -98,6 +99,8 @@ export const DETAIL_TERMS_COLUMNS = (
 		value: 'publishStatus',
 		disableSorting: true,
 		width: '20%',
+		format: (publishStatus: PublishStatus) =>
+			PUBLISH_STATUS_LABEL_MAP[publishStatus] || publishStatus,
 	},
 	{
 		label: '',

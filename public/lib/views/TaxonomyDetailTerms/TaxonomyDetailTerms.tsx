@@ -250,7 +250,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 			if (movingLeft && canMoveLeft(sourceTerm)) {
 				const list = findNestedTerm(termsTree, sourceTerm.parentTermId)?.children || [];
 				const sourceIndex = list.findIndex(term => term.id === source.id);
-				// // Only allow last item in level to move left to avoid jumping from current index
+				// Only allow last item in level to move left to avoid jumping from current index
 				const isLastTermInTree = sourceIndex !== -1 && sourceIndex === list.length - 1;
 				if (isLastTermInTree) {
 					// Keep ref of previous to check whether we can increment going a level higher

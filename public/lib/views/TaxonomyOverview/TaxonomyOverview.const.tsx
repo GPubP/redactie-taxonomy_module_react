@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 
 import { FilterFormState } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
+import { PUBLISH_STATUS_LABEL_MAP } from '../../taxonomy.const';
+import { PublishStatus } from '../../taxonomy.types';
 
 import { OverviewTableRow } from './TaxonomyOverview.types';
 
@@ -58,9 +60,8 @@ export const OVERVIEW_COLUMNS = (t: TranslateFunc): TableColumn<OverviewTableRow
 		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'publishStatus',
 		width: '20%',
-		component(publishStatus: string) {
-			return publishStatus;
-		},
+		format: (publishStatus: PublishStatus) =>
+			PUBLISH_STATUS_LABEL_MAP[publishStatus] || publishStatus,
 	},
 	{
 		label: '',
