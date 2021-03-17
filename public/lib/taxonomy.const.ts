@@ -1,6 +1,8 @@
 import { BreadcrumbOptions } from '@redactie/redactie-core';
 import { ContextHeaderTab, NavigateGenerateFn } from '@redactie/utils';
 
+import { PublishStatus } from './taxonomy.types';
+
 export const TENANT_ROOT = '/:tenantId';
 export const root = '/taxonomie';
 export const detail = `${root}/:taxonomyId`;
@@ -57,14 +59,19 @@ export const DETAIL_TAB_MAP: Record<string, ContextHeaderTab> = {
 
 export const DETAIL_TABS: ContextHeaderTab[] = [DETAIL_TAB_MAP.settings, DETAIL_TAB_MAP.terms];
 
+export const PUBLISH_STATUS_LABEL_MAP = {
+	[PublishStatus.Draft]: 'Werkversie',
+	[PublishStatus.Published]: 'Gepubliceerd',
+};
+
 export const PUBLISH_STATUS_OPTIONS = [
 	{
-		label: 'Werkversie',
-		value: 'draft',
+		label: PUBLISH_STATUS_LABEL_MAP.draft,
+		value: PublishStatus.Draft,
 	},
 	{
-		label: 'Gepubliceerd',
-		value: 'published',
+		label: PUBLISH_STATUS_LABEL_MAP.published,
+		value: PublishStatus.Published,
 	},
 ];
 
