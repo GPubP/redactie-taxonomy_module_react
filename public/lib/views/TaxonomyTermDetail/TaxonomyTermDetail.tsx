@@ -182,7 +182,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	 * RENDER
 	 */
 	const pageTitle = isUpdate
-		? `'${taxonomyTerm?.label ? `'${taxonomyTerm?.label}'` : 'Term'}' ${t(
+		? `${taxonomyTerm?.label ? `'${taxonomyTerm?.label}'` : 'Term'} ${t(
 				CORE_TRANSLATIONS.ROUTING_UPDATE
 		  )}`
 		: `Term ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`;

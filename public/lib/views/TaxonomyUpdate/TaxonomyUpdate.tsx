@@ -102,7 +102,7 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 	 * Render
 	 */
 
-	const pageTitle = `'${taxonomy?.label ? `'${taxonomy?.label}'` : 'Taxonomie'}' ${t(
+	const pageTitle = `${taxonomy?.label ? `'${taxonomy?.label}'` : 'Taxonomie'} ${t(
 		CORE_TRANSLATIONS.ROUTING_UPDATE
 	)}`;
 
