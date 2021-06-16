@@ -3,6 +3,7 @@ import { Cascader } from '@acpaas-ui/react-editorial-components';
 import { SelectOption } from '@redactie/utils';
 import React, { ChangeEvent, FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
+import { formRendererConnector } from '../../connectors';
 import { listToTree } from '../../helpers';
 import { TaxonomySelectMethods } from '../Fields/TaxonomySelect/TaxonomySelect.types';
 
@@ -18,6 +19,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	placeholder = TERM_SELECT_DEFAULT_PLACEHOLDER,
 	placeholderValue,
 	selectionMethod = TaxonomySelectMethods.Dropdown,
+	required = false,
 }) => {
 	const { setValue } = form.getFieldHelpers(field.name);
 
@@ -115,6 +117,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 						label={label}
 						onSelection={(selectedTermId: number) => setValue(selectedTermId)}
 						placeholder={placeholder}
+						required={required}
 					/>
 				);
 			case TaxonomySelectMethods.Dropdown:
@@ -129,6 +132,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 						onChange={(e: ChangeEvent<HTMLSelectElement>) => {
 							setValue(parseInt(e.target.value));
 						}}
+						required={required}
 					/>
 				);
 			}
@@ -143,6 +147,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 		return (
 			<div className="a-input">
 				{renderField()}
+				<formRendererConnector.api.ErrorMessage name={field.name} />
 				<small>{description}</small>
 			</div>
 		);
