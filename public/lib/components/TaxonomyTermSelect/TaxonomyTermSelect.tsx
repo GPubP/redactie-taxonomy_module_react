@@ -154,7 +154,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	}
 
 	return (
-		<div className="a-input has-icon-right">
+		<div className={`a-input has-icon-right ${required ? 'is-required' : ''}`}>
 			<label className="a-input__label" htmlFor="text-field">
 				{label}
 			</label>
@@ -190,6 +190,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 				</div>
 			</Cascader>
 			<small>{description}</small>
+			<formRendererConnector.api.ErrorMessage name={field.name} />
 		</div>
 	);
 };
