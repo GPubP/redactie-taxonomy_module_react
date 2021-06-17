@@ -147,8 +147,8 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 		return (
 			<div className="a-input">
 				{renderField()}
-				<formRendererConnector.api.ErrorMessage name={field.name} />
 				<small>{description}</small>
+				<formRendererConnector.api.ErrorMessage name={field.name} />
 			</div>
 		);
 	}
