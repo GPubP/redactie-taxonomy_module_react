@@ -111,7 +111,8 @@
 
 .o-dynamic-nested-table-responsive {
 	background-color: $table-bg;
-	border: 1px solid $table-border;
+	border-top: 1px solid $table-border;
+	border-bottom: 1px solid $table-border;
 	overflow-x: auto;
 	overflow-y: hidden;
 	width: 100%;
