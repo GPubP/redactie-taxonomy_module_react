@@ -10,6 +10,7 @@ export interface TaxonomyTermSelectProps extends FieldProps {
 	placeholderValue?: number;
 	allTerms: TaxonomyTerm[];
 	selectionMethod?: TaxonomySelectMethods;
+	required?: boolean;
 }
 
 export interface CascaderOption {
