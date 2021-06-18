@@ -1,6 +1,6 @@
 import { Select, TextField } from '@acpaas-ui/react-components';
 import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
-import { Field, Formik } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import React, { FC } from 'react';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors';
@@ -34,40 +34,42 @@ const FilterForm: FC<FilterFormProps> = ({
 		>
 			{({ resetForm, submitForm }) => {
 				return (
-					<Filter
-						title={t(CORE_TRANSLATIONS.FILTER_TITLE)}
-						noFilterText="Geen filters beschikbaar"
-						onConfirm={submitForm}
-						onClean={() => {
-							resetForm();
-							onCancel();
-						}}
-						confirmText={t(CORE_TRANSLATIONS.FILTER_APPLY)}
-						cleanText={t(CORE_TRANSLATIONS.FILTER_CLEAR)}
-						activeFilters={activeFilters}
-						onFilterRemove={clearActiveFilter}
-					>
-						<FilterBody>
-							<div className="col-xs-12 col-md-6 u-margin-bottom">
-								<Field
-									as={TextField}
-									label="Zoeken"
-									name="label"
-									iconright="search"
-									placeholder="Zoek op woord"
-								/>
-							</div>
-							<div className="col-xs-12 col-md-6 sm:u-margin-bottom">
-								<Field
-									as={Select}
-									label="Status"
-									name="publishStatus"
-									options={FILTER_PUBLISH_STATUS_OPTIONS}
-									placeholder="Status"
-								/>
-							</div>
-						</FilterBody>
-					</Filter>
+					<Form>
+						<Filter
+							title={t(CORE_TRANSLATIONS.FILTER_TITLE)}
+							noFilterText="Geen filters beschikbaar"
+							onConfirm={submitForm}
+							onClean={() => {
+								resetForm();
+								onCancel();
+							}}
+							confirmText={t(CORE_TRANSLATIONS.FILTER_APPLY)}
+							cleanText={t(CORE_TRANSLATIONS.FILTER_CLEAR)}
+							activeFilters={activeFilters}
+							onFilterRemove={clearActiveFilter}
+						>
+							<FilterBody>
+								<div className="col-xs-12 col-md-6 u-margin-bottom">
+									<Field
+										as={TextField}
+										label="Zoeken"
+										name="label"
+										iconright="search"
+										placeholder="Zoek op woord"
+									/>
+								</div>
+								<div className="col-xs-12 col-md-6 sm:u-margin-bottom">
+									<Field
+										as={Select}
+										label="Status"
+										name="publishStatus"
+										options={FILTER_PUBLISH_STATUS_OPTIONS}
+										placeholder="Status"
+									/>
+								</div>
+							</FilterBody>
+						</Filter>
+					</Form>
 				);
 			}}
 		</Formik>
