@@ -26,6 +26,10 @@ export const TermForm: FC<TaxonomyTermFormProps> = ({
 		return taxonomyTerm?.id ? allTerms.filter(term => term.id !== taxonomyTerm?.id) : allTerms;
 	}, [allTerms, taxonomyTerm]);
 
+	const termValidationSchema = useMemo(() => {
+		return TERM_FORM_VALIDATION_SCHEMA(allTerms.map(term => term.label));
+	}, [allTerms]);
+
 	/**
 	 * Render
 	 */
@@ -35,7 +39,7 @@ export const TermForm: FC<TaxonomyTermFormProps> = ({
 			innerRef={instance => isFunction(formikRef) && formikRef(instance)}
 			initialValues={initialValues}
 			onSubmit={onSubmit}
-			validationSchema={TERM_FORM_VALIDATION_SCHEMA}
+			validationSchema={termValidationSchema}
 		>
 			{formikProps => {
 				const { errors, touched } = formikProps;
