@@ -13,8 +13,9 @@ import {
 	DataLoader,
 	FormikOnChangeHandler,
 	LeavePrompt,
-	useDetectValueChangesWorker,
+	useDetectValueChanges,
 	useNavigate,
+	useOnNextRender,
 	useRoutes,
 } from '@redactie/utils';
 import { FormikProps } from 'formik';
@@ -63,17 +64,18 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	const [formValue, setFormValue] = useState<TermFormValues | null>(
 		!isUpdate ? INITIAL_TERM_VALUE : null
 	);
-	const [hasSubmit, setHasSubmit] = useState(false);
 	const [isInitialLoading, setInitialLoading] = useState(isUpdate);
 	const [showModal, setShowModal] = useState(false);
 	const isLoading = useMemo(
 		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
 		[detailState, isUpdate, listState]
 	);
-	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
+	const [hasChanges, resetChangeDetection] = useDetectValueChanges(
 		isUpdate ? !isInitialLoading && !isLoading && !!formValue : true,
-		formValue,
-		BFF_MODULE_PUBLIC_PATH
+		formValue
+	);
+	const forceNavigateToOverview = useOnNextRender(() =>
+		navigate(MODULE_PATHS.detailTerms, { taxonomyId })
 	);
 
 	// Set initial loading
@@ -90,18 +92,9 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		}
 	}, [isInitialLoading, isUpdate, taxonomyTerm]);
 
-	// Redirect to terms overview after successful submit (update only)
-	useEffect(() => {
-		if (hasSubmit && !hasChanges) {
-			navigate(MODULE_PATHS.detailTerms, { taxonomyId });
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [hasChanges, taxonomyId]);
-
 	/**
 	 * METHODS
 	 */
-
 	const updateTerm = async (updatedTerm: TermFormValues): Promise<void> => {
 		if (!taxonomyId) {
 			return;
@@ -116,7 +109,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			})
 			.then(() => {
 				resetChangeDetection();
-				setHasSubmit(true);
+				forceNavigateToOverview();
 			});
 	};
 
@@ -134,16 +127,13 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			},
 			{
 				errorAlertContainerId: ALERT_CONTAINER_IDS.termDetail,
-				successAlertContainerId: ALERT_CONTAINER_IDS.termDetail,
+				successAlertContainerId: ALERT_CONTAINER_IDS.detailTerms,
 			}
 		);
 
 		if (newTaxonomyTerm && newTaxonomyTerm.id) {
 			resetChangeDetection();
-			navigate(MODULE_PATHS.terms.detail, {
-				taxonomyId,
-				termId: newTaxonomyTerm.id,
-			});
+			forceNavigateToOverview();
 		}
 	};
 
@@ -217,9 +207,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 											onClick={submitForm}
 											type="success"
 										>
-											{isUpdate
-												? t(CORE_TRANSLATIONS.BUTTON_SAVE)
-												: t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
+											{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 										</Button>
 									</div>
 								</ActionBarContentSection>
@@ -227,7 +215,6 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 							<LeavePrompt
 								allowedPaths={TERM_DETAIL_ALLOWED_PATHS}
 								when={hasChanges}
-								shouldBlockNavigationOnConfirm
 								onConfirm={submitForm}
 							/>
 						</>
