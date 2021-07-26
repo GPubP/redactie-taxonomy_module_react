@@ -318,8 +318,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 			const payload = {
 				id: taxonomyId,
 				label: taxonomy.label,
-				// TODO: allow position once available from backend
-				body: terms.map(term => omit(['position'], term)),
+				body: terms,
 			};
 			taxonomiesFacade
 				.updateTaxonomyTerms(payload, {

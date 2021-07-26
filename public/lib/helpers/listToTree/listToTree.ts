@@ -31,9 +31,15 @@ export const listToTree = <T>(
 		// init its children
 		item[CHILDREN_KEY] = childrenOf[id];
 
+		const positionPropertyValue = item.propertyValues?.find(
+			(propertyValue: { id: number; value: string; key: string }) => propertyValue.value
+		);
+
 		if (parentId != 0) {
 			if (options.addPosition) {
-				item.position = item.position ?? childIndex;
+				item.position = positionPropertyValue?.value
+					? Number(positionPropertyValue.value)
+					: childIndex;
 				childIndex += 1;
 			}
 			// init its parent's children object
@@ -42,7 +48,9 @@ export const listToTree = <T>(
 			childrenOf[parentId].push(item);
 		} else {
 			if (options.addPosition) {
-				item.position = item.position ?? parentIndex;
+				item.position = positionPropertyValue?.value
+					? Number(positionPropertyValue.value)
+					: parentIndex;
 				childIndex = 0;
 				parentIndex += 1;
 			}
