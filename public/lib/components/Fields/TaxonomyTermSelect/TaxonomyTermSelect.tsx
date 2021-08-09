@@ -1,5 +1,5 @@
 import { InputFieldProps } from '@redactie/form-renderer-module';
-import { DataLoader } from '@redactie/utils';
+import { DataLoader, useSiteContext } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { TaxonomyTerm, taxonomyTermsApiService } from '../../../services/taxonomyTerms';
@@ -8,6 +8,7 @@ import { TaxonomyTermSelect as TermSelect } from '../../TaxonomyTermSelect';
 const TaxonomyTermSelect: FC<InputFieldProps> = ({ fieldProps, fieldSchema }) => {
 	const { config = { description: '' }, label = '' } = fieldSchema;
 	const { description, taxonomyConfig, required } = config;
+	const { siteId } = useSiteContext();
 
 	/**
 	 * Hooks
@@ -20,7 +21,7 @@ const TaxonomyTermSelect: FC<InputFieldProps> = ({ fieldProps, fieldSchema }) =>
 	useEffect(() => {
 		if (taxonomyConfig?.taxonomyId) {
 			taxonomyTermsApiService
-				.getTerms(taxonomyConfig?.taxonomyId)
+				.getTerms(taxonomyConfig?.taxonomyId, siteId)
 				.then(response => {
 					if (response?._embedded) {
 						setTerms(response._embedded);
@@ -30,7 +31,7 @@ const TaxonomyTermSelect: FC<InputFieldProps> = ({ fieldProps, fieldSchema }) =>
 		} else {
 			setIsLoading(false);
 		}
-	}, [taxonomyConfig]);
+	}, [siteId, taxonomyConfig]);
 
 	/**
 	 * Render

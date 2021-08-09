@@ -1,6 +1,6 @@
 import { api } from '../api';
 
-import { TAXONOMIES_PREFIX_URL } from './taxonomyTerms.service.const';
+import { SITE_TAXONOMIES_PREFIX_URL, TAXONOMIES_PREFIX_URL } from './taxonomyTerms.service.const';
 import {
 	CreateTaxonomyTermPayload,
 	TaxonomyTerm,
@@ -9,8 +9,12 @@ import {
 } from './taxonomyTerms.service.types';
 
 export class TaxonomyTermsApiService {
-	public async getTerms(taxonomyId: number): Promise<TaxonomyTermsResponse> {
-		return await api.get(`${TAXONOMIES_PREFIX_URL}/${taxonomyId}/terms`).json();
+	public async getTerms(taxonomyId: number, siteId?: string): Promise<TaxonomyTermsResponse> {
+		const path = siteId
+			? `${SITE_TAXONOMIES_PREFIX_URL}/${siteId}/taxonomies/${taxonomyId}/terms`
+			: `${TAXONOMIES_PREFIX_URL}/${taxonomyId}/terms`;
+
+		return await api.get(path).json();
 	}
 
 	public async getTerm(taxonomyId: number, termId: number): Promise<TaxonomyTerm> {
