@@ -60,17 +60,15 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 					parentKey: 'parentTermId',
 					childrenKey: 'children',
 			  })
-			: selectionMethod === TaxonomySelectMethods.Dropdown
-			? [defaultOption].concat(
+			: [defaultOption].concat(
 					mappedTermOptions.map(option => ({
 						label: option.label,
 						value: option.value ? String(option.value) : '',
 					}))
-			  )
-			: mappedTermOptions;
+			  );
 
 		return [filteredTerms, hasMultipleLevels];
-	}, [allTerms, placeholder, placeholderValue, selectionMethod]);
+	}, [allTerms, placeholder, placeholderValue]);
 
 	// Set initial cascader value
 	useEffect(() => {
