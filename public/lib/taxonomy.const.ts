@@ -9,7 +9,7 @@ export const detail = `${root}/:taxonomyId`;
 
 export const MODULE_PATHS = {
 	admin: '/dashboard',
-	contentTypes: '/content-types',
+	contentTypes: '/:ctType(content-types|content-blokken)',
 
 	root,
 	overview: `${root}/overzicht`,
