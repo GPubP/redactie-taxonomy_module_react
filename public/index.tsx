@@ -32,7 +32,7 @@ Core.routes.register({
 	redirect: MODULE_PATHS.overview,
 	navigation: {
 		label: 'Taxonomie',
-		order: 2,
+		order: 3,
 		parentPath: MODULE_PATHS.contentTypes,
 		canShown: [
 			rolesRightsConnector.canShowns.securityRightsTenantCanShown([
