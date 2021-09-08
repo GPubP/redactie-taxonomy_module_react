@@ -1,6 +1,5 @@
 import { Autocomplete, Select } from '@acpaas-ui/react-components';
 import { Cascader } from '@acpaas-ui/react-editorial-components';
-import { SelectOption } from '@redactie/utils';
 import React, { ChangeEvent, FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { formRendererConnector } from '../../connectors';
@@ -8,7 +7,11 @@ import { listToTree } from '../../helpers';
 import { TaxonomySelectMethods } from '../Fields/TaxonomySelect/TaxonomySelect.types';
 
 import { TERM_SELECT_DEFAULT_PLACEHOLDER } from './TaxonomyTermSelect.const';
-import { CascaderOption, TaxonomyTermSelectProps } from './TaxonomyTermSelect.types';
+import {
+	CascaderOption,
+	TaxonomyTermSelectProps,
+	TermSelectOption,
+} from './TaxonomyTermSelect.types';
 
 export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	form,
@@ -53,22 +56,27 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 		// Items with no parent will have their own id used as parentTermId
 		// By setting the placeholderValue with that id it will show the placeholder as intended
 		// (this only applies to the Select component)
-		const defaultOption: SelectOption = { label: placeholder, value: String(placeholderValue) };
+		const defaultOption: TermSelectOption = {
+			label: placeholder,
+			value: placeholderValue,
+		};
 		const filteredTerms = hasMultipleLevels
 			? listToTree(mappedTermOptions, {
 					idKey: 'value',
 					parentKey: 'parentTermId',
 					childrenKey: 'children',
 			  })
+			: selectionMethod === TaxonomySelectMethods.AutoComplete
+			? mappedTermOptions
 			: [defaultOption].concat(
 					mappedTermOptions.map(option => ({
 						label: option.label,
-						value: option.value ? String(option.value) : '',
+						value: option.value ? option.value : '',
 					}))
 			  );
 
 		return [filteredTerms, hasMultipleLevels];
-	}, [allTerms, placeholder, placeholderValue]);
+	}, [allTerms, placeholder, placeholderValue, selectionMethod]);
 
 	// Set initial cascader value
 	useEffect(() => {
