@@ -27,8 +27,8 @@ export const TermForm: FC<TaxonomyTermFormProps> = ({
 	}, [allTerms, taxonomyTerm]);
 
 	const termValidationSchema = useMemo(() => {
-		return TERM_FORM_VALIDATION_SCHEMA(allTerms.map(term => term.label));
-	}, [allTerms]);
+		return TERM_FORM_VALIDATION_SCHEMA(filteredTerms.map(term => term.label));
+	}, [filteredTerms]);
 
 	/**
 	 * Render
