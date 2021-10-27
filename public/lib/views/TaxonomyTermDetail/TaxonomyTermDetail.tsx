@@ -74,7 +74,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		isUpdate ? !isInitialLoading && !isLoading && !!formValue : true,
 		formValue
 	);
-	const forceNavigateToOverview = useOnNextRender(() =>
+	const [forceNavigateToOverview] = useOnNextRender(() =>
 		navigate(MODULE_PATHS.detailTerms, { taxonomyId })
 	);
 
