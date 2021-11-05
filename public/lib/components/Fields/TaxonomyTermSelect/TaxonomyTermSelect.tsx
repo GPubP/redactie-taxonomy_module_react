@@ -6,6 +6,7 @@ import { TaxonomyTerm, taxonomyTermsApiService } from '../../../services/taxonom
 import { TaxonomyTermSelect as TermSelect } from '../../TaxonomyTermSelect';
 
 const TaxonomyTermSelect: FC<InputFieldProps> = ({ fieldProps, fieldSchema }) => {
+	const { setValue } = fieldProps.form.getFieldHelpers(fieldProps.field.name);
 	const { config = { description: '' }, label = '' } = fieldSchema;
 	const { description, taxonomyConfig, required } = config;
 	const { siteId } = useSiteContext();
@@ -24,6 +25,14 @@ const TaxonomyTermSelect: FC<InputFieldProps> = ({ fieldProps, fieldSchema }) =>
 				.getTerms(taxonomyConfig?.taxonomyId, siteId)
 				.then(response => {
 					if (response?._embedded) {
+						const selectedTerm = response?._embedded.find(
+							term => term.id === Number(fieldProps.field.value)
+						);
+
+						if (!selectedTerm) {
+							setValue('');
+						}
+
 						setTerms(response._embedded);
 					}
 				})
@@ -31,7 +40,8 @@ const TaxonomyTermSelect: FC<InputFieldProps> = ({ fieldProps, fieldSchema }) =>
 		} else {
 			setIsLoading(false);
 		}
-	}, [siteId, taxonomyConfig]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [fieldProps.field.value, siteId, taxonomyConfig]);
 
 	/**
 	 * Render
