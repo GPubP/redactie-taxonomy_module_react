@@ -78,8 +78,16 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 		return [filteredTerms, hasMultipleLevels];
 	}, [allTerms, placeholder, placeholderValue, selectionMethod]);
 
-	// Set initial cascader value
 	useEffect(() => {
+		const selectedTerm = allTerms.find(term => term.id === field.value);
+
+		if (!selectedTerm) {
+			setValue('');
+			setCascaderValue([]);
+			return;
+		}
+
+		// Set initial cascader value
 		if ((selectionMethod === TaxonomySelectMethods.Cascader || hasChildren) && field.value) {
 			const getCascaderValue = (ids: number[]): number[] => {
 				const parentId = ids[ids.length - 1];
