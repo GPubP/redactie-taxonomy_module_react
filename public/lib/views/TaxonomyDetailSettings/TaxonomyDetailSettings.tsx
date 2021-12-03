@@ -143,7 +143,7 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 			{isUpdate && (
 				<DeleteCard
 					className="u-margin-bottom-lg"
-					description="Opgelet, indien u deze taxonomie verwijdert kan hij niet meer gebruikt worden in de content types."
+					description="Opgelet: indien je deze taxonomie verwijdert kan hij niet meer gebruikt worden in de content types."
 					isDeleting={!!detailState?.isDeleting}
 					onDelete={deleteTaxonomy}
 					showModal={showModal}

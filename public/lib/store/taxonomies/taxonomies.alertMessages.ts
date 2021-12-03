@@ -6,43 +6,43 @@ export const getAlertMessages = (
 	create: {
 		success: {
 			title: 'Aangemaakt',
-			message: `U hebt de taxonomie ${name} succesvol aangemaakt`,
+			message: `Je hebt de taxonomie ${name} succesvol aangemaakt.`,
 		},
 		error: {
 			title: 'Aanmaken mislukt',
-			message: `Aanmaken van de taxonomie ${name} is mislukt`,
+			message: `Aanmaken van de taxonomie ${name} is mislukt.`,
 		},
 	},
 	update: {
 		success: {
 			title: 'Bewaard',
-			message: `U hebt de taxonomie ${name} succesvol gewijzigd`,
+			message: `Je hebt de taxonomie ${name} succesvol gewijzigd.`,
 		},
 		error: {
 			title: 'Bewaren mislukt',
-			message: `Bewaren van de taxonomie ${name} is mislukt`,
+			message: `Bewaren van de taxonomie ${name} is mislukt.`,
 		},
 	},
 	fetch: {
 		error: {
 			title: 'Ophalen',
-			message: 'Ophalen van taxonomieën is mislukt',
+			message: 'Ophalen van taxonomieën is mislukt.',
 		},
 	},
 	fetchOne: {
 		error: {
 			title: 'Ophalen',
-			message: 'Ophalen van taxonomie is mislukt',
+			message: 'Ophalen van taxonomie is mislukt.',
 		},
 	},
 	delete: {
 		success: {
 			title: 'Verwijderen',
-			message: `U hebt de taxonomie ${name} succesvol verwijderd`,
+			message: `Je hebt de taxonomie ${name} succesvol verwijderd.`,
 		},
 		error: {
 			title: 'Verwijderen',
-			message: `Verwijderen van taxonomie ${name} is mislukt`,
+			message: `Verwijderen van taxonomie ${name} is mislukt.`,
 		},
 	},
 });
@@ -53,21 +53,21 @@ export const getTermsAlertMessages = (
 	create: {
 		success: {
 			title: 'Aangemaakt',
-			message: `U hebt de Taxonomy term ${name} succesvol aangemaakt`,
+			message: `Je hebt de Taxonomy term ${name} succesvol aangemaakt.`,
 		},
 		error: {
 			title: 'Aanmaken mislukt',
-			message: `Aanmaken van de Taxonomy term ${name} is mislukt`,
+			message: `Aanmaken van de Taxonomy term ${name} is mislukt.`,
 		},
 	},
 	update: {
 		success: {
 			title: 'Bewaard',
-			message: `U hebt de Taxonomy term ${name} succesvol gewijzigd`,
+			message: `Je hebt de Taxonomy term ${name} succesvol gewijzigd.`,
 		},
 		error: {
 			title: 'Bewaren mislukt',
-			message: `Bewaren van de Taxonomy term ${name} is mislukt`,
+			message: `Bewaren van de Taxonomy term ${name} is mislukt.`,
 		},
 	},
 	fetch: {

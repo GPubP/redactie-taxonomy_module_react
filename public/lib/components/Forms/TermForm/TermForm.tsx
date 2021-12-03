@@ -72,8 +72,8 @@ export const TermForm: FC<TaxonomyTermFormProps> = ({
 									name="description"
 								/>
 								<small className="u-block u-text-light u-margin-top-xs">
-									Geef de taxonomie term een duidelijke beschrijving voor in het
-									overzicht.
+									Geef de taxonomie term een duidelijke beschrijving. Deze wordt
+									gebruikt in het overzicht.
 								</small>
 								<ErrorMessage name="description" />
 							</div>
@@ -88,7 +88,7 @@ export const TermForm: FC<TaxonomyTermFormProps> = ({
 										label="Bovenliggende term"
 										component={TaxonomyTermSelect}
 										allTerms={filteredTerms}
-										description="Bepaal de bovenliggende term (de 'parent') van deze term"
+										description="Bepaal de bovenliggende term (de 'parent') van deze term."
 										placeholderValue={taxonomyTerm?.id}
 									/>
 									<ErrorMessage name="parentTermId" />
