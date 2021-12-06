@@ -56,8 +56,8 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 									name="description"
 								/>
 								<small className="u-block u-text-light u-margin-top-xs">
-									Geef de taxonomie een duidelijke beschrijving voor in het
-									overzicht.
+									Geef de taxonomie een duidelijke beschrijving. Deze wordt
+									gebruikt in het overzicht.
 								</small>
 							</div>
 						</div>
@@ -78,8 +78,7 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 									required
 								/>
 								<small className="u-block u-text-light u-margin-top-xs">
-									Geef de taxonomie een duidelijke beschrijving voor in het
-									overzicht.
+									Selecteer een status.
 								</small>
 								<ErrorMessage component="p" name="publishStatus" />
 							</div>

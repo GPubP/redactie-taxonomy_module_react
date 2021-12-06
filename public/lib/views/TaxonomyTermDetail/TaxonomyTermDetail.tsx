@@ -224,7 +224,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			{isUpdate && (
 				<DeleteCard
 					className="u-margin-bottom-lg"
-					description="Opgelet, indien u deze taxonomie term verwijdert kan hij niet meer gebruikt worden in de content types."
+					description="Opgelet: indien je deze taxonomie term verwijdert kan hij niet meer gebruikt worden in de content types."
 					isDeleting={!!detailState?.isDeleting}
 					onDelete={deleteTerm}
 					setShowModal={setShowModal}
