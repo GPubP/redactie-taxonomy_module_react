@@ -25,7 +25,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	required = false,
 }) => {
 	const { setValue } = form.getFieldHelpers(field.name);
-	const FormRendererFieldTitle = formRendererConnector.getFormRendererFieldTitle();
+	const FormRendererFieldTitle = formRendererConnector.api.FormRendererFieldTitle;
 
 	/**
 	 * Hooks
