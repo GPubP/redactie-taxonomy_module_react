@@ -8,6 +8,10 @@ class FormRendererConnector {
 	constructor() {
 		this.api = Core.modules.getModuleAPI<FormsAPI>(this.apiName);
 	}
+
+	getFormRendererFieldTitle(): FormsAPI['FormRendererFieldTitle'] {
+		return this.api.FormRendererFieldTitle;
+	}
 }
 
 const formRendererConnector = new FormRendererConnector();

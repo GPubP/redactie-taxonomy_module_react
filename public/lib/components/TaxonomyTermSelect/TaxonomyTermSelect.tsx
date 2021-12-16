@@ -25,6 +25,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	required = false,
 }) => {
 	const { setValue } = form.getFieldHelpers(field.name);
+	const FormRendererFieldTitle = formRendererConnector.getFormRendererFieldTitle();
 
 	/**
 	 * Hooks
@@ -116,30 +117,39 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 		switch (selectionMethod) {
 			case TaxonomySelectMethods.AutoComplete:
 				return (
-					<Autocomplete
-						defaultValue={field.value}
-						id={field.name}
-						items={filteredTermOptions}
-						label={label}
-						onSelection={(selectedTermId: number) => setValue(selectedTermId)}
-						placeholder={placeholder}
-						required={required}
-					/>
+					<div>
+						<FormRendererFieldTitle isRequired={required}>
+							{label}
+						</FormRendererFieldTitle>
+						<Autocomplete
+							defaultValue={field.value}
+							id={field.name}
+							items={filteredTermOptions}
+							onSelection={(selectedTermId: number) => setValue(selectedTermId)}
+							placeholder={placeholder}
+						/>
+					</div>
 				);
 			case TaxonomySelectMethods.Dropdown:
 			default: {
 				return (
-					<Select
-						description={description}
-						label={label}
-						options={filteredTermOptions}
-						{...field}
-						value={field.value || ''}
-						onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-							setValue(parseInt(e.target.value));
-						}}
-						required={required}
-					/>
+					<div>
+						<FormRendererFieldTitle
+							isRequired={required}
+							className="u-margin-bottom-xs"
+						>
+							{label}
+						</FormRendererFieldTitle>
+						<Select
+							description={description}
+							options={filteredTermOptions}
+							{...field}
+							value={field.value || ''}
+							onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+								setValue(parseInt(e.target.value));
+							}}
+						/>
+					</div>
 				);
 			}
 		}
@@ -160,10 +170,10 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	}
 
 	return (
-		<div className={`a-input has-icon-right ${required ? 'is-required' : ''}`}>
-			<label className="a-input__label" htmlFor="text-field">
+		<div className={`a-input has-icon-right`}>
+			<FormRendererFieldTitle isRequired={required} className="u-margin-bottom-xs">
 				{label}
-			</label>
+			</FormRendererFieldTitle>
 			<Cascader
 				changeOnSelect
 				value={cascaderValue}
