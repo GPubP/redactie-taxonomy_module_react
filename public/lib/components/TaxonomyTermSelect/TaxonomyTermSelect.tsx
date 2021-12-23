@@ -1,5 +1,6 @@
 import { Autocomplete, Select } from '@acpaas-ui/react-components';
 import { Cascader } from '@acpaas-ui/react-editorial-components';
+import classnames from 'classnames/bind';
 import React, { ChangeEvent, FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { formRendererConnector } from '../../connectors';
@@ -7,11 +8,14 @@ import { listToTree } from '../../helpers';
 import { TaxonomySelectMethods } from '../Fields/TaxonomySelect/TaxonomySelect.types';
 
 import { TERM_SELECT_DEFAULT_PLACEHOLDER } from './TaxonomyTermSelect.const';
+import styles from './TaxonomyTermSelect.module.scss';
 import {
 	CascaderOption,
 	TaxonomyTermSelectProps,
 	TermSelectOption,
 } from './TaxonomyTermSelect.types';
+
+const cx = classnames.bind(styles);
 
 export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	form,
@@ -118,16 +122,21 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 			case TaxonomySelectMethods.AutoComplete:
 				return (
 					<div>
-						<FormRendererFieldTitle isRequired={required}>
+						<FormRendererFieldTitle
+							isRequired={required}
+							className="u-margin-bottom-xs"
+						>
 							{label}
 						</FormRendererFieldTitle>
-						<Autocomplete
-							defaultValue={field.value}
-							id={field.name}
-							items={filteredTermOptions}
-							onSelection={(selectedTermId: number) => setValue(selectedTermId)}
-							placeholder={placeholder}
-						/>
+						<div className={cx('m-taxonomy-term-select')}>
+							<Autocomplete
+								defaultValue={field.value}
+								id={field.name}
+								items={filteredTermOptions}
+								onSelection={(selectedTermId: number) => setValue(selectedTermId)}
+								placeholder={placeholder}
+							/>
+						</div>
 					</div>
 				);
 			case TaxonomySelectMethods.Dropdown:
@@ -140,15 +149,17 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 						>
 							{label}
 						</FormRendererFieldTitle>
-						<Select
-							description={description}
-							options={filteredTermOptions}
-							{...field}
-							value={field.value || ''}
-							onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-								setValue(parseInt(e.target.value));
-							}}
-						/>
+						<div className={cx('m-taxonomy-term-select')}>
+							<Select
+								description={description}
+								options={filteredTermOptions}
+								{...field}
+								value={field.value || ''}
+								onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+									setValue(parseInt(e.target.value));
+								}}
+							/>
+						</div>
 					</div>
 				);
 			}
@@ -174,37 +185,39 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 			<FormRendererFieldTitle isRequired={required} className="u-margin-bottom-xs">
 				{label}
 			</FormRendererFieldTitle>
-			<Cascader
-				changeOnSelect
-				value={cascaderValue}
-				options={filteredTermOptions}
-				onChange={onCascaderChange}
-			>
-				<div className="a-input__wrapper">
-					<input
-						onChange={() => null}
-						placeholder="Kies een positie in de boom"
-						value={getPositionInputValue()}
-					/>
-
-					{field.value ? (
-						<span
-							style={{
-								pointerEvents: 'initial',
-								cursor: 'pointer',
-							}}
-							onClick={(e: React.SyntheticEvent) => {
-								e.preventDefault();
-								e.stopPropagation();
-								setValue(undefined);
-							}}
-							className="fa fa-times-circle"
+			<div className={cx('m-taxonomy-term-select')}>
+				<Cascader
+					changeOnSelect
+					value={cascaderValue}
+					options={filteredTermOptions}
+					onChange={onCascaderChange}
+				>
+					<div className="a-input__wrapper">
+						<input
+							onChange={() => null}
+							placeholder="Kies een positie in de boom"
+							value={getPositionInputValue()}
 						/>
-					) : (
-						<span className="fa fa-angle-down" />
-					)}
-				</div>
-			</Cascader>
+
+						{field.value ? (
+							<span
+								style={{
+									pointerEvents: 'initial',
+									cursor: 'pointer',
+								}}
+								onClick={(e: React.SyntheticEvent) => {
+									e.preventDefault();
+									e.stopPropagation();
+									setValue(undefined);
+								}}
+								className="fa fa-times-circle"
+							/>
+						) : (
+							<span className="fa fa-angle-down" />
+						)}
+					</div>
+				</Cascader>
+			</div>
 			<small>{description}</small>
 			<formRendererConnector.api.ErrorMessage name={field.name} />
 		</div>
