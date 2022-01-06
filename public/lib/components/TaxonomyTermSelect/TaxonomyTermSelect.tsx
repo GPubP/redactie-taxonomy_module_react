@@ -1,4 +1,4 @@
-import { Autocomplete, Select } from '@acpaas-ui/react-components';
+import { Autocomplete, Button, Select } from '@acpaas-ui/react-components';
 import { Cascader } from '@acpaas-ui/react-editorial-components';
 import classnames from 'classnames/bind';
 import React, { ChangeEvent, FC, ReactElement, useEffect, useMemo, useState } from 'react';
@@ -201,17 +201,27 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 
 						{field.value ? (
 							<span
+								className="fa"
 								style={{
 									pointerEvents: 'initial',
 									cursor: 'pointer',
 								}}
-								onClick={(e: React.SyntheticEvent) => {
-									e.preventDefault();
-									e.stopPropagation();
-									setValue(undefined);
-								}}
-								className="fa fa-times-circle"
-							/>
+							>
+								<Button
+									icon="close"
+									ariaLabel="Close"
+									size="small"
+									transparent
+									style={{
+										top: '-2px',
+									}}
+									onClick={(e: React.SyntheticEvent) => {
+										e.preventDefault();
+										e.stopPropagation();
+										setValue(undefined);
+									}}
+								></Button>
+							</span>
 						) : (
 							<span className="fa fa-angle-down" />
 						)}
