@@ -220,7 +220,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 										e.stopPropagation();
 										setValue(undefined);
 									}}
-								></Button>
+								/>
 							</span>
 						) : (
 							<span className="fa fa-angle-down" />

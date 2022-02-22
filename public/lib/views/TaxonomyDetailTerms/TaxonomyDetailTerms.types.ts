@@ -32,3 +32,8 @@ export interface HasMovedRef {
 	rightXThreshold: number;
 	zeroPoint: number;
 }
+
+export interface XYCoord {
+	x: number;
+	y: number;
+}

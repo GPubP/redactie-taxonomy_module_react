@@ -1,5 +1,5 @@
 import { Button } from '@acpaas-ui/react-components';
-import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
+import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import {
 	AlertContainer,
 	DataLoader,
@@ -10,7 +10,6 @@ import {
 import { insert, move, omit, pipe, set } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
-import { DynamicNestedTable, INDENT_SIZE, XYCoord } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
 import { listToTree, sortNestedTerms } from '../../helpers';
 import { useTaxonomiesUIStates, useTaxonomy } from '../../hooks';
@@ -22,6 +21,7 @@ import { NestedTaxonomyTerm, TaxonomyRouteProps } from '../../taxonomy.types';
 import {
 	DETAIL_TERMS_ALLOWED_PATHS,
 	DETAIL_TERMS_COLUMNS,
+	INDENT_SIZE,
 	INITIAL_HAS_MOVED,
 	PARENT_TERM_ID_LENS,
 	POSITION_LENS,
@@ -31,6 +31,7 @@ import {
 	DndItem,
 	HasMovedRef,
 	MoveDirection,
+	XYCoord,
 } from './TaxonomyDetailTerms.types';
 import {
 	canMoveDown,
@@ -225,11 +226,8 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		const sourceTerm = terms.find(term => term.id === source.id);
 		const targetTerm = terms.find(term => term.id === target.id);
 
-		if (!sourceTerm || !targetTerm) {
-			return;
-		}
 		// Don't perform drag action when item is the only one in top level
-		if (termIsTopLevel(sourceTerm) && termsTree.length === 1) {
+		if (!sourceTerm || !targetTerm || (termIsTopLevel(sourceTerm) && termsTree.length === 1)) {
 			return;
 		}
 
@@ -360,7 +358,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 		const termRows = parseTermRows(termsTree);
 
 		return (
-			<DynamicNestedTable
+			<Table
 				className="u-margin-bottom"
 				tableClassName="a-table--fixed--xs"
 				columns={DETAIL_TERMS_COLUMNS(t, onMoveRow)}
@@ -369,6 +367,8 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 				fixed
 				moveRow={onDragRow}
 				rows={termRows}
+				allowHorizontalDrag
+				childrenAs="div"
 				noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 			/>
 		);

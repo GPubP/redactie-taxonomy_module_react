@@ -6,7 +6,6 @@ import { lensProp } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { INDENT_SIZE } from '../../components';
 import { CORE_TRANSLATIONS } from '../../connectors';
 import { MODULE_PATHS, PUBLISH_STATUS_LABEL_MAP, TENANT_ROOT } from '../../taxonomy.const';
 import { PublishStatus } from '../../taxonomy.types';
@@ -15,6 +14,8 @@ import { DetailTermTableRow, HasMovedRef, MoveDirection } from './TaxonomyDetail
 
 export const PARENT_TERM_ID_LENS = lensProp('parentTermId');
 export const POSITION_LENS = lensProp('position');
+
+export const INDENT_SIZE = 24;
 
 export const INITIAL_HAS_MOVED: HasMovedRef = {
 	leftXThreshold: -INDENT_SIZE,
