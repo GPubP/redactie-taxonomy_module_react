@@ -1,6 +1,6 @@
 {
   "name": "@redactie/taxonomy-module",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "redactie taxonomy module",
   "main": "dist/redactie-taxonomy-module.umd.js",
   "module": "dist/redactie-taxonomy-module.umd.js",
