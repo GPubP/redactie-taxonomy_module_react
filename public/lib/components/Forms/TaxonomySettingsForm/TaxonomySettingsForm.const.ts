@@ -4,7 +4,13 @@ import { boolean, object, ObjectSchema, string } from 'yup';
 import { TaxonomySettings } from '../../../services/taxonomies';
 import { PUBLISH_STATUS_OPTIONS } from '../../../taxonomy.const';
 
-export const TAXONOMY_SETTINGS_VALIDATION_SCHEMA: ObjectSchema<TaxonomySettings> = object().shape({
+export const TAXONOMY_SETTINGS_VALIDATION_SCHEMA: ObjectSchema<
+	TaxonomySettings,
+	any,
+	any,
+	any,
+	any
+> = object().shape({
 	label: string().required('Naam is een verplicht veld'),
 	description: string(),
 	publishStatus: string().required('Status is een verplicht veld'),
