@@ -1,4 +1,4 @@
-import { Select, Textarea, TextField } from '@acpaas-ui/react-components';
+import { Checkbox, Select, Textarea, TextField } from '@acpaas-ui/react-components';
 import { ErrorMessage, FormikChildrenFn } from '@redactie/utils';
 import classnames from 'classnames';
 import { Field, Formik, isFunction } from 'formik';
@@ -28,7 +28,7 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 			validationSchema={TAXONOMY_SETTINGS_VALIDATION_SCHEMA}
 		>
 			{formikProps => {
-				const { errors, touched } = formikProps;
+				const { errors, touched, values, setFieldValue } = formikProps;
 
 				return (
 					<>
@@ -62,12 +62,7 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 							</div>
 						</div>
 
-						<div
-							className={classnames(
-								'row',
-								isUpdate ? 'u-margin-bottom' : 'u-margin-bottom-lg'
-							)}
-						>
+						<div className="row u-margin-bottom">
 							<div className="col-xs-12 col-md-6">
 								<Field
 									as={Select}
@@ -81,6 +76,26 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 									Selecteer een status.
 								</small>
 								<ErrorMessage component="p" name="publishStatus" />
+							</div>
+						</div>
+
+						<div
+							className={classnames(
+								'row',
+								isUpdate ? 'u-margin-bottom' : 'u-margin-bottom-lg'
+							)}
+						>
+							<div className="col-xs-12">
+								<Field
+									as={Checkbox}
+									id="multiLanguage"
+									label="Vertaalbaar"
+									name="multiLanguage"
+									checked={values.multiLanguage}
+									onChange={() => {
+										setFieldValue('multiLanguage', !values.multiLanguage);
+									}}
+								/>
 							</div>
 						</div>
 
