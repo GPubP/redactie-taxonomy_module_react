@@ -23,7 +23,7 @@ import { omit, pick } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
 import { DeleteCard, TermForm, TermFormValues } from '../../components';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import { CORE_TRANSLATIONS, translationsConnector } from '../../connectors';
 import { useTaxonomy, useTaxonomyTerm, useTaxonomyTermsUIStates } from '../../hooks';
 import { TaxonomyTerm } from '../../services/taxonomyTerms';
 import { taxonomiesFacade } from '../../store/taxonomies';
@@ -45,7 +45,7 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	/**
 	 * HOOKS
 	 */
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 	const { generatePath, navigate } = useNavigate();
 	const routes = useRoutes();
 	const formikRef = useRef<FormikProps<TermFormValues>>();

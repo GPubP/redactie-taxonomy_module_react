@@ -22,7 +22,7 @@ import {
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { FilterForm, FilterFormState } from '../../components';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import { CORE_TRANSLATIONS, translationsConnector } from '../../connectors';
 import { usePaginatedTaxonomies } from '../../hooks';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
 import { TaxonomyRouteProps } from '../../taxonomy.types';
@@ -43,7 +43,7 @@ const TaxonomyOverview: FC<TaxonomyRouteProps> = () => {
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(DEFAULT_FILTER_FORM);
 
 	const [query, setQuery] = useAPIQueryParams(DEFAULT_OVERVIEW_QUERY_PARAMS);
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 	const { generatePath, navigate } = useNavigate();
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(

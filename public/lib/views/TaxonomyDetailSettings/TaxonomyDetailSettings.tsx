@@ -12,7 +12,7 @@ import { FormikProps, FormikValues } from 'formik';
 import React, { FC, useMemo, useRef, useState } from 'react';
 
 import { DeleteCard, TaxonomySettingsForm } from '../../components';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import { CORE_TRANSLATIONS, translationsConnector } from '../../connectors';
 import { useTaxonomiesUIStates } from '../../hooks';
 import { taxonomiesFacade, TaxonomyDetailModel } from '../../store/taxonomies';
 import { ALERT_CONTAINER_IDS, DETAIL_TAB_MAP, MODULE_PATHS } from '../../taxonomy.const';
@@ -29,7 +29,7 @@ const TaxonomyDetailSettings: FC<TaxonomyDetailRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 	const [listState, detailState] = useTaxonomiesUIStates(taxonomy?.id);
 
 	const formikRef = useRef<FormikProps<FormikValues>>();

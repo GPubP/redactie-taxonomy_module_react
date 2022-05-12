@@ -10,7 +10,7 @@ import {
 import { insert, move, omit, pipe, set } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import { CORE_TRANSLATIONS, translationsConnector } from '../../connectors';
 import { listToTree, sortNestedTerms } from '../../helpers';
 import { useTaxonomiesUIStates, useTaxonomy } from '../../hooks';
 import { TaxonomyTerm } from '../../services/taxonomyTerms';
@@ -50,7 +50,7 @@ const TaxonomyDetailTerms: FC<TaxonomyRouteProps> = ({ match }) => {
 	 * HOOKS
 	 */
 
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 	const [taxonomy] = useTaxonomy(taxonomyId);
 	const [, detailState] = useTaxonomiesUIStates(taxonomyId);
 	const [terms, setTerms] = useState<TaxonomyTerm[]>([]);
