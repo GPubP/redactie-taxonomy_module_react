@@ -57,6 +57,7 @@ const TaxonomyCreate: FC<TaxonomyRouteProps> = ({ location, route }) => {
 		description: '',
 		label: '',
 		publishStatus: '',
+		multiLanguage: false,
 	});
 
 	const createTaxonomy = (payload: CreateTaxonomyPayload): void => {

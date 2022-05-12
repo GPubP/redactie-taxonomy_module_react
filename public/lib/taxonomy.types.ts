@@ -5,8 +5,9 @@ import { CreateTaxonomyPayload } from './services/taxonomies';
 import { TaxonomyTerm } from './services/taxonomyTerms';
 import { TaxonomyDetailModel } from './store/taxonomies';
 
-export interface TaxonomyModuleRouteProps<Params extends { [K in keyof Params]?: string } = {}>
-	extends RouteConfigComponentProps<Params> {
+export interface TaxonomyModuleRouteProps<
+	Params extends { [K in keyof Params]?: string } = Record<string, string>
+> extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
 	tenantId: string;
 }
