@@ -15,6 +15,7 @@ export interface TaxonomySettings {
 	description: string;
 	label: string;
 	publishStatus: string;
+	multiLanguage: boolean;
 }
 
 /**

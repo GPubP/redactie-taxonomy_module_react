@@ -4,7 +4,13 @@ import { PUBLISH_STATUS_OPTIONS } from '../../../taxonomy.const';
 
 import { FilterFormState } from './FilterForm.types';
 
-export const FILTER_FORM_VALIDATION_SCHEMA: ObjectSchema<FilterFormState> = object().shape({
+export const FILTER_FORM_VALIDATION_SCHEMA: ObjectSchema<
+	FilterFormState,
+	any,
+	any,
+	any,
+	any
+> = object().shape({
 	label: string(),
 	publishStatus: string(),
 });
