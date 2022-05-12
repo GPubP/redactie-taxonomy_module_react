@@ -1,4 +1,4 @@
-import { Checkbox, Select, Textarea, TextField } from '@acpaas-ui/react-components';
+import { Card, CardBody, Checkbox, Select, Textarea, TextField } from '@acpaas-ui/react-components';
 import { ErrorMessage, FormikChildrenFn } from '@redactie/utils';
 import classnames from 'classnames';
 import { Field, Formik, isFunction } from 'formik';
@@ -86,16 +86,29 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 							)}
 						>
 							<div className="col-xs-12">
-								<Field
-									as={Checkbox}
-									id="multiLanguage"
-									label="Vertaalbaar"
-									name="multiLanguage"
-									checked={values.multiLanguage}
-									onChange={() => {
-										setFieldValue('multiLanguage', !values.multiLanguage);
-									}}
-								/>
+								<Card>
+									<CardBody>
+										<h6>Vertalen</h6>
+										<p className="u-margin-top u-margin-bottom">
+											Bepaal of er voor deze taxonomie andere inhoud kan
+											ingegeven worden per taal. Zoniet blijft de inhoud over
+											de talen heen gelijk.
+										</p>
+										<Field
+											as={Checkbox}
+											checked={values.multiLanguage}
+											id="multiLanguage"
+											label="Taxonomie vertalen"
+											name="multiLanguage"
+											onChange={() => {
+												setFieldValue(
+													'multiLanguage',
+													!values.multiLanguage
+												);
+											}}
+										/>
+									</CardBody>
+								</Card>
 							</div>
 						</div>
 
