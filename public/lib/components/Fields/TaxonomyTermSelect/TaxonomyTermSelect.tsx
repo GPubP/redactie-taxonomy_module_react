@@ -8,7 +8,7 @@ import { TaxonomyTermSelect as TermSelect } from '../../TaxonomyTermSelect';
 const TaxonomyTermSelect: FC<InputFieldProps> = ({ fieldProps, fieldSchema }) => {
 	const { setValue } = fieldProps.form.getFieldHelpers(fieldProps.field.name);
 	const { config = { description: '' }, label = '' } = fieldSchema;
-	const { description, taxonomyConfig, required } = config;
+	const { description, taxonomyConfig, required, synced } = config;
 	const { siteId } = useSiteContext();
 
 	/**
@@ -57,6 +57,7 @@ const TaxonomyTermSelect: FC<InputFieldProps> = ({ fieldProps, fieldSchema }) =>
 				placeholder="Selecteer een term"
 				selectionMethod={taxonomyConfig?.selectionMethod}
 				required={required}
+				synced={synced}
 			/>
 		);
 	};
