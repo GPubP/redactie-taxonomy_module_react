@@ -27,6 +27,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	placeholderValue,
 	selectionMethod = TaxonomySelectMethods.Dropdown,
 	required = false,
+	synced = false,
 }) => {
 	const { setValue } = form.getFieldHelpers(field.name);
 	const FormRendererFieldTitle = formRendererConnector.api.FormRendererFieldTitle;
@@ -124,6 +125,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 					<div>
 						<FormRendererFieldTitle
 							isRequired={required}
+							isSynced={synced}
 							className="u-margin-bottom-xs"
 						>
 							{label}
@@ -145,6 +147,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 					<div>
 						<FormRendererFieldTitle
 							isRequired={required}
+							isSynced={synced}
 							className="u-margin-bottom-xs"
 						>
 							{label}
@@ -182,7 +185,11 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 
 	return (
 		<div className={`a-input has-icon-right`}>
-			<FormRendererFieldTitle isRequired={required} className="u-margin-bottom-xs">
+			<FormRendererFieldTitle
+				isRequired={required}
+				isSynced={synced}
+				className="u-margin-bottom-xs"
+			>
 				{label}
 			</FormRendererFieldTitle>
 			<div className={cx('m-taxonomy-term-select')}>
