@@ -12,6 +12,7 @@ export interface TaxonomyTermSelectProps extends FieldProps {
 	allTerms: TaxonomyTerm[];
 	selectionMethod?: TaxonomySelectMethods;
 	required?: boolean;
+	synced?: boolean;
 }
 
 export interface CascaderOption {
