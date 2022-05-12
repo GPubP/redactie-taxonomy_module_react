@@ -90,15 +90,15 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 									<CardBody>
 										<h6>Vertalen</h6>
 										<p className="u-margin-top u-margin-bottom">
-											Bepaal of er voor deze taxonomie andere inhoud kan
-											ingegeven worden per taal. Zoniet blijft de inhoud over
-											de talen heen gelijk.
+											Bepaal of de termen in deze taxonomie vertaald moeten
+											worden. Indien deze niet in de frontend gebruikt worden
+											is een vertaling onnodig.
 										</p>
 										<Field
 											as={Checkbox}
 											checked={values.multiLanguage}
 											id="multiLanguage"
-											label="Taxonomie vertalen"
+											label="Inhoud vertalen"
 											name="multiLanguage"
 											onChange={() => {
 												setFieldValue(
