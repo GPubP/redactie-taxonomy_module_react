@@ -2,7 +2,7 @@ import { Button, Card, CardBody, CardDescription } from '@acpaas-ui/react-compon
 import { DeletePrompt } from '@redactie/utils';
 import React, { FC } from 'react';
 
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import { CORE_TRANSLATIONS, translationsConnector } from '../../connectors';
 
 import { DeleteCardProps } from './DeleteCard.types';
 
@@ -15,7 +15,7 @@ const DeleteCard: FC<DeleteCardProps> = ({
 	showModal,
 	title,
 }) => {
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 
 	const closeModal = (): void => setShowModal(false);
 

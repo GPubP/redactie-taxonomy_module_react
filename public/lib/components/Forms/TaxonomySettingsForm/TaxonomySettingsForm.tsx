@@ -1,10 +1,12 @@
-import { Checkbox, Select, Textarea, TextField } from '@acpaas-ui/react-components';
+import { Card, CardBody, Checkbox, Select, Textarea, TextField } from '@acpaas-ui/react-components';
 import { ErrorMessage, FormikChildrenFn } from '@redactie/utils';
 import classnames from 'classnames';
 import { Field, Formik, isFunction } from 'formik';
 import React, { FC } from 'react';
 
+import { translationsConnector } from '../../../connectors';
 import { getFieldState } from '../../../helpers';
+import { MODULE_TRANSLATIONS } from '../../../i18next';
 import { TaxonomyDetailModel } from '../../../store/taxonomies';
 
 import {
@@ -20,6 +22,8 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 	taxonomy,
 	onSubmit,
 }) => {
+	const [tModule] = translationsConnector.useModuleTranslation();
+
 	return (
 		<Formik
 			innerRef={instance => isFunction(formikRef) && formikRef(instance)}
@@ -36,9 +40,13 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 							<div className="col-xs-12 col-md-6">
 								<Field
 									as={TextField}
-									description="Geef de taxonomie een korte en duidelijke naam. Deze naam verschijnt in de applicatie."
+									description={tModule(
+										MODULE_TRANSLATIONS.SETTINGS_FORM_LABEL_FIELD_DESCRIPTION
+									)}
 									id="label"
-									label="Naam"
+									label={tModule(
+										MODULE_TRANSLATIONS.SETTINGS_FORM_LABEL_FIELD_LABEL
+									)}
 									name="label"
 									required
 									state={getFieldState(touched, errors, 'label')}
@@ -52,12 +60,15 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 								<Field
 									as={Textarea}
 									id="description"
-									label="Beschrijving"
+									label={tModule(
+										MODULE_TRANSLATIONS.SETTINGS_FORM_DESCRIPTION_FIELD_LABEL
+									)}
 									name="description"
 								/>
 								<small className="u-block u-text-light u-margin-top-xs">
-									Geef de taxonomie een duidelijke beschrijving. Deze wordt
-									gebruikt in het overzicht.
+									{tModule(
+										MODULE_TRANSLATIONS.SETTINGS_FORM_DESCRIPTION_FIELD_DESCRIPTION
+									)}
 								</small>
 							</div>
 						</div>
@@ -67,13 +78,17 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 								<Field
 									as={Select}
 									id="publishStatus"
-									label="Status"
+									label={tModule(
+										MODULE_TRANSLATIONS.SETTINGS_FORM_STATUS_FIELD_LABEL
+									)}
 									name="publishStatus"
 									options={SETTINGS_PUBLISH_STATUS_OPTIONS}
 									required
 								/>
 								<small className="u-block u-text-light u-margin-top-xs">
-									Selecteer een status.
+									{tModule(
+										MODULE_TRANSLATIONS.SETTINGS_FORM_STATUS_FIELD_DESCRIPTION
+									)}
 								</small>
 								<ErrorMessage component="p" name="publishStatus" />
 							</div>
@@ -86,16 +101,35 @@ const TaxonomySettingsForm: FC<TaxonomySettingFormProps> = ({
 							)}
 						>
 							<div className="col-xs-12">
-								<Field
-									as={Checkbox}
-									id="multiLanguage"
-									label="Vertaalbaar"
-									name="multiLanguage"
-									checked={values.multiLanguage}
-									onChange={() => {
-										setFieldValue('multiLanguage', !values.multiLanguage);
-									}}
-								/>
+								<Card>
+									<CardBody>
+										<h6>
+											{tModule(
+												MODULE_TRANSLATIONS.SETTINGS_MULTI_LANGUAGE_CARD_TITLE
+											)}
+										</h6>
+										<p className="u-margin-top u-margin-bottom">
+											{tModule(
+												MODULE_TRANSLATIONS.SETTINGS_MULTI_LANGUAGE_CARD_DESCRIPTION
+											)}
+										</p>
+										<Field
+											as={Checkbox}
+											checked={values.multiLanguage}
+											id="multiLanguage"
+											label={tModule(
+												MODULE_TRANSLATIONS.SETTINGS_MULTI_LANGUAGE_CARD_CHECKBOX_LABEL
+											)}
+											name="multiLanguage"
+											onChange={() => {
+												setFieldValue(
+													'multiLanguage',
+													!values.multiLanguage
+												);
+											}}
+										/>
+									</CardBody>
+								</Card>
 							</div>
 						</div>
 
