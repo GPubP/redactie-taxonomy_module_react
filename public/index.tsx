@@ -4,6 +4,7 @@ import React, { FC, useMemo } from 'react';
 
 import { InputTaxonomyTermSelect, TaxonomySelect, TaxonomyTermView } from './lib/components';
 import { formRendererConnector, rolesRightsConnector } from './lib/connectors';
+import { registerTranslations } from './lib/i18next';
 import { MODULE_PATHS } from './lib/taxonomy.const';
 import { TaxonomyModuleRouteProps } from './lib/taxonomy.types';
 import {
@@ -14,6 +15,8 @@ import {
 	TaxonomyTermDetail,
 	TaxonomyUpdate,
 } from './lib/views';
+
+registerTranslations();
 
 const TaxonomyRoot: FC<TaxonomyModuleRouteProps> = ({ route, tenantId }) => {
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);

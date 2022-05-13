@@ -17,7 +17,7 @@ import {
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, matchPath } from 'react-router-dom';
 
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import { CORE_TRANSLATIONS, translationsConnector } from '../../connectors';
 import { useActiveTabs, useTaxonomiesUIStates, useTaxonomy } from '../../hooks';
 import { UpdateTaxonomySettingsPayload } from '../../services/taxonomies';
 import { taxonomiesFacade } from '../../store/taxonomies';
@@ -62,7 +62,7 @@ const CustomCCUpdate: FC<TaxonomyRouteProps> = ({ location, route, match }) => {
 			{ name: 'Taxonomie', target: generatePath(MODULE_PATHS.overview) },
 		],
 	});
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 	const [taxonomy] = useTaxonomy(taxonomyId);
 	const [, detailState] = useTaxonomiesUIStates(taxonomyId);
 
