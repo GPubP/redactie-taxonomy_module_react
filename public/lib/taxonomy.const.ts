@@ -3,6 +3,11 @@ import { ContextHeaderTab, NavigateGenerateFn } from '@redactie/utils';
 
 import { PublishStatus } from './taxonomy.types';
 
+export const CONFIG = Object.freeze({
+	name: 'taxonomy',
+	module: 'taxonomy-module',
+});
+
 export const TENANT_ROOT = '/:tenantId';
 export const root = '/taxonomie';
 export const detail = `${root}/:taxonomyId`;

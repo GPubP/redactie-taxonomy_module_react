@@ -15,7 +15,7 @@ import {
 import React, { FC, ReactElement, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors';
+import { CORE_TRANSLATIONS, translationsConnector } from '../../connectors';
 import { useActiveTabs } from '../../hooks';
 import { CreateTaxonomyPayload } from '../../services/taxonomies';
 import { taxonomiesFacade } from '../../store/taxonomies';
@@ -37,7 +37,7 @@ const TaxonomyCreate: FC<TaxonomyRouteProps> = ({ location, route }) => {
 	const { tenantId } = useTenantContext();
 
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
-	const [t] = useCoreTranslation();
+	const [t] = translationsConnector.useCoreTranslation();
 	const activeTabs = useActiveTabs(DETAIL_TABS.slice(0, 1), location.pathname);
 	const { generatePath, navigate } = useNavigate();
 	const routes = useRoutes();
