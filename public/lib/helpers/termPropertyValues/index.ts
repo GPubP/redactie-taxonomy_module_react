@@ -1,5 +1,5 @@
 import { LanguageModel } from '@redactie/language-module';
-import { eqBy, omit, prop, unionWith } from 'ramda';
+import { omit } from 'ramda';
 
 import { LanguagePropertyValues } from '../../components';
 import { TermPropertyValue } from '../../services/taxonomyTerms';
@@ -43,12 +43,4 @@ export const parseTermPropertyValues = (
 			},
 		];
 	}, [] as TermPropertyValue[]);
-};
-
-export const mergeTermPropertyValues = (
-	oldPropertyValues: TermPropertyValue[] | undefined,
-	newPropertyValues: TermPropertyValue[] | undefined
-): TermPropertyValue[] => {
-	// Check for property value key property
-	return unionWith(eqBy(prop('key') as any), newPropertyValues || [], oldPropertyValues || []);
 };
