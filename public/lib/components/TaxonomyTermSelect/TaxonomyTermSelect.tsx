@@ -24,7 +24,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	description,
 	allTerms,
 	placeholder = TERM_SELECT_DEFAULT_PLACEHOLDER,
-	placeholderValue,
+	placeholderValue = '',
 	selectionMethod = TaxonomySelectMethods.Dropdown,
 	required = false,
 	synced = false,
