@@ -5,6 +5,7 @@ import {
 	Container,
 	ContextHeader,
 	ContextHeaderTopSection,
+	LanguageHeader,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
@@ -12,7 +13,9 @@ import {
 	ContextHeaderBadge,
 	DataLoader,
 	FormikOnChangeHandler,
+	Language,
 	LeavePrompt,
+	LoadingState,
 	useDetectValueChanges,
 	useNavigate,
 	useOnNextRender,
@@ -23,9 +26,10 @@ import { omit, pick } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
 import { DeleteCard, TermForm, TermFormValues } from '../../components';
-import { CORE_TRANSLATIONS, translationsConnector } from '../../connectors';
+import { CORE_TRANSLATIONS, languagesConnector, translationsConnector } from '../../connectors';
+import { parseTermFormTranslations, parseTermPropertyValues } from '../../helpers';
 import { useTaxonomy, useTaxonomyTerm, useTaxonomyTermsUIStates } from '../../hooks';
-import { TaxonomyTerm } from '../../services/taxonomyTerms';
+import { UpdateTaxonomyTermPayload } from '../../services/taxonomyTerms';
 import { taxonomiesFacade } from '../../store/taxonomies';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../taxonomy.const';
 import { PublishStatus } from '../../taxonomy.types';
@@ -49,8 +53,9 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	const { generatePath, navigate } = useNavigate();
 	const routes = useRoutes();
 	const formikRef = useRef<FormikProps<TermFormValues>>();
+	const [activeLanguage, setActiveLanguage] = useState<Language>();
 
-	const [taxonomy] = useTaxonomy(taxonomyId);
+	const [taxonomy, taxonomyState] = useTaxonomy(taxonomyId);
 	const [taxonomyTerm] = useTaxonomyTerm(taxonomyId, termId);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS(generatePath),
@@ -61,17 +66,18 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		],
 	});
 	const [listState, detailState] = useTaxonomyTermsUIStates(termId);
-	const [formValue, setFormValue] = useState<TermFormValues | null>(
-		!isUpdate ? INITIAL_TERM_VALUE : null
-	);
+	const [languagesLoading, languages] = languagesConnector.hooks.useActiveLanguages();
+	const [formValue, setFormValue] = useState<TermFormValues | null>(null);
 	const [isInitialLoading, setInitialLoading] = useState(isUpdate);
 	const [showModal, setShowModal] = useState(false);
 	const isLoading = useMemo(
-		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
-		[detailState, isUpdate, listState]
+		() =>
+			(isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating) &&
+			languagesLoading === LoadingState.Loading,
+		[detailState, isUpdate, languagesLoading, listState]
 	);
 	const [hasChanges, resetChangeDetection] = useDetectValueChanges(
-		isUpdate ? !isInitialLoading && !isLoading && !!formValue : true,
+		!isInitialLoading && !isLoading && !!formValue,
 		formValue
 	);
 	const [forceNavigateToOverview] = useOnNextRender(() =>
@@ -80,27 +86,74 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 
 	// Set initial loading
 	useEffect(() => {
-		if (isUpdate && detailState) {
-			setInitialLoading(detailState.isFetching);
+		if (isUpdate && taxonomyState && detailState) {
+			setInitialLoading(
+				taxonomyState.isFetching && detailState.isFetching && !languagesLoading
+			);
 		}
-	}, [detailState, isUpdate]);
+	}, [detailState, isUpdate, languagesLoading, taxonomyState]);
 
 	// Set initial form value
 	useEffect(() => {
-		if (isUpdate && !isInitialLoading && taxonomyTerm) {
-			setFormValue({ ...INITIAL_TERM_VALUE, ...pick(TERM_VALUE_KEYS, taxonomyTerm) });
+		if (isInitialLoading || !taxonomy || !languages) {
+			return;
 		}
-	}, [isInitialLoading, isUpdate, taxonomyTerm]);
+		const { multiLanguage } = taxonomy;
+		const initialTermValue = INITIAL_TERM_VALUE(multiLanguage, languages);
+		const initialFormValue =
+			isUpdate && taxonomyTerm
+				? {
+						...initialTermValue,
+						...pick(TERM_VALUE_KEYS, taxonomyTerm),
+						...(multiLanguage
+							? {
+									propertyValues: {
+										multiLanguage,
+										...parseTermFormTranslations(
+											taxonomyTerm.propertyValues ?? [],
+											languages
+										),
+									},
+							  }
+							: null),
+				  }
+				: initialTermValue;
+
+		setFormValue(initialFormValue as TermFormValues);
+	}, [isInitialLoading, isUpdate, languages, taxonomy, taxonomyTerm]);
+
+	// Set active language
+	useEffect(() => {
+		if (Array.isArray(languages) && !activeLanguage) {
+			setActiveLanguage(languages.find(l => l.primary) || languages[0]);
+		}
+	}, [activeLanguage, languages]);
 
 	/**
 	 * METHODS
 	 */
+
+	const getTermLabel = (termValues: TermFormValues): string => {
+		if (taxonomy?.multiLanguage) {
+			const primaryLanguage = (languages ?? []).find(lang => lang.primary) ?? languages?.[0];
+			// Set the primary language as main label
+			return termValues.propertyValues?.[primaryLanguage?.key ?? 'nl'] ?? '';
+		}
+
+		return termValues.label;
+	};
+
 	const updateTerm = async (updatedTerm: TermFormValues): Promise<void> => {
 		if (!taxonomyId) {
 			return;
 		}
-		// Omit keys from form to always ensure the last updated values
-		const payload = { ...omit(TERM_VALUE_KEYS, taxonomyTerm), ...updatedTerm } as TaxonomyTerm;
+		const payload = {
+			// Omit keys from form to always ensure the last updated values
+			...omit(TERM_VALUE_KEYS, taxonomyTerm),
+			...updatedTerm,
+			label: getTermLabel(updatedTerm),
+			propertyValues: parseTermPropertyValues(updatedTerm.propertyValues),
+		} as UpdateTaxonomyTermPayload;
 
 		await taxonomiesFacade
 			.updateTaxonomyTerm(taxonomyId, payload, {
@@ -118,18 +171,18 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 			return;
 		}
 
-		const newTaxonomyTerm = await taxonomiesFacade.createTaxonomyTerm(
-			taxonomyId,
-			{
-				...newTerm,
-				// Should always be published on create
-				publishStatus: PublishStatus.Published,
-			},
-			{
-				errorAlertContainerId: ALERT_CONTAINER_IDS.termDetail,
-				successAlertContainerId: ALERT_CONTAINER_IDS.detailTerms,
-			}
-		);
+		const payload = {
+			...newTerm,
+			label: getTermLabel(newTerm),
+			propertyValues: parseTermPropertyValues(newTerm.propertyValues),
+			// Should always be published on create
+			publishStatus: PublishStatus.Published,
+		};
+
+		const newTaxonomyTerm = await taxonomiesFacade.createTaxonomyTerm(taxonomyId, payload, {
+			errorAlertContainerId: ALERT_CONTAINER_IDS.termDetail,
+			successAlertContainerId: ALERT_CONTAINER_IDS.detailTerms,
+		});
 
 		if (newTaxonomyTerm && newTaxonomyTerm.id) {
 			resetChangeDetection();
@@ -177,12 +230,15 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		  )}`
 		: `Term ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`;
 
-	const renderForm = (): ReactElement => (
+	const renderForm = (multiLanguage = false): ReactElement => (
 		<>
 			<TermForm
+				className={multiLanguage ? 'u-margin-top' : ''}
 				formikRef={instance => (formikRef.current = instance || undefined)}
 				allTerms={taxonomy?.terms || []}
 				initialValues={formValue}
+				languages={languages ?? []}
+				multiLanguage={multiLanguage}
 				taxonomyTerm={taxonomyTerm}
 				onSubmit={onFormSubmit}
 			>
@@ -234,6 +290,22 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 		</>
 	);
 
+	const renderMultiLanguageForm = (): ReactElement => {
+		const sortedLanguages = languages?.sort(
+			(a, b) => Number(b.primary ?? false) - Number(a.primary ?? false)
+		);
+
+		return (
+			<LanguageHeader
+				languages={sortedLanguages}
+				activeLanguage={activeLanguage}
+				onChangeLanguage={(language: string) => setActiveLanguage({ key: language })}
+			>
+				{renderForm(true)}
+			</LanguageHeader>
+		);
+	};
+
 	return (
 		<>
 			<ContextHeader title={pageTitle} badges={headerBadges}>
@@ -244,7 +316,10 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 					toastClassName="u-margin-bottom"
 					containerId={ALERT_CONTAINER_IDS.termDetail}
 				/>
-				<DataLoader loadingState={isInitialLoading} render={renderForm} />
+				<DataLoader
+					loadingState={isInitialLoading}
+					render={taxonomy?.multiLanguage ? renderMultiLanguageForm : renderForm}
+				/>
 			</Container>
 		</>
 	);

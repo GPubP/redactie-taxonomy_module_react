@@ -10,9 +10,15 @@ export interface TaxonomyTerm {
 	createdAt: string;
 	updatedBy: string;
 	updatedAt: string;
-	propertyValues: [];
+	propertyValues: TermPropertyValue[];
 	parentTermId: number;
 	position: number;
+}
+
+export interface TermPropertyValue {
+	id: number;
+	key: string;
+	value: string;
 }
 
 /**
@@ -36,6 +42,7 @@ export interface CreateTaxonomyTermPayload {
 	description: string;
 	publishStatus: string;
 	parentTermId?: number;
+	propertyValues?: TermPropertyValue[];
 }
 
 export interface UpdateTaxonomyTermPayload {
@@ -48,6 +55,7 @@ export interface UpdateTaxonomyTermPayload {
 	createdAt: string;
 	updatedBy: string;
 	updatedAt: string;
+	propertyValues?: TermPropertyValue[];
 }
 
 export type UpdateTaxonomyTermsPayload = {

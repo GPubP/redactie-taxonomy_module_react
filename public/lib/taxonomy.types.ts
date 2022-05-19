@@ -1,5 +1,5 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
-import { AlertProps, ContextHeaderTab } from '@redactie/utils';
+import { AlertProps, ContextHeaderTab, Language, LanguageErrors } from '@redactie/utils';
 
 import { CreateTaxonomyPayload } from './services/taxonomies';
 import { TaxonomyTerm } from './services/taxonomyTerms';
@@ -42,4 +42,9 @@ export type AlertMessages<T extends string | number | symbol> = Record<
 export enum PublishStatus {
 	Draft = 'draft',
 	Published = 'published',
+}
+
+export interface LanguageHeaderContextType {
+	activeLanguage: Language;
+	setErrors: (errors: LanguageErrors) => void;
 }
