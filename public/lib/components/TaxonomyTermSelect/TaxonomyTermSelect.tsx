@@ -4,7 +4,7 @@ import classnames from 'classnames/bind';
 import React, { ChangeEvent, FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { formRendererConnector } from '../../connectors';
-import { listToTree } from '../../helpers';
+import { listToTree, sortNestedTerms, sortTerms } from '../../helpers';
 import { TaxonomySelectMethods } from '../Fields/TaxonomySelect/TaxonomySelect.types';
 
 import { TERM_SELECT_DEFAULT_PLACEHOLDER } from './TaxonomyTermSelect.const';
@@ -45,6 +45,11 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 					label: term.label,
 					parentTermId: term.parentTermId,
 					children: [],
+					position:
+						Number(
+							term.propertyValues.find(propValue => propValue.key === 'position')
+								?.value
+						) || 0,
 				});
 
 				if (term.id && term.parentTermId && term.id !== term.parentTermId) {
@@ -54,7 +59,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 				return acc;
 			},
 			{
-				mappedTermOptions: [] as CascaderOption[],
+				mappedTermOptions: [] as (CascaderOption & { position: number })[],
 				hasMultipleLevels: false,
 			}
 		);
@@ -67,15 +72,17 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 			value: placeholderValue,
 		};
 		const filteredTerms = hasMultipleLevels
-			? listToTree(mappedTermOptions, {
-					idKey: 'value',
-					parentKey: 'parentTermId',
-					childrenKey: 'children',
-			  })
+			? sortNestedTerms(
+					listToTree(mappedTermOptions, {
+						idKey: 'value',
+						parentKey: 'parentTermId',
+						childrenKey: 'children',
+					})
+			  )
 			: selectionMethod === TaxonomySelectMethods.AutoComplete
-			? mappedTermOptions
+			? sortTerms(mappedTermOptions)
 			: [defaultOption].concat(
-					mappedTermOptions.map(option => ({
+					sortTerms(mappedTermOptions).map(option => ({
 						label: option.label,
 						value: option.value ? option.value : '',
 					}))
