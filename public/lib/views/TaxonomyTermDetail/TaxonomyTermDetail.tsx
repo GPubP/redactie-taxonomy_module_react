@@ -68,13 +68,13 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 	const [listState, detailState] = useTaxonomyTermsUIStates(termId);
 	const [languagesLoading, languages] = languagesConnector.hooks.useActiveLanguages();
 	const [formValue, setFormValue] = useState<TermFormValues | null>(null);
-	const [isInitialLoading, setInitialLoading] = useState(isUpdate);
+	const [isInitialLoading, setInitialLoading] = useState(
+		isUpdate || languagesLoading === LoadingState.Loading
+	);
 	const [showModal, setShowModal] = useState(false);
 	const isLoading = useMemo(
-		() =>
-			(isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating) &&
-			languagesLoading === LoadingState.Loading,
-		[detailState, isUpdate, languagesLoading, listState]
+		() => (isUpdate ? !!detailState?.isUpdating : !!listState?.isCreating),
+		[detailState, isUpdate, listState]
 	);
 	const [hasChanges, resetChangeDetection] = useDetectValueChanges(
 		!isInitialLoading && !isLoading && !!formValue,
@@ -86,9 +86,15 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 
 	// Set initial loading
 	useEffect(() => {
+		if (!isUpdate) {
+			setInitialLoading(languagesLoading === LoadingState.Loading);
+			return;
+		}
 		if (isUpdate && taxonomyState && detailState) {
 			setInitialLoading(
-				taxonomyState.isFetching && detailState.isFetching && !languagesLoading
+				taxonomyState.isFetching &&
+					detailState.isFetching &&
+					languagesLoading === LoadingState.Loading
 			);
 		}
 	}, [detailState, isUpdate, languagesLoading, taxonomyState]);
