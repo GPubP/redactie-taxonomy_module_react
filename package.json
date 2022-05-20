@@ -30,7 +30,7 @@
     "url": "https://bitbucket.antwerpen.be/scm/reda/redactie-taxonomy_module_react.git"
   },
   "publishConfig": {
-    "@redactie:registry": "https://nexusrepo.antwerpen.be/repository/npm-private/"
+    "@redactie:registry": "https://nexusrepo.antwerpen.be/repository/npm-private"
   },
   "keywords": [
     "Redactie",
