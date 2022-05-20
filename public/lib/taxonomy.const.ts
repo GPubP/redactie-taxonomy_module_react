@@ -87,5 +87,3 @@ export const ALERT_CONTAINER_IDS = {
 	detailTerms: 'taxonomy-detail-terms',
 	termDetail: 'taxonomy-term-detail',
 };
-
-export const TERM_LANG_PROPERTY_VALUE_PREFIX = 'lang_';

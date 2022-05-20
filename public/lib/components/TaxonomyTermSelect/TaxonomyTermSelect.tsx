@@ -1,10 +1,20 @@
 import { Autocomplete, Button, Select } from '@acpaas-ui/react-components';
 import { Cascader } from '@acpaas-ui/react-editorial-components';
 import classnames from 'classnames/bind';
-import React, { ChangeEvent, FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { isNil } from 'ramda';
+import React, {
+	ChangeEvent,
+	FC,
+	ReactElement,
+	useContext,
+	useEffect,
+	useMemo,
+	useState,
+} from 'react';
 
 import { formRendererConnector } from '../../connectors';
-import { listToTree } from '../../helpers';
+import { listToTree, sortNestedTerms, sortTerms } from '../../helpers';
+import { TermLanguagePropertyPrefix } from '../../taxonomy.types';
 import { TaxonomySelectMethods } from '../Fields/TaxonomySelect/TaxonomySelect.types';
 
 import { TERM_SELECT_DEFAULT_PLACEHOLDER } from './TaxonomyTermSelect.const';
@@ -24,7 +34,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	description,
 	allTerms,
 	placeholder = TERM_SELECT_DEFAULT_PLACEHOLDER,
-	placeholderValue,
+	placeholderValue = '',
 	selectionMethod = TaxonomySelectMethods.Dropdown,
 	required = false,
 	synced = false,
@@ -37,14 +47,30 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 	 */
 
 	const [cascaderValue, setCascaderValue] = useState<number[]>([]);
+	const { activeLanguage } = useContext(formRendererConnector.api.FormContext);
 	const [filteredTermOptions, hasChildren] = useMemo(() => {
 		const { mappedTermOptions, hasMultipleLevels } = (allTerms || []).reduce(
 			(acc, term) => {
+				// See if we can find a translation for the current active language
+				const label =
+					isNil(activeLanguage) || !term.propertyValues?.length
+						? term.label
+						: term.propertyValues.find(
+								propValue =>
+									propValue.key ===
+									`${TermLanguagePropertyPrefix.Label}${activeLanguage}`
+						  )?.value ?? term.label;
+
 				acc.mappedTermOptions.push({
 					value: term.id,
-					label: term.label,
+					label,
 					parentTermId: term.parentTermId,
 					children: [],
+					position:
+						Number(
+							term.propertyValues.find(propValue => propValue.key === 'position')
+								?.value
+						) || 0,
 				});
 
 				if (term.id && term.parentTermId && term.id !== term.parentTermId) {
@@ -54,7 +80,7 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 				return acc;
 			},
 			{
-				mappedTermOptions: [] as CascaderOption[],
+				mappedTermOptions: [] as (CascaderOption & { position: number })[],
 				hasMultipleLevels: false,
 			}
 		);
@@ -67,22 +93,24 @@ export const TaxonomyTermSelect: FC<TaxonomyTermSelectProps> = ({
 			value: placeholderValue,
 		};
 		const filteredTerms = hasMultipleLevels
-			? listToTree(mappedTermOptions, {
-					idKey: 'value',
-					parentKey: 'parentTermId',
-					childrenKey: 'children',
-			  })
+			? sortNestedTerms(
+					listToTree(mappedTermOptions, {
+						idKey: 'value',
+						parentKey: 'parentTermId',
+						childrenKey: 'children',
+					})
+			  )
 			: selectionMethod === TaxonomySelectMethods.AutoComplete
-			? mappedTermOptions
+			? sortTerms(mappedTermOptions)
 			: [defaultOption].concat(
-					mappedTermOptions.map(option => ({
+					sortTerms(mappedTermOptions).map(option => ({
 						label: option.label,
 						value: option.value ? option.value : '',
 					}))
 			  );
 
 		return [filteredTerms, hasMultipleLevels];
-	}, [allTerms, placeholder, placeholderValue, selectionMethod]);
+	}, [activeLanguage, allTerms, placeholder, placeholderValue, selectionMethod]);
 
 	// Set initial cascader value
 	useEffect(() => {

@@ -48,3 +48,7 @@ export interface LanguageHeaderContextType {
 	activeLanguage: Language;
 	setErrors: (errors: LanguageErrors) => void;
 }
+
+export enum TermLanguagePropertyPrefix {
+	Label = 'label_lang_',
+}

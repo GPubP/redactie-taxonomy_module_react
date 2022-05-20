@@ -6,7 +6,7 @@ export const TERM_FORM_VALIDATION_SCHEMA = (
 	terms: string[],
 	languages: LanguageModel[],
 	multiLanguage: boolean
-): ObjectSchema<any, any, any, any, any> =>
+): ObjectSchema<any> =>
 	MultilanguageYup.object().shape({
 		label: multiLanguage
 			? MultilanguageYup.string()

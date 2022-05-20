@@ -3,7 +3,7 @@ import { omit } from 'ramda';
 
 import { LanguagePropertyValues } from '../../components';
 import { TermPropertyValue } from '../../services/taxonomyTerms';
-import { TERM_LANG_PROPERTY_VALUE_PREFIX } from '../../taxonomy.const';
+import { TermLanguagePropertyPrefix } from '../../taxonomy.types';
 
 export const parseTermFormTranslations = (
 	values: TermPropertyValue[] | undefined,
@@ -14,8 +14,8 @@ export const parseTermFormTranslations = (
 	}
 
 	return values.reduce((acc, curr) => {
-		const isLanguageProperty = curr.key.startsWith(TERM_LANG_PROPERTY_VALUE_PREFIX);
-		const languageKey = curr.key.replace(TERM_LANG_PROPERTY_VALUE_PREFIX, '');
+		const isLanguageProperty = curr.key.startsWith(TermLanguagePropertyPrefix.Label);
+		const languageKey = curr.key.replace(TermLanguagePropertyPrefix.Label, '');
 		const isCurrentLanguage = languages.some(lang => lang.key === languageKey);
 
 		if (!isLanguageProperty || !isCurrentLanguage) {
@@ -38,7 +38,7 @@ export const parseTermPropertyValues = (
 			...acc,
 			{
 				id: 0,
-				key: `${TERM_LANG_PROPERTY_VALUE_PREFIX}${curr}`,
+				key: `${TermLanguagePropertyPrefix.Label}${curr}`,
 				value: propertiesObject[curr],
 			},
 		];
