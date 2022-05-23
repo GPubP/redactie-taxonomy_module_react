@@ -7,22 +7,20 @@ import { TermLanguagePropertyPrefix } from '../../taxonomy.types';
 
 export const parseTermFormTranslations = (
 	values: TermPropertyValue[] | undefined,
-	languages: LanguageModel[]
+	languages: LanguageModel[],
+	defaultValue?: string
 ): LanguagePropertyValues | void => {
 	if (!values) {
 		return;
 	}
 
-	return values.reduce((acc, curr) => {
-		const isLanguageProperty = curr.key.startsWith(TermLanguagePropertyPrefix.Label);
-		const languageKey = curr.key.replace(TermLanguagePropertyPrefix.Label, '');
-		const isCurrentLanguage = languages.some(lang => lang.key === languageKey);
+	return languages.reduce((acc, curr) => {
+		const languageKey = curr.key;
+		const propertyValue = values.find(
+			value => value.key === `${TermLanguagePropertyPrefix.Label}${languageKey}`
+		);
 
-		if (!isLanguageProperty || !isCurrentLanguage) {
-			return acc;
-		}
-
-		return { ...acc, [languageKey]: curr.value };
+		return { ...acc, [languageKey]: propertyValue?.value || defaultValue };
 	}, {});
 };
 

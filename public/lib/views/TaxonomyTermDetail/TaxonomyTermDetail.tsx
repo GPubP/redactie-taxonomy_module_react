@@ -117,7 +117,8 @@ export const TaxonomyTermDetail: FC<TaxonomyTermRouteProps> = ({ match }) => {
 										multiLanguage,
 										...parseTermFormTranslations(
 											taxonomyTerm.propertyValues ?? [],
-											languages
+											languages,
+											taxonomy.label
 										),
 									},
 							  }
