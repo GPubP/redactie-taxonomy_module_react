@@ -16,7 +16,9 @@ export const parseTermFormTranslations = (
 
 	return languages.reduce((acc, curr) => {
 		const languageKey = curr.key;
-		const propertyValue = values.find(value => value.key === `label_lang_${languageKey}`);
+		const propertyValue = values.find(
+			value => value.key === `${TermLanguagePropertyPrefix.Label}${languageKey}`
+		);
 
 		return { ...acc, [languageKey]: propertyValue?.value || defaultValue };
 	}, {});
