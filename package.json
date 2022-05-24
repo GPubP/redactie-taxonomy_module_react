@@ -101,9 +101,7 @@
     "typescript-plugin-css-modules": "2.1.2",
     "webpack": "4.41.5",
     "webpack-cli": "3.3.10",
-    "yup": "0.32.11"
-  },
-  "dependencies": {
+    "yup": "0.32.11",
     "typedoc-plugin-missing-exports": "0.22.6"
   }
 }
